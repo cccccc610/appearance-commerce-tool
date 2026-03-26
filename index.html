@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v3.4</title>
+    <title>游戏外观商业化分析平台 v3.5</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -246,6 +246,20 @@
         .appearance-type-btn { padding: 8px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 0.8rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
         .appearance-type-btn:hover { border-color: var(--primary-light); }
         .appearance-type-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
+
+        /* Compare Analysis Styles */
+        .compare-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+        .compare-item { background: var(--bg-card); border-radius: 10px; padding: 16px; border: 1px solid var(--border); }
+        .compare-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); color: var(--text-primary); }
+        .compare-row { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; font-size: 0.75rem; margin-bottom: 8px; }
+        .compare-label { color: var(--text-muted); flex-shrink: 0; min-width: 70px; }
+        .tier-badge { display: inline-block; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 600; }
+        .pain-points { display: flex; flex-direction: column; gap: 6px; }
+        .pain-item { font-size: 0.75rem; color: var(--text-secondary); padding: 6px 10px; background: rgba(255, 152, 0, 0.1); border-left: 3px solid var(--warning); border-radius: 0 6px 6px 0; }
+        .compare-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .compare-table th, .compare-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+        .compare-table th { background: var(--bg-card); font-weight: 600; color: var(--text-secondary); }
+        .compare-table tr:hover { background: var(--bg-card); }
 
         /* Empty State */
         .empty-state { text-align: center; padding: 40px 16px; }
@@ -529,7 +543,34 @@
                         ]
                     }
                 },
-                model: { primary: "皮肤直售+限定抽奖", pricing: "6-1688元" }
+                model: { primary: "皮肤直售+限定抽奖", pricing: "6-1688元" },
+                // ========== 对比分析扩展字段 ==========
+                commercial: {
+                    model: "皮肤直售为主 + 限定抽奖 + 荣耀典藏积分夺宝",
+                    channels: ["商城直售", "限时活动", "积分夺宝", "战令系统"],
+                    cycle: "新皮肤每周1-2款，节日/赛季大型活动集中投放",
+                    strategy: "高频更新+稀缺性营销，传说皮肤定价锚定高端市场"
+                },
+                payment: {
+                    structure: "免费 + 内购",
+                    currencies: ["点券(1元=10点券)", "积分", "战令币"],
+                    monetization: "皮肤收入占总收入60%+，ARPU值行业领先",
+                    tierCount: 4,
+                    priceRange: "¥29-2000+"
+                },
+                market: {
+                    scale: "月流水超20亿，皮肤收入占比60%+",
+                    users: "DAU超1亿，MAU超2亿",
+                    growth: "稳定增长，节日活动带动月度峰值",
+                    competitors: ["英雄联盟手游", "无尽对决(海外)"]
+                },
+                painPoints: [
+                    "低端皮肤同质化严重，玩家审美疲劳",
+                    "抽奖机制争议，概率透明度不足",
+                    "传说皮肤定价偏高，部分玩家流失",
+                    "皮肤特效过于花哨影响游戏公平性争议",
+                    "限定皮肤返场规则不明确"
+                ]
             },
             "英雄联盟": {
                 category: "moba", icon: "⚔️", rank: 2,
@@ -546,18 +587,347 @@
                         ]
                     }
                 },
-                model: { primary: "皮肤直售+至臻系统", pricing: "30-130元" }
+                model: { primary: "皮肤直售+至臻系统", pricing: "30-130元" },
+                commercial: {
+                    model: "皮肤直售 + 至臻代币系统 + 神话皮肤",
+                    channels: ["商城直售", "至臻代币兑换", "神话精萃兑换", "海克斯科技抽奖"],
+                    cycle: "每2周新皮肤，至臻皮肤月度更新",
+                    strategy: "分级明确，至臻系统增加稀缺性和收集价值"
+                },
+                payment: {
+                    structure: "免费 + 内购",
+                    currencies: ["RP(riot points)", "至臻代币", "神话精萃"],
+                    monetization: "皮肤+通行证为主，RP充值档位多样",
+                    tierCount: 5,
+                    priceRange: "¥38-200+"
+                },
+                market: {
+                    scale: "全球月流水超$1.5亿，皮肤收入占比高",
+                    users: "月活超1.5亿(全球)",
+                    growth: "成熟期稳定，至臻系统刺激消费",
+                    competitors: ["DOTA2", "王者荣耀", "VALORANT"]
+                },
+                painPoints: [
+                    "低端皮肤性价比低，玩家选择少",
+                    "至臻代币获取周期长，肝度要求高",
+                    "神话皮肤获取门槛高，新玩家难以获得",
+                    "皮肤特效过于复杂影响游戏性能",
+                    "部分限定皮肤绝版引发不满"
+                ]
             },
-            "金铲铲之战": {
-                category: "strategy", icon: "♟️", rank: 3,
-                overview: "自走棋手游，棋盘与小小英雄商业化",
-                appearanceTypes: ["board", "decoration", "skin"],
+            "原神": {
+                category: "simulation", icon: "🏠", rank: 1,
+                overview: "开放世界RPG，角色驱动商业化",
+                appearanceTypes: ["skin", "home_decor", "mount"],
                 pricing: {
-                    board: {
+                    skin: {
                         tiers: [
-                            { name: "普通棋盘", game: "4500点券", rmb: "¥450", tasks: ["棋盘贴图设计", "基础环境光效", "2-3种地形变化"] },
-                            { name: "史诗棋盘", game: "7900点券", rmb: "¥790", tasks: ["全3D棋盘建模", "动态环境效果", "专属音效", "交互反馈"] },
-                            { name: "传说棋盘", game: "11500点券", rmb: "¥1150", tasks: ["高质量场景设计", "完整动画系统", "专属BGM", "粒子特效", "主题角色"] }
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["模型调整", "配色更换", "简单特效"] },
+                            { name: "商城皮肤", game: "1680原石", rmb: "¥168", tasks: ["新模型设计", "技能特效", "专属动画", "立绘更新"] },
+                            { name: "联动皮肤", game: "1980原石", rmb: "¥198", tasks: ["主题设计", "全套特效", "专属剧情", "联动元素"] }
+                        ]
+                    },
+                    home_decor: {
+                        tiers: [
+                            { name: "普通家具", game: "洞天宝钱", rmb: "游戏内获取", tasks: ["基础模型", "简单动画"] },
+                            { name: "限定家具", game: "创世结晶", rmb: "¥30+", tasks: ["主题设计", "交互功能", "专属特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "角色抽卡+皮肤直售", pricing: "68-198元" },
+                commercial: {
+                    model: "角色/武器抽卡为主 + 皮肤直售 + 尘歌壶系统",
+                    channels: ["商城直售", "活动免费", "尘歌壶家具"],
+                    cycle: "皮肤更新频率低(月度或季度)，角色更新为主",
+                    strategy: "角色驱动消费，皮肤作为附加价值，免费皮肤提升玩家留存"
+                },
+                payment: {
+                    structure: "免费 + 抽卡 + 内购",
+                    currencies: ["原石", "创世结晶", "洞天宝钱"],
+                    monetization: "角色抽卡ARPU极高，皮肤为辅助收入",
+                    tierCount: 3,
+                    priceRange: "免费-¥198"
+                },
+                market: {
+                    scale: "月流水超$2亿(全球)，皮肤收入占比约5-10%",
+                    users: "MAU超6000万",
+                    growth: "稳定期，版本更新带动收入波动",
+                    competitors: ["鸣潮", "崩坏：星穹铁道", "幻塔"]
+                },
+                painPoints: [
+                    "皮肤更新频率低，玩家期待难以满足",
+                    "皮肤定价偏高(¥168)，性价比争议",
+                    "免费皮肤质量参差不齐",
+                    "尘歌壶系统后续更新不足",
+                    "皮肤特效改动较少，差异化不足"
+                ]
+            },
+            "和平精英": {
+                category: "fps", icon: "🔫", rank: 1,
+                overview: "国内最大FPS手游",
+                appearanceTypes: ["weapon_skin", "skin", "decoration", "mount"],
+                pricing: {
+                    weapon_skin: {
+                        tiers: [
+                            { name: "普通枪皮", game: "军需抽取", rmb: "¥100-500", tasks: ["枪械换色", "基础贴图"] },
+                            { name: "稀有枪皮", game: "军需抽取", rmb: "¥300-800", tasks: ["新模型细节", "专属检视动画", "击杀特效"] },
+                            { name: "传说枪皮", game: "军需抽取", rmb: "¥500-2000", tasks: ["完整建模", "全套动画", "专属音效", "升级特效"] }
+                        ]
+                    },
+                    mount: {
+                        tiers: [
+                            { name: "普通载具", game: "军需抽取", rmb: "¥200-500", tasks: ["载具换色", "简单贴图"] },
+                            { name: "联动载具", game: "军需抽取", rmb: "¥1500+", tasks: ["完整建模", "专属音效", "联动元素", "特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "军需箱抽奖", pricing: "600-2000元" },
+                commercial: {
+                    model: "军需抽奖为主 + 通行证 + 联动限定",
+                    channels: ["军需抽奖", "荣耀手册", "限时活动", "IP联动"],
+                    cycle: "军需周更，大型联动季度更新",
+                    strategy: "抽奖概率刺激消费，联动IP扩大用户圈层"
+                },
+                payment: {
+                    structure: "免费 + 抽奖 + 通行证",
+                    currencies: ["UC点券", "荣耀勋章", "物资币"],
+                    monetization: "军需抽奖为主，ARPPU高但付费率偏低",
+                    tierCount: 3,
+                    priceRange: "¥100-2000+"
+                },
+                market: {
+                    scale: "月流水超15亿，军需收入占比70%+",
+                    users: "DAU超5000万",
+                    growth: "稳定增长，联动活动带动峰值",
+                    competitors: ["使命召唤手游", "荒野行动", "堡垒之夜"]
+                },
+                painPoints: [
+                    "军需抽奖概率低，玩家挫败感强",
+                    "联动载具定价过高(¥1500+)",
+                    "枪皮同质化，升级系统肝度高",
+                    "免费内容少，白嫖玩家体验差",
+                    "外挂问题影响付费意愿"
+                ]
+            },
+            "鸣潮": {
+                category: "action", icon: "🌊", rank: 1,
+                overview: "库洛游戏开放世界动作RPG，声骸系统独特",
+                appearanceTypes: ["skin", "weapon_skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["模型调整", "配色更换", "简单特效"] },
+                            { name: "商城皮肤", game: "1680-1980星声", rmb: "¥100-120", tasks: ["新模型设计", "技能特效", "专属动画", "待机动作"] },
+                            { name: "限定皮肤", game: "活动限定", rmb: "活动获取", tasks: ["主题设计", "全套特效", "专属剧情", "限定标识"] }
+                        ]
+                    },
+                    weapon_skin: {
+                        tiers: [
+                            { name: "活动武器皮", game: "免费", rmb: "免费", tasks: ["武器换色", "简单特效"] },
+                            { name: "限定武器皮", game: "活动获取", rmb: "活动获取", tasks: ["武器建模", "专属特效", "专属音效"] }
+                        ]
+                    }
+                },
+                model: { primary: "角色抽卡+皮肤直售", pricing: "68-128元" },
+                commercial: {
+                    model: "角色/武器抽卡 + 皮肤直售 + 声骸系统",
+                    channels: ["商城直售", "活动免费", "通行证"],
+                    cycle: "皮肤更新频率中等，角色更新为主",
+                    strategy: "高品质皮肤吸引付费，免费活动皮肤提升好感度"
+                },
+                payment: {
+                    structure: "免费 + 抽卡 + 内购",
+                    currencies: ["星声", "共鸣", "月相"],
+                    monetization: "角色抽卡为主，皮肤为辅助收入",
+                    tierCount: 3,
+                    priceRange: "免费-¥120"
+                },
+                market: {
+                    scale: "月流水约5-8亿，快速增长期",
+                    users: "MAU超2000万",
+                    growth: "新游红利期，用户增长迅速",
+                    competitors: ["原神", "崩坏3", "幻塔"]
+                },
+                painPoints: [
+                    "皮肤种类较少，玩家选择有限",
+                    "武器皮肤更新慢",
+                    "声骸系统与外观关联度低",
+                    "新游戏内容深度待验证",
+                    "部分玩家反馈优化问题"
+                ]
+            },
+            "永劫无间": {
+                category: "action", icon: "⚔️", rank: 1,
+                overview: "武侠吃鸡，皮肤系统成熟",
+                appearanceTypes: ["skin", "weapon_skin", "vfx", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通", game: "直购/活动", rmb: "¥30-50", tasks: ["基础换色", "简单调整"] },
+                            { name: "稀有", game: "金块购买", rmb: "¥60-150", tasks: ["新模型设计", "专属特效", "主题元素"] },
+                            { name: "传说", game: "限定活动", rmb: "¥150-500", tasks: ["顶级设计", "全套特效", "专属动画", "联动元素"] }
+                        ]
+                    },
+                    weapon_skin: {
+                        tiers: [
+                            { name: "普通武器", game: "直购", rmb: "¥20-50", tasks: ["武器换色", "简单纹理"] },
+                            { name: "传说武器", game: "限定活动", rmb: "¥100-300", tasks: ["完整建模", "专属特效", "专属音效"] }
+                        ]
+                    }
+                },
+                model: { primary: "皮肤直售+抽奖", pricing: "几十到几百元" },
+                commercial: {
+                    model: "皮肤直售 + 抽奖宝箱 + 通行证 + 联动限定",
+                    channels: ["商城直售", "奇珍宝箱", "赛季通行证", "IP联动"],
+                    cycle: "周常皮肤更新，赛季大型活动",
+                    strategy: "武侠题材差异化，联动IP扩大受众"
+                },
+                payment: {
+                    structure: "买断制转免费 + 内购",
+                    currencies: ["金块", "古币", "幻丝"],
+                    monetization: "皮肤+通行证为主，免费转型后用户量大增",
+                    tierCount: 3,
+                    priceRange: "¥30-500"
+                },
+                market: {
+                    scale: "月流水约2-3亿，Steam在线常驻TOP20",
+                    users: "全球累计超4000万",
+                    growth: "免费后用户激增，稳定运营",
+                    competitors: ["绝地求生", "Apex英雄", "CS2"]
+                },
+                painPoints: [
+                    "宝箱抽奖概率争议",
+                    "部分联动皮肤定价过高",
+                    "武器皮肤种类偏少",
+                    "赛季皮肤返场规则不明",
+                    "新玩家获取限定皮肤困难"
+                ]
+            },
+            "CS2": {
+                category: "fps", icon: "🔫", rank: 2,
+                overview: "武器皮肤经济系统最成熟",
+                appearanceTypes: ["weapon_skin", "decoration", "vfx"],
+                pricing: {
+                    weapon_skin: {
+                        tiers: [
+                            { name: "消费级", game: "市场购买", rmb: "¥5-10", tasks: ["基础换色", "简单纹理"] },
+                            { name: "工业级", game: "市场购买", rmb: "¥10-30", tasks: ["基础纹理设计"] },
+                            { name: "军规级", game: "市场购买", rmb: "¥30-80", tasks: ["主题纹理", "磨损度设计"] },
+                            { name: "受限", game: "开箱/市场", rmb: "¥80-200", tasks: ["完整主题设计", "多磨损度"] },
+                            { name: "保密", game: "开箱/市场", rmb: "¥200-500", tasks: ["高品质设计", "特殊纹理"] },
+                            { name: "隐秘", game: "开箱/市场", rmb: "¥500-2000", tasks: ["顶级设计", "稀有纹理", "收藏价值"] },
+                            { name: "特殊/刀", game: "开箱/市场", rmb: "¥2000-10000+", tasks: ["独特设计", "动画系统", "极高收藏价值"] }
+                        ]
+                    }
+                },
+                model: { primary: "武器箱开箱+市场交易", pricing: "市场化定价" },
+                commercial: {
+                    model: "开箱 + Steam市场交易 + 饰品经济",
+                    channels: ["开箱", "Steam市场", "第三方平台", "掉落"],
+                    cycle: "武器箱季度更新，饰品长期流通",
+                    strategy: "市场化定价，饰品投资属性，稀缺性驱动价值"
+                },
+                payment: {
+                    structure: "买断制 + 市场交易",
+                    currencies: ["Steam钱包", "钥匙(已取消)", "饰品"],
+                    monetization: "市场交易手续费为主，开箱已调整",
+                    tierCount: 7,
+                    priceRange: "¥5-10000+"
+                },
+                market: {
+                    scale: "饰品市场规模超$50亿，年交易活跃",
+                    users: "日活超100万",
+                    growth: "饰品经济成熟，价值稳定",
+                    competitors: ["DOTA2", "PUBG", "Rust"]
+                },
+                painPoints: [
+                    "开箱机制已被各国监管关注",
+                    "饰品市场价格波动大",
+                    "稀有饰品获取门槛极高",
+                    "第三方交易平台风险",
+                    "饰品与游戏平衡性无关，但社交压力明显"
+                ]
+            },
+            "明日方舟": {
+                category: "strategy", icon: "🎯", rank: 2,
+                overview: "塔防手游，皮肤系统克制",
+                appearanceTypes: ["skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "源石皮肤", game: "15-21源石", rmb: "¥90-126", tasks: ["新立绘", "动态效果", "技能特效", "基建形象"] },
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["新立绘", "基础特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "角色抽卡", pricing: "90-126元" },
+                commercial: {
+                    model: "角色抽卡为主 + 皮肤直售(克制)",
+                    channels: ["商城直售", "活动免费", "采购中心"],
+                    cycle: "皮肤月更或双周更，更新频率克制",
+                    strategy: "克制商业化，口碑优先，皮肤质量稳定"
+                },
+                payment: {
+                    structure: "免费 + 抽卡 + 内购",
+                    currencies: ["源石", "合成玉", "至纯源石"],
+                    monetization: "角色抽卡为主，皮肤收入占比低",
+                    tierCount: 2,
+                    priceRange: "免费-¥126"
+                },
+                market: {
+                    scale: "月流水约3-5亿，皮肤占比约10%",
+                    users: "MAU超800万",
+                    growth: "稳定运营，口碑良好",
+                    competitors: ["碧蓝航线", "少女前线", "FGO"]
+                },
+                painPoints: [
+                    "皮肤更新频率较低",
+                    "源石皮肤定价偏高",
+                    "部分干员长期无皮肤",
+                    "基建系统更新慢",
+                    "免费皮肤质量参差"
+                ]
+            },
+            "蛋仔派对": {
+                category: "casual", icon: "🎮", rank: 5,
+                overview: "休闲竞技，外观商业化成熟",
+                appearanceTypes: ["skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通外观", game: "蛋币购买", rmb: "¥20-50", tasks: ["角色换装", "基础动画"] },
+                            { name: "盲盒外观", game: "抽奖", rmb: "¥50-200", tasks: ["主题设计", "专属动画", "稀有度"] }
+                        ]
+                    }
+                },
+                model: { primary: "外观直售+盲盒", pricing: "几十元" },
+                commercial: {
+                    model: "外观直售 + 盲盒抽奖 + 通行证 + UGC生态",
+                    channels: ["商城直售", "盲盒抽奖", "赛季通行证", "UGC创作"],
+                    cycle: "外观高频更新，联动活动密集",
+                    strategy: "休闲+社交+UGC，外观驱动社交货币"
+                },
+                payment: {
+                    structure: "免费 + 内购",
+                    currencies: ["蛋币", "潮流纤维", "瓶盖"],
+                    monetization: "外观为主，付费率较高",
+                    tierCount: 2,
+                    priceRange: "¥20-200"
+                },
+                market: {
+                    scale: "月流水约5-8亿，快速增长",
+                    users: "MAU超3000万，年轻用户为主",
+                    growth: "高速增长期，UGC生态活跃",
+                    competitors: ["糖豆人", "元梦之星", "光·遇"]
+                },
+                painPoints: [
+                    "盲盒概率争议",
+                    "联动活动过于密集",
+                    "部分外观定价偏高",
+                    "UGC内容质量参差",
+                    "未成年用户付费管理"
+                ]
+            }, }
                         ]
                     },
                     skin: {
@@ -1987,6 +2357,7 @@
                 appearance: selectedAppearance
             };
             renderAnalysisTab();
+            renderCompareTab();
             renderRisksTab();
             showToast('分析完成！', 'success');
         }
@@ -2107,6 +2478,175 @@
             link.download = `${gameName}_${selectedAppearance}_定价表.csv`;
             link.click();
             showToast('CSV文件已下载！', 'success');
+        }
+
+        function renderCompareTab() {
+            const container = document.getElementById('compareContent');
+            if (!analysisData.competitors || analysisData.competitors.length === 0) {
+                container.innerHTML = '<div class="card"><div class="card-body"><p style="text-align: center; color: var(--text-muted);">请先选择竞品进行分析</p></div></div>';
+                return;
+            }
+
+            let html = '';
+
+            // ========== 商业化模式对比 ==========
+            html += `
+                <div class="card" style="margin-bottom: 16px;">
+                    <div class="card-header">
+                        <div class="card-title">💰 商业化模式对比</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="compare-grid">
+            `;
+            analysisData.competitors.forEach(comp => {
+                const cm = comp.commercial || {};
+                html += `
+                    <div class="compare-item">
+                        <div class="compare-title">${comp.icon} ${comp.name}</div>
+                        <div class="compare-row"><span class="compare-label">核心模式:</span><span>${cm.model || '暂无数据'}</span></div>
+                        <div class="compare-row"><span class="compare-label">销售渠道:</span><span>${(cm.channels || []).join(' / ') || '暂无数据'}</span></div>
+                        <div class="compare-row"><span class="compare-label">更新周期:</span><span>${cm.cycle || '暂无数据'}</span></div>
+                        <div class="compare-row"><span class="compare-label">策略特点:</span><span>${cm.strategy || '暂无数据'}</span></div>
+                    </div>
+                `;
+            });
+            html += `</div></div></div>`;
+
+            // ========== 付费结构对比 ==========
+            html += `
+                <div class="card" style="margin-bottom: 16px;">
+                    <div class="card-header">
+                        <div class="card-title">💳 付费结构对比</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="compare-grid">
+            `;
+            analysisData.competitors.forEach(comp => {
+                const pm = comp.payment || {};
+                html += `
+                    <div class="compare-item">
+                        <div class="compare-title">${comp.icon} ${comp.name}</div>
+                        <div class="compare-row"><span class="compare-label">付费结构:</span><span>${pm.structure || '暂无数据'}</span></div>
+                        <div class="compare-row"><span class="compare-label">货币体系:</span><span>${(pm.currencies || []).join('、') || '暂无数据'}</span></div>
+                        <div class="compare-row"><span class="compare-label">收入构成:</span><span>${pm.monetization || '暂无数据'}</span></div>
+                        <div class="compare-row"><span class="compare-label">品质层级:</span><span class="tier-badge">${pm.tierCount || '-'}层</span></div>
+                        <div class="compare-row"><span class="compare-label">价格区间:</span><span style="color: var(--success); font-weight: 600;">${pm.priceRange || '暂无数据'}</span></div>
+                    </div>
+                `;
+            });
+            html += `</div></div></div>`;
+
+            // ========== 付费分层对比 ==========
+            html += `
+                <div class="card" style="margin-bottom: 16px;">
+                    <div class="card-header">
+                        <div class="card-title">📊 付费分层对比</div>
+                    </div>
+                    <div class="card-body">
+                        <div style="overflow-x: auto;">
+                            <table class="compare-table">
+                                <thead>
+                                    <tr>
+                                        <th>竞品</th>
+                                        <th>低端定价</th>
+                                        <th>中端定价</th>
+                                        <th>高端定价</th>
+                                        <th>付费层级数</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+            `;
+            analysisData.competitors.forEach(comp => {
+                const pm = comp.payment || {};
+                const pricing = comp.pricing?.[analysisData.appearance];
+                const tiers = pricing?.tiers || [];
+                const lowPrice = tiers.length > 0 ? tiers[0].rmb : '-';
+                const midPrice = tiers.length > 1 ? tiers[Math.floor(tiers.length/2)].rmb : '-';
+                const highPrice = tiers.length > 0 ? tiers[tiers.length-1].rmb : '-';
+                html += `
+                    <tr>
+                        <td><strong>${comp.icon} ${comp.name}</strong></td>
+                        <td>${lowPrice}</td>
+                        <td>${midPrice}</td>
+                        <td style="color: var(--success); font-weight: 600;">${highPrice}</td>
+                        <td><span class="tier-badge">${pm.tierCount || tiers.length || '-'}</span></td>
+                    </tr>
+                `;
+            });
+            html += `</tbody></table></div></div></div>`;
+
+            // ========== 市场规模对比 ==========
+            html += `
+                <div class="card" style="margin-bottom: 16px;">
+                    <div class="card-header">
+                        <div class="card-title">📈 市场规模对比</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="compare-grid">
+            `;
+            analysisData.competitors.forEach(comp => {
+                const mm = comp.market || {};
+                html += `
+                    <div class="compare-item">
+                        <div class="compare-title">${comp.icon} ${comp.name}</div>
+                        <div class="compare-row"><span class="compare-label">市场规模:</span><span style="color: var(--primary); font-weight: 600;">${mm.scale || '暂无数据'}</span></div>
+                        <div class="compare-row"><span class="compare-label">用户规模:</span><span>${mm.users || '暂无数据'}</span></div>
+                        <div class="compare-row"><span class="compare-label">增长趋势:</span><span>${mm.growth || '暂无数据'}</span></div>
+                        <div class="compare-row"><span class="compare-label">主要竞品:</span><span>${(mm.competitors || []).join('、') || '暂无数据'}</span></div>
+                    </div>
+                `;
+            });
+            html += `</div></div></div>`;
+
+            // ========== 市场痛点对比 ==========
+            html += `
+                <div class="card" style="margin-bottom: 16px;">
+                    <div class="card-header">
+                        <div class="card-title">⚠️ 市场痛点对比</div>
+                    </div>
+                    <div class="card-body">
+                        <div class="compare-grid">
+            `;
+            analysisData.competitors.forEach(comp => {
+                const pains = comp.painPoints || [];
+                html += `
+                    <div class="compare-item">
+                        <div class="compare-title">${comp.icon} ${comp.name}</div>
+                        <div class="pain-points">
+                `;
+                if (pains.length > 0) {
+                    pains.forEach(p => {
+                        html += `<div class="pain-item">• ${p}</div>`;
+                    });
+                } else {
+                    html += `<div style="color: var(--text-muted);">暂无数据</div>`;
+                }
+                html += `</div></div>`;
+            });
+            html += `</div></div></div>`;
+
+            // ========== 综合建议 ==========
+            html += `
+                <div class="card" style="margin-bottom: 16px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(139, 92, 246, 0.05) 100%); border: 1px solid rgba(99, 102, 241, 0.2);">
+                    <div class="card-header">
+                        <div class="card-title">💡 综合建议</div>
+                    </div>
+                    <div class="card-body">
+                        <div style="font-size: 0.85rem; line-height: 1.8;">
+            `;
+            
+            // 根据选择的竞品生成建议
+            const avgTiers = Math.round(analysisData.competitors.reduce((sum, c) => sum + (c.payment?.tierCount || 3), 0) / analysisData.competitors.length);
+            const hasFree = analysisData.competitors.some(c => c.payment?.priceRange?.includes('免费'));
+            const topPain = analysisData.competitors.flatMap(c => c.painPoints || []).slice(0, 3);
+            
+            html += `<p><strong>1. 定价策略建议：</strong>参考竞品平均${avgTiers}层的付费分层设计，建议采用<strong>${avgTiers > 4 ? '精细分层' : avgTiers > 2 ? '适中分层' : '简化分层'}</strong>策略。</p>`;
+            html += `<p><strong>2. 商业化路径：</strong>${hasFree ? '建议保留免费/活动获取渠道，降低玩家门槛，提升用户基数。' : '可考虑增加免费/活动获取渠道，吸引更多用户。'}</p>`;
+            html += `<p><strong>3. 差异化机会：</strong>针对竞品常见痛点（如"${topPain[0] || '定价透明度'}"），可作为差异化突破口。</p>`;
+            
+            html += `</div></div></div>`;
+
+            container.innerHTML = html;
         }
 
         function renderRisksTab() {
