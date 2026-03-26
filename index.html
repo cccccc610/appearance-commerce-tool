@@ -927,7 +927,17 @@
                     "UGC内容质量参差",
                     "未成年用户付费管理"
                 ]
-            }, }
+            },
+            "金铲铲之战": {
+                category: "strategy", icon: "♟️", rank: 3,
+                overview: "自走棋手游，棋盘与小小英雄商业化",
+                appearanceTypes: ["board", "decoration", "skin"],
+                pricing: {
+                    board: {
+                        tiers: [
+                            { name: "普通棋盘", game: "4500点券", rmb: "¥450", tasks: ["棋盘贴图设计", "基础环境光效", "2-3种地形变化"] },
+                            { name: "史诗棋盘", game: "7900点券", rmb: "¥790", tasks: ["全3D棋盘建模", "动态环境效果", "专属音效", "交互反馈"] },
+                            { name: "传说棋盘", game: "11500点券", rmb: "¥1150", tasks: ["高质量场景设计", "完整动画系统", "专属BGM", "粒子特效", "主题角色"] }
                         ]
                     },
                     skin: {
@@ -936,7 +946,33 @@
                         ]
                     }
                 },
-                model: { primary: "棋盘+小小英雄直售", pricing: "45-115元" }
+                model: { primary: "棋盘+小小英雄直售", pricing: "45-115元" },
+                commercial: {
+                    model: "棋盘/小小英雄直售 + 通行证 + 限时活动",
+                    channels: ["商城直售", "赛季通行证", "限时活动"],
+                    cycle: "赛季更新，棋盘和小小英雄按赛季投放",
+                    strategy: "稀缺性营销+收藏价值，赛季限定刺激消费"
+                },
+                payment: {
+                    structure: "免费 + 内购",
+                    currencies: ["点券", "星之碎片", "银河币"],
+                    monetization: "棋盘+小小英雄为主，ARPU较高",
+                    tierCount: 3,
+                    priceRange: "¥230-1150"
+                },
+                market: {
+                    scale: "月流水约8-10亿",
+                    users: "DAU超1500万",
+                    growth: "稳定运营，用户粘性强",
+                    competitors: ["云顶之弈", "炉石传说酒馆战棋"]
+                },
+                painPoints: [
+                    "棋盘定价偏高(¥450起)",
+                    "小小英雄升级系统复杂",
+                    "赛季限定内容返场规则不明",
+                    "免费棋盘选择少",
+                    "部分玩家认为性价比低"
+                ]
             },
             "原神": {
                 category: "simulation", icon: "🏠", rank: 1,
