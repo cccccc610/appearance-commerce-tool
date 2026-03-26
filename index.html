@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v3.5</title>
+    <title>游戏外观商业化分析平台 v3.6</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -65,6 +65,9 @@
         .appearance-tag { background: var(--bg-card); border: 1px solid var(--border); padding: 5px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
         .appearance-tag:hover { border-color: var(--primary-light); }
         .appearance-tag.selected { background: var(--primary); border-color: var(--primary); color: white; }
+        .appearance-tag.small { padding: 3px 8px; font-size: 0.7rem; }
+        .appearance-sub-tags { display: none; }
+        .appearance-sub-tags.show { display: block; }
 
         /* Selected Count */
         .selected-count { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: var(--gradient-1); border-radius: 8px; margin-bottom: 8px; }
@@ -261,6 +264,59 @@
         .compare-table th { background: var(--bg-card); font-weight: 600; color: var(--text-secondary); }
         .compare-table tr:hover { background: var(--bg-card); }
 
+        /* Growth Suggestions */
+        .growth-suggestions { display: flex; flex-direction: column; gap: 10px; }
+        .growth-item { display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: var(--bg-card); border-radius: 8px; border: 1px solid var(--border); transition: all 0.2s; }
+        .growth-item:hover { border-color: var(--success); transform: translateX(4px); }
+        .growth-index { width: 28px; height: 28px; background: linear-gradient(135deg, var(--success), var(--accent)); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; flex-shrink: 0; }
+        .growth-content { flex: 1; }
+        .growth-title { font-size: 0.85rem; font-weight: 600; color: var(--text-primary); margin-bottom: 4px; }
+        .growth-desc { font-size: 0.7rem; color: var(--text-muted); }
+
+        /* Skin Detail Styles */
+        .skin-detail-empty { text-align: center; padding: 40px 16px; background: var(--bg-card); border-radius: 10px; }
+        .skin-chip { display: inline-block; padding: 4px 12px; background: var(--bg); border: 1px solid var(--border); border-radius: 16px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+        .skin-chip:hover { border-color: var(--primary); color: var(--primary); }
+        .skin-detail-container { background: var(--bg-card); border-radius: 12px; overflow: hidden; }
+        .skin-info-header { padding: 20px; background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%); border-bottom: 1px solid var(--border); }
+        .skin-title-row { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+        .skin-name { font-size: 1.4rem; font-weight: 700; color: var(--text-primary); }
+        .skin-rarity { padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .skin-rarity.传说 { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+        .skin-rarity.史诗 { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+        .skin-rarity.荣耀典藏 { background: linear-gradient(135deg, #ec4899, #db2777); color: white; }
+        .skin-rarity.终极 { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+        .skin-description { font-size: 0.85rem; color: var(--text-secondary); margin-top: 8px; }
+        .skin-info-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px; }
+        .skin-info-card { background: var(--bg); border-radius: 8px; padding: 12px; text-align: center; }
+        .info-label { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px; }
+        .info-value { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); }
+        .info-value.price { color: var(--success); font-size: 1rem; }
+        .info-sub { font-size: 0.75rem; color: var(--text-secondary); margin-top: 2px; }
+        .skin-artwork-section, .skin-video-section, .skin-tasks-section { padding: 16px; border-top: 1px solid var(--border); }
+        .section-title { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+        .artwork-container { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .artwork-item { border-radius: 8px; overflow: hidden; background: var(--bg); }
+        .artwork-item.splash { grid-column: 1 / -1; }
+        .artwork-item img { width: 100%; display: block; }
+        .artwork-label { padding: 8px; font-size: 0.75rem; color: var(--text-muted); text-align: center; background: rgba(0,0,0,0.3); }
+        .artwork-placeholder { padding: 60px 20px; text-align: center; color: var(--text-muted); background: var(--bg); border-radius: 8px; display: flex; flex-direction: column; gap: 8px; }
+        .video-container { background: var(--bg); border-radius: 8px; padding: 30px; text-align: center; }
+        .video-link { display: inline-flex; flex-direction: column; align-items: center; gap: 8px; color: var(--primary); text-decoration: none; font-weight: 600; }
+        .video-link:hover { color: var(--primary-light); }
+        .video-placeholder { padding: 30px; text-align: center; background: var(--bg); border-radius: 8px; color: var(--text-muted); display: flex; flex-direction: column; gap: 8px; }
+        .search-link { color: var(--primary); font-size: 0.8rem; margin-top: 8px; }
+        .task-checklist { display: flex; flex-direction: column; gap: 8px; }
+        .task-check-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: var(--bg); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .task-check-item:hover { background: var(--bg-secondary); }
+        .task-check-item.checked { background: rgba(16, 185, 129, 0.1); }
+        .task-check-item.checked .task-checkbox { color: var(--success); }
+        .task-check-item.checked .task-checkbox::after { content: '☑'; position: absolute; }
+        .task-checkbox { width: 20px; font-size: 1rem; color: var(--text-muted); }
+        .task-text { flex: 1; font-size: 0.85rem; color: var(--text-primary); }
+        .task-status { font-size: 0.7rem; color: var(--text-muted); padding: 2px 8px; background: var(--bg-card); border-radius: 10px; }
+        .task-check-item.checked .task-status { background: var(--success); color: white; }
+
         /* Empty State */
         .empty-state { text-align: center; padding: 40px 16px; }
         .empty-state .icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.5; }
@@ -315,14 +371,36 @@
                 </div>
 
                 <div class="sidebar-section">
-                    <div class="section-label">选择外观类型</div>
-                    <div class="appearance-tags">
+                    <div class="section-label">选择外观类型 <span style="font-size:0.7rem;color:var(--text-muted);">（根据品类动态展示）</span></div>
+                    <div class="appearance-tags" id="appearanceTagsContainer">
                         <div class="appearance-tag selected" data-appearance="skin"><span>👤</span>皮肤</div>
-                        <div class="appearance-tag" data-appearance="weapon_skin"><span>🔫</span>武器</div>
+                        <div class="appearance-tag" data-appearance="weapon_skin"><span>🔫</span>武器皮肤</div>
                         <div class="appearance-tag" data-appearance="vfx"><span>💫</span>特效</div>
                         <div class="appearance-tag" data-appearance="decoration"><span>✨</span>装饰</div>
-                        <div class="appearance-tag" data-appearance="mount"><span>🐴</span>坐骑</div>
+                        <div class="appearance-tag" data-appearance="mount"><span>🐴</span>坐骑/载具</div>
                         <div class="appearance-tag" data-appearance="board"><span>♟️</span>棋盘</div>
+                        <div class="appearance-tag" data-appearance="costume"><span>👗</span>人物服饰</div>
+                        <div class="appearance-tag" data-appearance="personalized"><span>🏷️</span>个性化装饰</div>
+                    </div>
+                    <!-- 服饰子品类 -->
+                    <div class="appearance-sub-tags" id="costumeSubTags" style="display:none; margin-top:8px; padding-left:10px; border-left:2px solid var(--primary);">
+                        <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;">服饰细分类目</div>
+                        <div class="appearance-tag small" data-appearance="costume_clothes"><span>👕</span>衣服</div>
+                        <div class="appearance-tag small" data-appearance="costume_accessory"><span>🎒</span>配饰/背包</div>
+                        <div class="appearance-tag small" data-appearance="costume_head"><span>👑</span>头饰</div>
+                        <div class="appearance-tag small" data-appearance="costume_hair"><span>💇</span>美发</div>
+                        <div class="appearance-tag small" data-appearance="costume_eyes"><span>👁️</span>美瞳</div>
+                        <div class="appearance-tag small" data-appearance="costume_scene"><span>🖼️</span>场景背景</div>
+                    </div>
+                    <!-- 个性化装饰子品类 -->
+                    <div class="appearance-sub-tags" id="personalizedSubTags" style="display:none; margin-top:8px; padding-left:10px; border-left:2px solid var(--primary);">
+                        <div style="font-size:0.7rem;color:var(--text-muted);margin-bottom:4px;">个性化装饰细分类目</div>
+                        <div class="appearance-tag small" data-appearance="personalized_avatar"><span>👤</span>头像</div>
+                        <div class="appearance-tag small" data-appearance="personalized_frame"><span>🖼️</span>头像框</div>
+                        <div class="appearance-tag small" data-appearance="personalized_card"><span>📋</span>个性名片</div>
+                        <div class="appearance-tag small" data-appearance="personalized_emote"><span>😀</span>表情包</div>
+                        <div class="appearance-tag small" data-appearance="personalized_title"><span>🏅</span>称号/铭牌</div>
+                        <div class="appearance-tag small" data-appearance="personalized_kill"><span>💀</span>击杀特效</div>
                     </div>
                 </div>
 
@@ -451,6 +529,26 @@
                                 <button class="btn btn-primary" id="breakdownBtn">拆解</button>
                             </div>
                             <div id="breakdownResult"></div>
+                        </div>
+                    </div>
+
+                    <!-- 皮肤详情展示 -->
+                    <div class="card" style="margin-top: 12px;">
+                        <div class="card-header">
+                            <div class="card-title">🖼️ 皮肤详情展示</div>
+                            <span style="font-size: 0.7rem; color: var(--text-muted);">参考 lolskin.info 格式</span>
+                        </div>
+                        <div class="card-body">
+                            <div style="display: flex; gap: 10px; margin-bottom: 16px;">
+                                <select id="skinGameSelect" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem;">
+                                    <option value="">选择游戏</option>
+                                    <option value="王者荣耀">王者荣耀</option>
+                                    <option value="英雄联盟">英雄联盟</option>
+                                </select>
+                                <input type="text" style="flex:1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem;" placeholder="输入皮肤名称搜索...（如：灵魂莲华 阿狸）" id="skinSearchInput">
+                                <button class="btn btn-primary" id="skinSearchBtn">搜索</button>
+                            </div>
+                            <div id="skinDetailResult"></div>
                         </div>
                     </div>
                 </div>
@@ -1207,6 +1305,130 @@
             ]
         };
 
+        // ==================== 品类与外观类型映射 ====================
+        const CATEGORY_APPEARANCE_MAP = {
+            moba: ['skin', 'weapon_skin', 'vfx', 'decoration', 'mount', 'personalized'],
+            fps: ['weapon_skin', 'skin', 'vfx', 'decoration', 'mount', 'personalized'],
+            simulation: ['skin', 'costume', 'decoration', 'mount', 'vfx', 'personalized'],
+            rpg: ['skin', 'costume', 'weapon_skin', 'mount', 'vfx', 'decoration', 'personalized'],
+            action: ['skin', 'weapon_skin', 'vfx', 'decoration', 'mount', 'costume'],
+            strategy: ['board', 'decoration', 'skin', 'personalized'],
+            casual: ['skin', 'costume', 'decoration', 'personalized', 'vfx'],
+            card: ['board', 'decoration', 'vfx', 'skin', 'personalized'],
+            all: ['skin', 'weapon_skin', 'vfx', 'decoration', 'mount', 'board', 'costume', 'personalized']
+        };
+
+        const APPEARANCE_LABELS = {
+            skin: { icon: '👤', name: '皮肤' },
+            weapon_skin: { icon: '🔫', name: '武器皮肤' },
+            vfx: { icon: '💫', name: '特效' },
+            decoration: { icon: '✨', name: '装饰' },
+            mount: { icon: '🐴', name: '坐骑/载具' },
+            board: { icon: '♟️', name: '棋盘' },
+            costume: { icon: '👗', name: '人物服饰' },
+            personalized: { icon: '🏷️', name: '个性化装饰' }
+        };
+
+        // ==================== 外观增值建议 ====================
+        const APPEARANCE_GROWTH_SUGGESTIONS = {
+            skin: [
+                "进阶特效包：解锁更炫酷的技能特效变体",
+                "动态语音包：角色专属互动语音",
+                "主题徽章/边框：配套身份标识",
+                "炫彩版本：多配色方案扩展",
+                "关联场景皮肤：打造主题系列"
+            ],
+            weapon_skin: [
+                "击杀特效/音效包：专属击杀反馈",
+                "检视动画扩展：丰富的武器展示动作",
+                "升级系统：可成长的外观变化",
+                "专属贴花/挂饰：个性化定制",
+                "配套角色皮肤：套装联动销售"
+            ],
+            costume: [
+                "染色系统：自由配色组合",
+                "动态服饰：飘带/裙摆物理效果",
+                "季节限定款：应季主题设计",
+                "关联场景背景：搭配销售",
+                "表情动作包：角色专属动作"
+            ],
+            mount: [
+                "特效升级包：尾迹/光环特效",
+                "双形态/多形态载具：变形动画",
+                "专属音效/语音：载具互动",
+                "主题配件：挂饰/贴花装饰",
+                "载具皮肤：多款式切换"
+            ],
+            vfx: [
+                "节日限定特效：应季主题",
+                "击杀/成就特效：高光时刻专属",
+                "环境互动特效：场景响应",
+                "音效联动包：视听同步",
+                "自定义配色：个性化颜色选择"
+            ],
+            decoration: [
+                "动态装饰：流动光效/粒子",
+                "互动功能：点击/触发动画",
+                "主题套装：系列组合优惠",
+                "稀有度升级：品质进阶系统",
+                "限时/限定款：稀缺性营销"
+            ],
+            board: [
+                "动态棋盘格：交互动画反馈",
+                "专属BGM/音效：沉浸式体验",
+                "主题角色/模型：场景NPC",
+                "季节变换：四季主题切换",
+                "玩家互动特效：落子/移动反馈"
+            ],
+            personalized: [
+                "动态头像：GIF/视频头像",
+                "成就展示墙：荣誉陈列系统",
+                "社交互动特效：送礼/点赞特效",
+                "个性化签名档：文字/图片展示",
+                "等级/身份特权：进阶身份标识"
+            ]
+        };
+
+        // ==================== 皮肤详情数据示例 ====================
+        const SKIN_DETAIL_DATA = {
+            "王者荣耀": {
+                "银白之翼 亚瑟": {
+                    hero: "亚瑟", price: "888点券", rmb: "¥89",
+                    releaseDate: "2023-06-15", rarity: "史诗", 
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "https://pvp.qq.com/web201605/js/herodata/yase/5.jpg",
+                    modelUrl: "",
+                    description: "银白骑士主题，全新模型+特效重制"
+                },
+                "无限飓风号 夏侯惇": {
+                    hero: "夏侯惇", price: "1688点券", rmb: "¥169",
+                    releaseDate: "2022-09-01", rarity: "传说",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "https://pvp.qq.com/web201605/js/herodata/xiahoudun/3.jpg",
+                    modelUrl: "",
+                    description: "机甲主题，双形态设计"
+                }
+            },
+            "英雄联盟": {
+                "灵魂莲华 阿狸": {
+                    hero: "阿狸", price: "1350 RP", rmb: "¥68",
+                    releaseDate: "2020-07-23", rarity: "史诗",
+                    obtain: "商城直售", videoUrl: "https://www.youtube.com/watch?v=example",
+                    splashUrl: "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_13.jpg",
+                    modelUrl: "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/Ahri_13.jpg",
+                    description: "日式灵幻主题，新模型+全套特效"
+                },
+                "K/DA 阿狸": {
+                    hero: "阿狸", price: "1350 RP", rmb: "¥68",
+                    releaseDate: "2018-11-03", rarity: "史诗",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_8.jpg",
+                    modelUrl: "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/Ahri_8.jpg",
+                    description: "K/DA女团主题，流行音乐风格"
+                }
+            }
+        };
+
         // ==================== 状态管理 ====================
         let selectedCategory = 'all';
         let selectedAppearance = 'skin';
@@ -1242,6 +1464,7 @@
                     selectedCategory = tab.dataset.category;
                     renderTopGames();
                     filterCompetitors();
+                    updateAppearanceTags();
                 });
             });
         }
@@ -1279,14 +1502,56 @@
         }
 
         // ==================== 外观选择 ====================
+        function updateAppearanceTags() {
+            const container = document.getElementById('appearanceTagsContainer');
+            const allowedTypes = CATEGORY_APPEARANCE_MAP[selectedCategory] || CATEGORY_APPEARANCE_MAP.all;
+            
+            container.querySelectorAll('.appearance-tag').forEach(tag => {
+                const type = tag.dataset.appearance;
+                if (allowedTypes.includes(type)) {
+                    tag.style.display = 'flex';
+                } else {
+                    tag.style.display = 'none';
+                }
+            });
+            
+            // 如果当前选中的外观不在允许列表中，重置为第一个可用的
+            if (!allowedTypes.includes(selectedAppearance)) {
+                selectedAppearance = allowedTypes[0];
+                container.querySelectorAll('.appearance-tag').forEach(t => t.classList.remove('selected'));
+                container.querySelector(`.appearance-tag[data-appearance="${selectedAppearance}"]`)?.classList.add('selected');
+            }
+            
+            // 更新子品类显示
+            document.getElementById('costumeSubTags').classList.toggle('show', selectedAppearance === 'costume');
+            document.getElementById('personalizedSubTags').classList.toggle('show', selectedAppearance === 'personalized');
+        }
+
         function initAppearanceTags() {
-            document.querySelectorAll('.appearance-tag').forEach(tag => {
+            // 主品类标签
+            document.querySelectorAll('#appearanceTagsContainer .appearance-tag').forEach(tag => {
                 tag.addEventListener('click', () => {
-                    document.querySelectorAll('.appearance-tag').forEach(t => t.classList.remove('selected'));
+                    document.querySelectorAll('#appearanceTagsContainer .appearance-tag').forEach(t => t.classList.remove('selected'));
+                    tag.classList.add('selected');
+                    selectedAppearance = tag.dataset.appearance;
+                    
+                    // 显示/隐藏子品类
+                    document.getElementById('costumeSubTags').classList.toggle('show', selectedAppearance === 'costume');
+                    document.getElementById('personalizedSubTags').classList.toggle('show', selectedAppearance === 'personalized');
+                });
+            });
+            
+            // 子品类标签
+            document.querySelectorAll('.appearance-sub-tags .appearance-tag').forEach(tag => {
+                tag.addEventListener('click', () => {
+                    document.querySelectorAll('.appearance-sub-tags .appearance-tag').forEach(t => t.classList.remove('selected'));
                     tag.classList.add('selected');
                     selectedAppearance = tag.dataset.appearance;
                 });
             });
+            
+            // 初始化显示
+            updateAppearanceTags();
         }
 
         // ==================== 竞品列表 ====================
@@ -1728,6 +1993,41 @@
             
             html += `</div></div></div>`;
 
+            // ========== 增值商品建议 ==========
+            const appearanceKey = analysisData.appearance.split('_')[0]; // 获取主品类
+            const growthSuggestions = APPEARANCE_GROWTH_SUGGESTIONS[appearanceKey] || APPEARANCE_GROWTH_SUGGESTIONS.skin;
+            
+            html += `
+                <div class="card" style="margin-bottom: 16px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%); border: 1px solid rgba(16, 185, 129, 0.2);">
+                    <div class="card-header">
+                        <div class="card-title">🚀 未来外观增值商品建议</div>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">基于${APPEARANCE_LABELS[appearanceKey]?.name || '皮肤'}品类</span>
+                    </div>
+                    <div class="card-body">
+                        <div class="growth-suggestions">
+            `;
+            
+            growthSuggestions.forEach((suggestion, index) => {
+                html += `
+                    <div class="growth-item">
+                        <div class="growth-index">${index + 1}</div>
+                        <div class="growth-content">
+                            <div class="growth-title">${suggestion}</div>
+                            <div class="growth-desc">拓展ARPU值，提升用户付费深度</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                        </div>
+                        <div style="margin-top: 16px; padding: 12px; background: rgba(16, 185, 129, 0.1); border-radius: 8px; font-size: 0.8rem;">
+                            <strong>💡 实施建议：</strong>优先开发"炫彩/染色系统"和"专属特效包"，这两类增值商品开发成本相对较低，但能显著提升用户付费意愿和ARPU值。建议配合主皮肤上线，形成"皮肤+增值包"的捆绑销售策略。
+                        </div>
+                    </div>
+                </div>
+            `;
+
             container.innerHTML = html;
         }
 
@@ -1785,6 +2085,15 @@
                 const input = document.getElementById('breakdownInput').value.trim();
                 if (!input) { showToast('请输入外观名称', 'warning'); return; }
                 renderBreakdown(input);
+            });
+
+            // 皮肤详情搜索功能
+            document.getElementById('skinSearchBtn').addEventListener('click', () => {
+                const game = document.getElementById('skinGameSelect').value;
+                const skinName = document.getElementById('skinSearchInput').value.trim();
+                if (!game) { showToast('请选择游戏', 'warning'); return; }
+                if (!skinName) { showToast('请输入皮肤名称', 'warning'); return; }
+                renderSkinDetail(game, skinName);
             });
         }
 
@@ -1913,6 +2222,171 @@
             link.download = `${skinName}_美术拆解表.csv`;
             link.click();
             showToast('CSV文件已下载！', 'success');
+        }
+
+        // ==================== 皮肤详情展示 ====================
+        function renderSkinDetail(game, skinName) {
+            const container = document.getElementById('skinDetailResult');
+            const gameData = SKIN_DETAIL_DATA[game];
+            
+            if (!gameData) {
+                container.innerHTML = `
+                    <div class="skin-detail-empty">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">🔍</div>
+                        <div style="color: var(--text-muted);">暂无"${game}"的皮肤数据</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">当前支持：王者荣耀、英雄联盟</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // 模糊匹配皮肤名称
+            const skinKeys = Object.keys(gameData);
+            const matchedKey = skinKeys.find(key => 
+                key.toLowerCase().includes(skinName.toLowerCase()) ||
+                skinName.toLowerCase().includes(key.toLowerCase())
+            );
+
+            if (!matchedKey) {
+                // 显示该游戏所有可用皮肤
+                container.innerHTML = `
+                    <div class="skin-detail-empty">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">🔍</div>
+                        <div style="color: var(--text-muted);">未找到"${skinName}"</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 12px;">
+                            <strong>可用的皮肤：</strong>
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                            ${skinKeys.map(key => `
+                                <span class="skin-chip" onclick="document.getElementById('skinSearchInput').value='${key}'; renderSkinDetail('${game}', '${key}');">${key}</span>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            const skin = gameData[matchedKey];
+            
+            let html = `
+                <div class="skin-detail-container">
+                    <!-- 基本信息 -->
+                    <div class="skin-info-header">
+                        <div class="skin-title-row">
+                            <h3 class="skin-name">${matchedKey}</h3>
+                            <span class="skin-rarity ${skin.rarity}">${skin.rarity}</span>
+                        </div>
+                        <p class="skin-description">${skin.description || ''}</p>
+                    </div>
+
+                    <!-- 信息卡片 -->
+                    <div class="skin-info-grid">
+                        <div class="skin-info-card">
+                            <div class="info-label">💰 价格</div>
+                            <div class="info-value price">${skin.price}</div>
+                            <div class="info-sub">${skin.rmb}</div>
+                        </div>
+                        <div class="skin-info-card">
+                            <div class="info-label">👤 英雄</div>
+                            <div class="info-value">${skin.hero}</div>
+                        </div>
+                        <div class="skin-info-card">
+                            <div class="info-label">📅 发布日期</div>
+                            <div class="info-value">${skin.releaseDate}</div>
+                        </div>
+                        <div class="skin-info-card">
+                            <div class="info-label">⭐ 稀有度</div>
+                            <div class="info-value">${skin.rarity}</div>
+                        </div>
+                        <div class="skin-info-card">
+                            <div class="info-label">🛒 获取渠道</div>
+                            <div class="info-value">${skin.obtain}</div>
+                        </div>
+                        <div class="skin-info-card">
+                            <div class="info-label">🎮 游戏</div>
+                            <div class="info-value">${game}</div>
+                        </div>
+                    </div>
+
+                    <!-- 原画展示 -->
+                    <div class="skin-artwork-section">
+                        <h4 class="section-title">🎨 原画展示</h4>
+                        <div class="artwork-container">
+                            ${skin.splashUrl ? `
+                                <div class="artwork-item splash">
+                                    <img src="${skin.splashUrl}" alt="${matchedKey} 原画" onerror="this.parentElement.innerHTML='<div class=\\'artwork-placeholder\\'>原画加载失败</div>'">
+                                    <div class="artwork-label">Splash Art 原画</div>
+                                </div>
+                            ` : `
+                                <div class="artwork-placeholder">
+                                    <span>🖼️</span>
+                                    <span>暂无原画</span>
+                                </div>
+                            `}
+                            ${skin.modelUrl ? `
+                                <div class="artwork-item model">
+                                    <img src="${skin.modelUrl}" alt="${matchedKey} 模型" onerror="this.parentElement.innerHTML='<div class=\\'artwork-placeholder\\'>模型图加载失败</div>'">
+                                    <div class="artwork-label">Loading Art 加载图</div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+
+                    <!-- 视频展示 -->
+                    <div class="skin-video-section">
+                        <h4 class="section-title">🎬 视频展示</h4>
+                        ${skin.videoUrl ? `
+                            <div class="video-container">
+                                <a href="${skin.videoUrl}" target="_blank" class="video-link">
+                                    <span style="font-size: 2rem;">▶️</span>
+                                    <span>观看皮肤展示视频</span>
+                                </a>
+                            </div>
+                        ` : `
+                            <div class="video-placeholder">
+                                <span>🎬</span>
+                                <span>暂无视频</span>
+                                <a href="https://www.bilibili.com/search?keyword=${encodeURIComponent(game + ' ' + matchedKey + ' 皮肤展示')}" target="_blank" class="search-link">
+                                    去B站搜索 →
+                                </a>
+                            </div>
+                        `}
+                    </div>
+
+                    <!-- 美术任务清单 -->
+                    <div class="skin-tasks-section">
+                        <h4 class="section-title">📋 美术制作任务清单</h4>
+                        <div class="task-checklist">
+                            ${generateSkinTasks(skin.rarity, matchedKey)}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // 根据稀有度生成美术任务清单
+        function generateSkinTasks(rarity, skinName) {
+            const tasksByRarity = {
+                '伴生': ['基础模型换色', '简单特效调整'],
+                '勇者': ['基础模型换色', '简单特效调整', '回城特效'],
+                '史诗': ['全新模型设计', '技能特效重制', '专属语音包', '回城特效', '待机动作'],
+                '传说': ['高质量模型设计', '全套特效重制', '专属语音+音效', '回城+出生特效', '待机动作', '头像框/徽章'],
+                '荣耀典藏': ['顶级品质模型', '双形态设计', '全特效定制', '专属动画', '专属标识', '配套加载边框'],
+                '终极': ['多形态设计', '全套定制内容', '专属交互', '独特音效语音', '专属动作', '专属击杀特效'],
+                '默认': ['基础模型设计', '特效设计', '动画调整']
+            };
+
+            const tasks = tasksByRarity[rarity] || tasksByRarity['默认'];
+            
+            return tasks.map((task, index) => `
+                <div class="task-check-item" onclick="this.classList.toggle('checked')">
+                    <div class="task-checkbox">☐</div>
+                    <div class="task-text">${task}</div>
+                    <div class="task-status">待完成</div>
+                </div>
+            `).join('');
         }
 
         // ==================== 运营日历 ====================
