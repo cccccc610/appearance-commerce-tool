@@ -1,0 +1,517 @@
+{
+  "hero_selection": {
+    "name": "英雄/角色选择决策树",
+    "description": "帮助确定皮肤的目标英雄/角色",
+    "applicable": ["moba", "fps"],
+    "nodes": {
+      "start": {
+        "question": "目标英雄/角色的当前版本强度如何？",
+        "type": "choice",
+        "options": {
+          "T1（强势）": "high_tier",
+          "T2（主流）": "mid_tier",
+          "T3（冷门）": "low_tier"
+        }
+      },
+      "high_tier": {
+        "question": "该英雄/角色近30日出场率如何？",
+        "type": "choice",
+        "options": {
+          "≥15%（高人气）": "high_popularity",
+          "10-15%（中等）": "check_skin_count",
+          "<10%（需评估）": "low_popularity_high_tier"
+        }
+      },
+      "mid_tier": {
+        "question": "该英雄/角色现有皮肤数量？",
+        "type": "choice",
+        "options": {
+          "≤3款": "good_candidate",
+          "4-6款": "check_last_skin_time",
+          ">6款": "skip_recommend"
+        }
+      },
+      "low_tier": {
+        "question": "玩家社区对该英雄/角色的皮肤需求如何？",
+        "type": "choice",
+        "options": {
+          "高（TOP10需求）": "community_driven",
+          "中等": "evaluate_potential",
+          "低": "skip_recommend"
+        }
+      },
+      "high_popularity": {
+        "question": "现有皮肤数量？",
+        "type": "choice",
+        "options": {
+          "≤3款": "priority_candidate",
+          "4-6款": "check_last_skin_time",
+          ">6款": "evaluate_theme_fit"
+        }
+      },
+      "check_skin_count": {
+        "question": "现有皮肤数量？",
+        "type": "choice",
+        "options": {
+          "≤3款": "good_candidate",
+          ">3款": "check_last_skin_time"
+        }
+      },
+      "check_last_skin_time": {
+        "question": "距上次皮肤上线多久？",
+        "type": "choice",
+        "options": {
+          "≥6个月": "good_candidate",
+          "3-6个月": "maybe_wait",
+          "<3个月": "skip_recommend"
+        }
+      },
+      "priority_candidate": {
+        "conclusion": true,
+        "result": "优先候选",
+        "reason": "版本强势+高人气+皮肤存量少，是理想的皮肤目标",
+        "actions": [
+          "确认主题方向与英雄气质匹配",
+          "评估制作资源",
+          "制定时间排期"
+        ]
+      },
+      "good_candidate": {
+        "conclusion": true,
+        "result": "候选",
+        "reason": "具备一定条件，可考虑作为皮肤目标",
+        "actions": [
+          "评估主题适配度",
+          "确认玩家需求",
+          "对比其他候选优先级"
+        ]
+      },
+      "community_driven": {
+        "conclusion": true,
+        "result": "候选（社区驱动型）",
+        "reason": "虽版本冷门但玩家有明确需求，适合差异化皮肤",
+        "actions": [
+          "收集社区反馈确认需求",
+          "设计有针对性的主题",
+          "控制投入成本"
+        ]
+      },
+      "skip_recommend": {
+        "conclusion": true,
+        "result": "暂不推荐",
+        "reason": "皮肤存量大或刚上线新皮肤，建议等待更好时机",
+        "actions": [
+          "记录候选，6个月后重新评估",
+          "考虑其他英雄/角色"
+        ]
+      },
+      "maybe_wait": {
+        "conclusion": true,
+        "result": "建议等待",
+        "reason": "近期已有皮肤上线，建议等待更合适的时机",
+        "actions": [
+          "规划3-6个月后再评估",
+          "可提前进行主题构思"
+        ]
+      },
+      "evaluate_theme_fit": {
+        "question": "是否有适合的主题/活动可匹配？",
+        "type": "choice",
+        "options": {
+          "有合适主题": "good_candidate",
+          "暂无合适主题": "maybe_wait"
+        }
+      },
+      "low_popularity_high_tier": {
+        "question": "是否有适合的主题/活动可匹配？",
+        "type": "choice",
+        "options": {
+          "有合适主题": "good_candidate",
+          "暂无合适主题": "evaluate_potential"
+        }
+      },
+      "evaluate_potential": {
+        "conclusion": true,
+        "result": "需进一步评估",
+        "reason": "需综合考虑主题匹配度、投入产出比",
+        "actions": [
+          "评估主题匹配可能性",
+          "计算预期ROI",
+          "与其他候选对比"
+        ]
+      }
+    }
+  },
+  "quality_tier": {
+    "name": "品质等级决策树",
+    "description": "帮助确定皮肤的品质等级定位",
+    "applicable": ["moba", "fps", "simulation"],
+    "nodes": {
+      "start": {
+        "question": "是否计划制作全新的3D模型？",
+        "type": "choice",
+        "options": {
+          "是，完全重做": "check_vfx_full",
+          "是，部分修改": "check_vfx_partial",
+          "否，仅换色/贴图": "basic_tier"
+        }
+      },
+      "check_vfx_full": {
+        "question": "是否计划制作全套技能特效？",
+        "type": "choice",
+        "options": {
+          "是": "check_premium_features",
+          "部分": "epic_tier",
+          "否": "rare_tier"
+        }
+      },
+      "check_vfx_partial": {
+        "question": "是否计划制作技能特效？",
+        "type": "choice",
+        "options": {
+          "是": "rare_tier",
+          "否": "basic_tier"
+        }
+      },
+      "check_premium_features": {
+        "question": "是否包含以下高级特性？（可多选）",
+        "type": "multi",
+        "options": {
+          "专属回城动画": "add_premium",
+          "专属语音包": "add_premium",
+          "专属击杀/死亡特效": "add_premium",
+          "动态模型变化": "add_premium",
+          "专属待机动画": "add_premium"
+        },
+        "next": "determine_tier"
+      },
+      "determine_tier": {
+        "type": "calculate",
+        "logic": "根据选择的高级特性数量决定等级",
+        "threshold": {
+          "≥4项": "legendary_tier",
+          "2-3项": "epic_plus_tier",
+          "1项": "epic_tier",
+          "0项": "epic_tier"
+        }
+      },
+      "basic_tier": {
+        "conclusion": true,
+        "result": "普通级",
+        "features": [
+          "基础模型换色或贴图修改",
+          "无特效变化",
+          "适合活动奖励或新手福利"
+        ],
+        "price_range": "免费/10-30元"
+      },
+      "rare_tier": {
+        "conclusion": true,
+        "result": "稀有级",
+        "features": [
+          "模型细节优化",
+          "基础特效调整",
+          "适合常规周更皮肤"
+        ],
+        "price_range": "30-50元"
+      },
+      "epic_tier": {
+        "conclusion": true,
+        "result": "史诗级",
+        "features": [
+          "全新或大幅修改模型",
+          "全套技能特效重做",
+          "可选语音调整"
+        ],
+        "price_range": "50-100元"
+      },
+      "epic_plus_tier": {
+        "conclusion": true,
+        "result": "史诗+级",
+        "features": [
+          "史诗级全部内容",
+          "部分高级特性（回城/语音）"
+        ],
+        "price_range": "80-120元"
+      },
+      "legendary_tier": {
+        "question": "是否计划限时销售或永不返场？",
+        "type": "choice",
+        "options": {
+          "是，永不返场": "limited_tier",
+          "是，限时销售": "limited_tier",
+          "否，常驻销售": "legendary_tier_final"
+        }
+      },
+      "limited_tier": {
+        "conclusion": true,
+        "result": "限定级",
+        "features": [
+          "传说级全部内容",
+          "限定标签/标识",
+          "专属头像框/边框等",
+          "限时/限量/永不返场"
+        ],
+        "price_range": "150-300元+"
+      },
+      "legendary_tier_final": {
+        "conclusion": true,
+        "result": "传说级",
+        "features": [
+          "全新动态模型",
+          "全套特效重做（技能/回城/死亡）",
+          "专属语音包",
+          "专属动作/表情",
+          "加载界面等配套"
+        ],
+        "price_range": "100-200元"
+      }
+    }
+  },
+  "pricing": {
+    "name": "定价决策树",
+    "description": "帮助确定合理的定价区间",
+    "applicable": ["moba", "fps", "simulation"],
+    "nodes": {
+      "start": {
+        "question": "品质等级已确定？",
+        "type": "input",
+        "field": "quality_tier",
+        "next": "check_hero_factor"
+      },
+      "check_hero_factor": {
+        "question": "目标英雄/角色的人气排名？",
+        "type": "choice",
+        "options": {
+          "TOP10": "hero_high",
+          "TOP11-20": "hero_mid",
+          "TOP21-50": "hero_low",
+          "50名外/无排名": "hero_none"
+        }
+      },
+      "hero_high": {
+        "type": "factor",
+        "name": "英雄人气系数",
+        "value": 0.2,
+        "next": "check_theme"
+      },
+      "hero_mid": {
+        "type": "factor",
+        "name": "英雄人气系数",
+        "value": 0.1,
+        "next": "check_theme"
+      },
+      "hero_low": {
+        "type": "factor",
+        "name": "英雄人气系数",
+        "value": 0.05,
+        "next": "check_theme"
+      },
+      "hero_none": {
+        "type": "factor",
+        "name": "英雄人气系数",
+        "value": 0,
+        "next": "check_theme"
+      },
+      "check_theme": {
+        "question": "主题类型？",
+        "type": "choice",
+        "options": {
+          "IP联动（知名IP）": "theme_ip",
+          "节日限定（大节日）": "theme_festival",
+          "原创主题": "theme_original",
+          "电竞/赛事主题": "theme_esports"
+        }
+      },
+      "theme_ip": {
+        "type": "factor",
+        "name": "主题热度系数",
+        "value": 0.3,
+        "next": "check_limited"
+      },
+      "theme_festival": {
+        "type": "factor",
+        "name": "主题热度系数",
+        "value": 0.2,
+        "next": "check_limited"
+      },
+      "theme_esports": {
+        "type": "factor",
+        "name": "主题热度系数",
+        "value": 0.15,
+        "next": "check_limited"
+      },
+      "theme_original": {
+        "type": "factor",
+        "name": "主题热度系数",
+        "value": 0,
+        "next": "check_limited"
+      },
+      "check_limited": {
+        "question": "销售策略？",
+        "type": "choice",
+        "options": {
+          "永不返场": "limited_never",
+          "限时返场": "limited_time",
+          "常驻销售": "limited_none"
+        }
+      },
+      "limited_never": {
+        "type": "factor",
+        "name": "限定稀缺系数",
+        "value": 0.5,
+        "next": "calculate"
+      },
+      "limited_time": {
+        "type": "factor",
+        "name": "限定稀缺系数",
+        "value": 0.3,
+        "next": "calculate"
+      },
+      "limited_none": {
+        "type": "factor",
+        "name": "限定稀缺系数",
+        "value": 0,
+        "next": "calculate"
+      },
+      "calculate": {
+        "type": "formula",
+        "expression": "base_price * (1 + quality_factor + hero_factor + theme_factor + limited_factor)",
+        "base_prices": {
+          "普通": 30,
+          "稀有": 45,
+          "史诗": 75,
+          "史诗+": 100,
+          "传说": 150,
+          "限定": 180
+        },
+        "quality_factors": {
+          "普通": 0,
+          "稀有": 0.1,
+          "史诗": 0.3,
+          "史诗+": 0.4,
+          "传说": 0.6,
+          "限定": 0.8
+        }
+      }
+    }
+  },
+  "theme_selection": {
+    "name": "主题选择决策树",
+    "description": "帮助确定皮肤的主题方向",
+    "applicable": ["moba", "fps", "simulation"],
+    "nodes": {
+      "start": {
+        "question": "皮肤计划何时上线？",
+        "type": "choice",
+        "options": {
+          "春节/新年期间": "theme_cny",
+          "情人节期间": "theme_valentine",
+          "夏季（6-8月）": "theme_summer",
+          "万圣节期间": "theme_halloween",
+          "圣诞节/年底": "theme_christmas",
+          "周年庆期间": "theme_anniversary",
+          "其他时间段": "check_ip_opportunity"
+        }
+      },
+      "theme_cny": {
+        "conclusion": true,
+        "result": "春节主题",
+        "elements": ["红色/金色主色调", "龙/凤/瑞兽元素", "烟花/灯笼/福字装饰", "喜庆音乐音效"],
+        "tips": "需要提前2-3个月开始制作，预留返场投票时间"
+      },
+      "theme_valentine": {
+        "conclusion": true,
+        "result": "情人节主题",
+        "elements": ["粉色/白色主色调", "爱心/玫瑰元素", "情侣/浪漫故事", "轻柔音乐音效"],
+        "tips": "适合推出情侣皮肤套装，捆绑销售效果更好"
+      },
+      "theme_summer": {
+        "question": "夏季主题细分方向？",
+        "type": "choice",
+        "options": {
+          "海滩/海洋": "theme_beach",
+          "清凉/水上运动": "theme_water",
+          "夏日祭/花火": "theme_festival_summer"
+        }
+      },
+      "theme_beach": {
+        "conclusion": true,
+        "result": "海滩/海洋主题",
+        "elements": ["蓝色/白色主色调", "海浪/沙滩/贝壳元素", "冲浪/潜水场景", "海浪音效"],
+        "tips": "适合多英雄系列皮肤，形成夏季主题阵容"
+      },
+      "theme_halloween": {
+        "conclusion": true,
+        "result": "万圣节主题",
+        "elements": ["橙色/紫色/黑色", "南瓜/蝙蝠/幽灵元素", "恐怖/奇幻风格", "诡异音效"],
+        "tips": "适合奇幻/暗黑风格英雄，可与恐怖IP联动"
+      },
+      "theme_christmas": {
+        "conclusion": true,
+        "result": "圣诞节主题",
+        "elements": ["红色/绿色/白色", "圣诞树/雪人/麋鹿元素", "冬日雪景", "圣诞铃声"],
+        "tips": "可与年底活动结合，推出新年倒计时系列"
+      },
+      "theme_anniversary": {
+        "question": "周年庆定位？",
+        "type": "choice",
+        "options": {
+          "重磅限定": "anniversary_limited",
+          "福利皮肤": "anniversary_free",
+          "IP联动": "anniversary_ip"
+        }
+      },
+      "anniversary_limited": {
+        "conclusion": true,
+        "result": "周年限定主题",
+        "elements": ["周年纪念标识", "游戏元素回顾", "高级制作规格", "专属纪念头像框"],
+        "tips": "周年限定通常制作规格最高，需预留充足时间"
+      },
+      "check_ip_opportunity": {
+        "question": "是否有IP联动机会？",
+        "type": "choice",
+        "options": {
+          "有明确IP合作计划": "ip_collaboration",
+          "正在洽谈中": "ip_planning",
+          "暂无IP合作计划": "original_theme"
+        }
+      },
+      "ip_collaboration": {
+        "conclusion": true,
+        "result": "IP联动主题",
+        "elements": ["IP核心视觉元素", "IP角色/故事融入", "IP风格特效", "IP授权标识"],
+        "tips": "需要IP方确认设计稿，预留额外审核时间"
+      },
+      "original_theme": {
+        "question": "期望的风格方向？",
+        "type": "choice",
+        "options": {
+          "科幻/未来": "theme_scifi",
+          "奇幻/魔法": "theme_fantasy",
+          "国风/东方": "theme_oriental",
+          "现代/都市": "theme_modern",
+          "二次元/动漫": "theme_anime"
+        }
+      },
+      "theme_scifi": {
+        "conclusion": true,
+        "result": "科幻/未来主题",
+        "elements": ["金属/霓虹配色", "科技元素/激光特效", "未来世界观", "电子音效"],
+        "tips": "适合赛季主题联动，可扩展为系列皮肤"
+      },
+      "theme_fantasy": {
+        "conclusion": true,
+        "result": "奇幻/魔法主题",
+        "elements": ["紫/蓝/金配色", "魔法粒子/光效", "奇幻世界观", "魔幻音效"],
+        "tips": "可结合游戏世界观扩展，形成长期IP"
+      },
+      "theme_oriental": {
+        "conclusion": true,
+        "result": "国风/东方主题",
+        "elements": ["水墨/红金配色", "传统纹样/瑞兽", "东方故事背景", "古风音乐"],
+        "tips": "中国市场接受度高，可与传统文化联动"
+      }
+    }
+  }
+}

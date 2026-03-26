@@ -1,0 +1,2250 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>外观商业化思考小工具 v2.1</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --success: #22c55e;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --moba: #8b5cf6;
+            --fps: #ef4444;
+            --sim: #22c55e;
+            --ios: #007AFF;
+            --android: #3DDC84;
+            --pc: #5856D6;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 35px 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 20px;
+            margin-bottom: 25px;
+        }
+        .header h1 { font-size: 2rem; margin-bottom: 8px; }
+        .header .subtitle { opacity: 0.9; font-size: 1rem; }
+        .header .version {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+
+        /* Progress Steps */
+        .progress-container {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+        }
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 12%;
+            right: 12%;
+            height: 3px;
+            background: var(--border);
+            z-index: 1;
+        }
+        .progress-line {
+            position: absolute;
+            top: 20px;
+            left: 12%;
+            height: 3px;
+            background: var(--primary);
+            z-index: 2;
+            transition: width 0.3s ease;
+        }
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            z-index: 3;
+            cursor: pointer;
+            padding: 10px;
+        }
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--text-light);
+            transition: all 0.3s;
+            border: 3px solid var(--card);
+        }
+        .step.active .step-number {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 0 4px var(--primary-light);
+        }
+        .step.completed .step-number { background: var(--success); color: white; }
+        .step-label { margin-top: 8px; font-size: 13px; color: var(--text-light); font-weight: 500; }
+        .step.active .step-label { color: var(--primary); }
+        .step.completed .step-label { color: var(--success); }
+
+        /* Card */
+        .card {
+            background: var(--card);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 20px;
+        }
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+        }
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            margin-right: 15px;
+        }
+        .card-title { font-size: 1.2rem; font-weight: 600; }
+        .card-desc { color: var(--text-light); font-size: 0.9rem; margin-top: 4px; }
+
+        /* Form Controls */
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-weight: 500; margin-bottom: 8px; color: var(--text); }
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+            background: white;
+        }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--primary); }
+        .form-hint { color: var(--text-light); font-size: 0.85rem; margin-top: 6px; }
+
+        /* Game Selection */
+        .game-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 20px; }
+        .game-option {
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .game-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            border-radius: 14px 14px 0 0;
+        }
+        .game-option.moba::before { background: var(--moba); }
+        .game-option.fps::before { background: var(--fps); }
+        .game-option.sim::before { background: var(--sim); }
+        .game-option:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+        .game-option.selected.moba { border-color: var(--moba); background: linear-gradient(to bottom, rgba(139,92,246,0.05), transparent); }
+        .game-option.selected.fps { border-color: var(--fps); background: linear-gradient(to bottom, rgba(239,68,68,0.05), transparent); }
+        .game-option.selected.sim { border-color: var(--sim); background: linear-gradient(to bottom, rgba(34,197,94,0.05), transparent); }
+        .game-option.custom::before { background: var(--primary); }
+        .game-option.selected.custom { border-color: var(--primary); }
+        .game-icon { font-size: 40px; margin-bottom: 12px; }
+        .game-name { font-size: 1.15rem; font-weight: 600; margin-bottom: 6px; }
+        .game-desc { color: var(--text-light); font-size: 0.85rem; margin-bottom: 10px; }
+        .game-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+        .game-tag { background: var(--bg); padding: 4px 10px; border-radius: 15px; font-size: 0.75rem; color: var(--text-light); }
+
+        /* Platform Tabs */
+        .platform-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .platform-tab {
+            padding: 10px 20px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            background: white;
+        }
+        .platform-tab:hover { border-color: var(--primary); }
+        .platform-tab.active.ios { border-color: var(--ios); background: rgba(0,122,255,0.1); }
+        .platform-tab.active.android { border-color: var(--android); background: rgba(61,220,132,0.1); }
+        .platform-tab.active.pc { border-color: var(--pc); background: rgba(88,86,214,0.1); }
+        .platform-icon { font-size: 18px; }
+
+        /* Appearance Grid */
+        .appearance-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .appearance-item {
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .appearance-item:hover { border-color: var(--primary); background: var(--bg); }
+        .appearance-item.selected { border-color: var(--primary); background: var(--primary); color: white; }
+        .appearance-item .icon { font-size: 24px; margin-bottom: 6px; }
+        .appearance-item .name { font-weight: 500; font-size: 0.9rem; }
+
+        /* Competitor List */
+        .competitor-list { display: grid; gap: 12px; }
+        .competitor-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .competitor-item:hover { border-color: var(--primary); }
+        .competitor-item.selected { border-color: var(--primary); background: rgba(99,102,241,0.1); }
+        .competitor-rank {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            margin-right: 12px;
+        }
+        .competitor-rank.top1 { background: #FFD700; color: #000; }
+        .competitor-rank.top2 { background: #C0C0C0; color: #000; }
+        .competitor-rank.top3 { background: #CD7F32; color: #fff; }
+        .competitor-rank.normal { background: var(--bg); color: var(--text-light); }
+        .competitor-name { flex: 1; font-weight: 500; }
+        .competitor-platform { font-size: 0.8rem; color: var(--text-light); }
+
+        /* Tabs */
+        .tabs { display: flex; border-bottom: 2px solid var(--border); margin-bottom: 20px; overflow-x: auto; gap: 4px; }
+        .tab {
+            padding: 12px 18px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-light);
+            position: relative;
+            white-space: nowrap;
+            transition: color 0.2s;
+        }
+        .tab:hover { color: var(--text); }
+        .tab.active { color: var(--primary); }
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary);
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Analysis Section */
+        .analysis-section { margin-bottom: 24px; }
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-title .badge {
+            background: var(--primary);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+        }
+
+        /* Tool Cards */
+        .tool-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+        .tool-card {
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 14px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .tool-card:hover { border-color: var(--primary); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+        .tool-card .tool-icon { font-size: 24px; margin-bottom: 8px; }
+        .tool-card .tool-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 4px; }
+        .tool-card .tool-desc { color: var(--text-light); font-size: 0.8rem; }
+        .tool-card .tool-link { color: var(--primary); font-size: 0.8rem; margin-top: 8px; display: block; text-decoration: none; }
+        .tool-card .tool-link:hover { text-decoration: underline; }
+
+        /* Dimension Card */
+        .dimension-card {
+            background: var(--bg);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+        .dimension-title { font-weight: 600; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+        .dimension-options { display: flex; flex-wrap: wrap; gap: 6px; }
+        .option-chip {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-chip:hover { border-color: var(--primary); }
+        .option-chip.selected { border-color: var(--primary); background: var(--primary); color: white; }
+
+        /* Risk Checklist */
+        .risk-section { margin-bottom: 16px; }
+        .risk-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+        .risk-header.critical { background: rgba(239,68,68,0.1); }
+        .risk-header.high { background: rgba(249,115,22,0.1); }
+        .risk-header.medium { background: rgba(245,158,11,0.1); }
+        .risk-header.low { background: rgba(34,197,94,0.1); }
+        .risk-title { font-weight: 600; }
+        .risk-badge {
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+        .risk-badge.critical { background: var(--danger); color: white; }
+        .risk-badge.high { background: #f97316; color: white; }
+        .risk-badge.medium { background: var(--warning); color: white; }
+        .risk-badge.low { background: var(--success); color: white; }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 6px;
+            background: var(--bg);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .checklist-item:hover { background: var(--border); }
+        .checklist-item.checked { background: rgba(34,197,94,0.1); }
+        .checklist-item.checked .checklist-text { text-decoration: line-through; color: var(--text-light); }
+        .checklist-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--border);
+            border-radius: 5px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .checklist-item.checked .checklist-checkbox { background: var(--success); border-color: var(--success); color: white; }
+
+        /* Competitor Analysis Card */
+        .competitor-analysis-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            margin-bottom: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .competitor-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 16px 18px;
+        }
+        .competitor-title-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 8px;
+        }
+        .competitor-name-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .competitor-category-tag {
+            background: rgba(255,255,255,0.2);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .appearance-match-tag {
+            background: var(--success);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .competitor-overview {
+            font-size: 0.9rem;
+            opacity: 0.95;
+            margin: 0;
+        }
+        .competitor-section {
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border);
+        }
+        .competitor-section:last-child { border-bottom: none; }
+        .competitor-section-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        .model-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        .model-item {
+            background: var(--bg);
+            padding: 10px 12px;
+            border-radius: 8px;
+        }
+        .model-label {
+            font-size: 0.75rem;
+            color: var(--text-light);
+            display: block;
+            margin-bottom: 4px;
+        }
+        .model-value {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+        .highlight-list, .insight-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .highlight-list li, .insight-list li {
+            font-size: 0.85rem;
+            color: var(--text);
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+        .insight-list li::marker {
+            color: var(--primary);
+        }
+        .case-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+        }
+        .case-item {
+            background: var(--bg);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+        .case-name {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+        }
+        .case-meta {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 6px;
+        }
+        .case-type, .case-price {
+            font-size: 0.75rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: var(--border);
+        }
+        .case-price {
+            background: var(--primary);
+            color: white;
+        }
+        .case-highlight {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .competitor-summary-card {
+            background: linear-gradient(135deg, rgba(99,102,241,0.1) 0%, rgba(79,70,229,0.1) 100%);
+            border: 2px solid var(--primary-light);
+            border-radius: 12px;
+            padding: 18px;
+            margin-top: 20px;
+        }
+        .summary-title {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--primary-dark);
+        }
+        .summary-list {
+            margin: 8px 0;
+            padding-left: 20px;
+        }
+        .summary-list li {
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: var(--text);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 4px 12px rgba(99,102,241,0.4); }
+        .btn-secondary { background: var(--bg); color: var(--text); border: 2px solid var(--border); }
+        .btn-secondary:hover { background: var(--border); }
+        .btn-lg { padding: 14px 28px; font-size: 1.05rem; }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+        .btn-group { display: flex; gap: 12px; margin-top: 24px; flex-wrap: wrap; }
+
+        /* Stats */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 12px; margin-bottom: 20px; }
+        .stat-card { background: var(--bg); border-radius: 10px; padding: 16px; text-align: center; }
+        .stat-value { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+        .stat-label { color: var(--text-light); font-size: 0.8rem; margin-top: 4px; }
+
+        /* Hidden */
+        .hidden { display: none !important; }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.5rem; }
+            .progress-steps { flex-wrap: wrap; gap: 15px; }
+            .progress-steps::before, .progress-line { display: none; }
+            .game-options { grid-template-columns: 1fr; }
+            .btn-group { flex-direction: column; }
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--text);
+            color: white;
+            padding: 14px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { background: var(--success); }
+
+        /* Progress Bar */
+        .progress-bar { height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; margin-top: 10px; }
+        .progress-bar-fill { height: 100%; background: var(--success); transition: width 0.3s; }
+
+        /* Custom Input Section */
+        .custom-input-section {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 16px;
+        }
+        .custom-input-section h4 { margin-bottom: 10px; font-size: 0.95rem; }
+
+        /* Summary Card */
+        .summary-card {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .summary-card h3 { margin-bottom: 12px; }
+        .summary-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.2); }
+        .summary-item:last-child { border-bottom: none; }
+        .summary-label { opacity: 0.8; }
+        .summary-value { font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎨 外观商业化思考小工具</h1>
+            <p class="subtitle">面向美术策划运营复合型岗位</p>
+            <span class="version">v2.1 优化版</span>
+        </header>
+
+        <!-- Progress Steps -->
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-line" id="progressLine"></div>
+                <div class="step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <span class="step-label">选择品类</span>
+                </div>
+                <div class="step" data-step="2">
+                    <div class="step-number">2</div>
+                    <span class="step-label">选择外观</span>
+                </div>
+                <div class="step" data-step="3">
+                    <div class="step-number">3</div>
+                    <span class="step-label">选择竞品</span>
+                </div>
+                <div class="step" data-step="4">
+                    <div class="step-number">4</div>
+                    <span class="step-label">分析检查</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 1: Game Selection -->
+        <div id="step1" class="step-content">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #8b5cf6, #6366f1);">🎮</div>
+                    <div>
+                        <h2 class="card-title">选择游戏品类</h2>
+                        <p class="card-desc">选择你要设计外观的游戏类型，或自定义输入</p>
+                    </div>
+                </div>
+
+                <div class="game-options">
+                    <div class="game-option moba" data-game="moba">
+                        <div class="game-icon">⚔️</div>
+                        <h3 class="game-name">MOBA</h3>
+                        <p class="game-desc">多人在线战术竞技，如王者荣耀、英雄联盟</p>
+                        <div class="game-tags">
+                            <span class="game-tag">英雄皮肤</span>
+                            <span class="game-tag">特效</span>
+                        </div>
+                    </div>
+                    <div class="game-option fps" data-game="fps">
+                        <div class="game-icon">🎯</div>
+                        <h3 class="game-name">FPS</h3>
+                        <p class="game-desc">第一人称射击，如CS2、VALORANT</p>
+                        <div class="game-tags">
+                            <span class="game-tag">武器皮肤</span>
+                            <span class="game-tag">角色皮肤</span>
+                        </div>
+                    </div>
+                    <div class="game-option sim" data-game="simulation">
+                        <div class="game-icon">🏠</div>
+                        <h3 class="game-name">模拟经营</h3>
+                        <p class="game-desc">休闲养成类，如动森、原神家园</p>
+                        <div class="game-tags">
+                            <span class="game-tag">角色皮肤</span>
+                            <span class="game-tag">家园装饰</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="custom-input-section">
+                    <h4>✏️ 或自定义输入游戏品类</h4>
+                    <input type="text" class="form-input" id="customGameInput" placeholder="例如：MMORPG、卡牌、音游、二次元...">
+                    <p class="form-hint">输入自定义品类后，点击下一步继续</p>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary btn-lg" id="nextStep1" disabled>
+                        下一步：选择外观类型 →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 2: Appearance Selection -->
+        <div id="step2" class="step-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #ec4899, #f43f5e);">🎨</div>
+                    <div>
+                        <h2 class="card-title">选择外观类型</h2>
+                        <p class="card-desc" id="appearanceSubtitle">选择你要设计的外观类型</p>
+                    </div>
+                </div>
+
+                <div class="appearance-grid" id="appearanceGrid"></div>
+
+                <div class="custom-input-section">
+                    <h4>✏️ 或自定义输入外观类型</h4>
+                    <input type="text" class="form-input" id="customAppearanceInput" placeholder="例如：载具皮肤、宠物外观、UI主题...">
+                    <p class="form-hint">输入自定义外观类型后，点击下一步继续</p>
+                </div>
+
+                <div class="form-group" style="margin-top: 20px;">
+                    <label class="form-label">主题方向（可选）</label>
+                    <input type="text" class="form-input" id="themeInput" placeholder="例如：春节、科幻、国风、赛博朋克...">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">品质定位（可选）</label>
+                    <select class="form-select" id="qualitySelect">
+                        <option value="">请选择...</option>
+                        <option value="普通">普通/基础</option>
+                        <option value="稀有">稀有/勇者</option>
+                        <option value="史诗">史诗</option>
+                        <option value="传说">传说</option>
+                        <option value="限定">限定</option>
+                    </select>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="prevStep2">← 上一步</button>
+                    <button class="btn btn-primary btn-lg" id="nextStep2" disabled>
+                        下一步：选择竞品 →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 3: Competitor Selection -->
+        <div id="step3" class="step-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #f59e0b, #f97316);">🏆</div>
+                    <div>
+                        <h2 class="card-title">选择参考竞品</h2>
+                        <p class="card-desc">基于 iOS/安卓/PC 平台榜单 TOP 游戏，选择要参考的竞品</p>
+                    </div>
+                </div>
+
+                <!-- Platform Tabs -->
+                <div class="platform-tabs">
+                    <div class="platform-tab ios active" data-platform="ios">
+                        <span class="platform-icon">📱</span>
+                        <span>iOS 畅销榜</span>
+                    </div>
+                    <div class="platform-tab android" data-platform="android">
+                        <span class="platform-icon">🤖</span>
+                        <span>安卓畅销榜</span>
+                    </div>
+                    <div class="platform-tab pc" data-platform="pc">
+                        <span class="platform-icon">💻</span>
+                        <span>PC 热门榜</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">选择竞品游戏（可多选）</label>
+                    <div class="competitor-list" id="competitorList"></div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="selectedCount">0</div>
+                        <div class="stat-label">已选竞品</div>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="prevStep3">← 上一步</button>
+                    <button class="btn btn-primary btn-lg" id="nextStep3">
+                        开始分析 →
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Analysis & Checklist -->
+        <div id="step4" class="step-content hidden">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: linear-gradient(135deg, #22c55e, #16a34a);">📊</div>
+                    <div>
+                        <h2 class="card-title">分析结果与风险检查</h2>
+                        <p class="card-desc" id="analysisSubtitle"></p>
+                    </div>
+                </div>
+
+                <!-- Summary Card -->
+                <div class="summary-card" id="summaryCard">
+                    <h3>📋 当前方案概览</h3>
+                    <div class="summary-item">
+                        <span class="summary-label">游戏品类</span>
+                        <span class="summary-value" id="summaryGame">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">外观类型</span>
+                        <span class="summary-value" id="summaryAppearance">-</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">参考竞品</span>
+                        <span class="summary-value" id="summaryCompetitors">-</span>
+                    </div>
+                </div>
+
+                <div class="tabs">
+                    <button class="tab active" data-tab="content">📝 内容规划</button>
+                    <button class="tab" data-tab="tools">🔍 搜索工具</button>
+                    <button class="tab" data-tab="risks">⚠️ 风险检查</button>
+                </div>
+
+                <!-- Content Tab -->
+                <div class="tab-content active" id="tab-content">
+                    <div id="contentAnalysis"></div>
+                </div>
+
+                <!-- Tools Tab -->
+                <div class="tab-content" id="tab-tools">
+                    <div id="toolsContent"></div>
+                </div>
+
+                <!-- Risks Tab -->
+                <div class="tab-content" id="tab-risks">
+                    <div id="risksContent"></div>
+                    <div style="margin-top: 20px; padding: 16px; background: var(--bg); border-radius: 10px;">
+                        <h4 style="margin-bottom: 10px;">检查进度</h4>
+                        <div class="progress-bar">
+                            <div class="progress-bar-fill" id="riskProgress" style="width: 0%"></div>
+                        </div>
+                        <p style="margin-top: 8px; color: var(--text-light); font-size: 0.9rem;">
+                            <span id="riskCount">0</span> / <span id="riskTotal">0</span> 项已检查
+                        </p>
+                    </div>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-secondary" id="prevStep4">← 上一步</button>
+                    <button class="btn btn-primary btn-lg" id="resetBtn">
+                        🔄 重新开始
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ==================== 配置数据 ====================
+        const CONFIG = {
+            moba: {
+                name: "MOBA",
+                fullName: "MOBA（多人在线战术竞技）",
+                appearances: [
+                    { id: "skin", name: "英雄皮肤", icon: "👤", desc: "角色外观替换" },
+                    { id: "decoration", name: "装饰系统", icon: "✨", desc: "翅膀、光环等" },
+                    { id: "vfx", name: "特效设计", icon: "💫", desc: "技能、击杀特效" },
+                    { id: "animation", name: "动画设计", icon: "🎬", desc: "待机、回城动画" },
+                    { id: "sound", name: "音效设计", icon: "🎵", desc: "语音包、音效" }
+                ]
+            },
+            fps: {
+                name: "FPS",
+                fullName: "FPS（第一人称射击）",
+                appearances: [
+                    { id: "weapon_skin", name: "武器皮肤", icon: "🔫", desc: "枪械外观" },
+                    { id: "character_skin", name: "角色皮肤", icon: "👤", desc: "角色外观" },
+                    { id: "vfx", name: "特效设计", icon: "💫", desc: "弹道、击杀特效" },
+                    { id: "melee", name: "近战武器", icon: "🔪", desc: "刀、手套等" }
+                ]
+            },
+            simulation: {
+                name: "模拟经营",
+                fullName: "模拟经营类",
+                appearances: [
+                    { id: "character_skin", name: "角色皮肤", icon: "👤", desc: "角色外观" },
+                    { id: "home_decor", name: "家园装饰", icon: "🏠", desc: "家具、摆件" },
+                    { id: "mount", name: "坐骑载具", icon: "🐴", desc: "陆地/飞行坐骑" },
+                    { id: "theme", name: "主题套装", icon: "🎁", desc: "成套主题内容" }
+                ]
+            }
+        };
+
+        // 平台榜单数据
+        const PLATFORM_GAMES = {
+            ios: [
+                { name: "王者荣耀", category: "moba" },
+                { name: "和平精英", category: "fps" },
+                { name: "原神", category: "simulation" },
+                { name: "金铲铲之战", category: "strategy" },
+                { name: "英雄联盟手游", category: "moba" },
+                { name: "梦幻西游", category: "simulation" },
+                { name: "永劫无间", category: "action" },
+                { name: "三国杀", category: "card" },
+                { name: "蛋仔派对", category: "casual" },
+                { name: "地下城与勇士", category: "action" }
+            ],
+            android: [
+                { name: "王者荣耀", category: "moba" },
+                { name: "和平精英", category: "fps" },
+                { name: "原神", category: "simulation" },
+                { name: "明日方舟", category: "strategy" },
+                { name: "崩坏：星穹铁道", category: "rpg" },
+                { name: "英雄联盟手游", category: "moba" },
+                { name: "永劫无间手游", category: "action" },
+                { name: "阴阳师", category: "rpg" },
+                { name: "第五人格", category: "casual" },
+                { name: "穿越火线", category: "fps" }
+            ],
+            pc: [
+                { name: "英雄联盟", category: "moba" },
+                { name: "CS2", category: "fps" },
+                { name: "DOTA2", category: "moba" },
+                { name: "VALORANT", category: "fps" },
+                { name: "永劫无间", category: "action" },
+                { name: "Apex英雄", category: "fps" },
+                { name: "魔兽世界", category: "mmorpg" },
+                { name: "地下城与勇士", category: "action" },
+                { name: "剑网3", category: "mmorpg" },
+                { name: "最终幻想14", category: "mmorpg" }
+            ]
+        };
+
+        // 竞品商业化详细数据
+        const COMPETITOR_DATA = {
+            // MOBA类竞品
+            "王者荣耀": {
+                category: "moba",
+                overview: "全球收入最高的MOBA手游，皮肤商业化标杆",
+                model: {
+                    primary: "英雄皮肤直售 + 限定抽奖",
+                    secondary: "战令系统、星元系统、荣耀典藏",
+                    pricing: "6元-1688元，传说级888元"
+                },
+                highlights: [
+                    "皮肤品质分层清晰（勇者/史诗/传说/荣耀典藏）",
+                    "IP联动频繁（圣斗士、SNK、国漫IP）",
+                    "星元系统提供皮肤内定制，延长生命周期",
+                    "每周特惠、碎片商店形成价格锚点"
+                ],
+                cases: [
+                    { name: "李信·一念神魔", type: "传说", price: "1688点券", highlight: "双形态切换，特效拉满", sales: "销量TOP级" },
+                    { name: "瑶·遇见神鹿", type: "传说", price: "1688点券", highlight: "敦煌文化联动", sales: "现象级爆款" },
+                    { name: "花木兰·水晶猎龙者", type: "星元", price: "星元部件", highlight: "星元系统标杆", sales: "持续长尾" }
+                ],
+                insights: [
+                    "史诗级皮肤性价比最高，定价锚点在888点券",
+                    "文化IP联动提升品牌价值和用户认同",
+                    "星元系统让老皮肤焕发新生",
+                    "限定皮肤FOMO心理驱动强"
+                ],
+                appearanceTypes: ["skin", "decoration", "vfx", "animation", "sound"]
+            },
+            "英雄联盟": {
+                category: "moba",
+                overview: "PC MOBA皮肤系统开创者，拥有最成熟的皮肤生态",
+                model: {
+                    primary: "皮肤直售 + 至臻系统",
+                    secondary: "战利品箱、神话系统、海克斯科技",
+                    pricing: "750-3250RP（约30-130元）"
+                },
+                highlights: [
+                    "皮肤宇宙世界观（星之守护者、K/DA）",
+                    "至臻皮肤通过代币兑换，增强用户粘性",
+                    "神话炫彩提供土豪级消费出口",
+                    "电竞赛事皮肤（冠军系列）品牌价值高"
+                ],
+                cases: [
+                    { name: "K/DA系列", type: "组合皮肤", price: "全套约500元", highlight: "虚拟偶像团体出圈", sales: "现象级IP" },
+                    { name: "星之守护者", type: "皮肤宇宙", price: "系列皮肤", highlight: "魔法少女主题长线运营", sales: "持续迭代" },
+                    { name: "True Damage", type: "组合皮肤", price: "单曲+皮肤", highlight: "虚拟乐队概念", sales: "跨界出圈" }
+                ],
+                insights: [
+                    "皮肤宇宙可独立运营，形成子品牌",
+                    "音乐+皮肤组合提升溢价能力",
+                    "至臻系统平衡肝党和氪党需求",
+                    "赛事皮肤承载情感价值"
+                ],
+                appearanceTypes: ["skin", "decoration", "vfx", "animation", "sound"]
+            },
+            "英雄联盟手游": {
+                category: "moba",
+                overview: "端游IP移植，皮肤系统与端游联动",
+                model: {
+                    primary: "皮肤直售 + 抽奖",
+                    secondary: "峡谷宝典、魄罗商店",
+                    pricing: "与王者荣耀类似"
+                },
+                highlights: [
+                    "端游皮肤情怀移植，降低用户迁移成本",
+                    "手游专属皮肤差异化运营",
+                    "端手游皮肤收藏互通（部分）",
+                    "K/DA等IP直接沿用"
+                ],
+                cases: [
+                    { name: "K/DA ALL OUT", type: "系列皮肤", price: "系列定价", highlight: "端游IP移植", sales: "端手双端热销" },
+                    { name: "光明哨兵", type: "事件皮肤", price: "活动获取", highlight: "大事件联动", sales: "活动驱动" }
+                ],
+                insights: [
+                    "情怀价值是核心卖点",
+                    "差异化皮肤避免端手竞争",
+                    "活动皮肤提高活跃度"
+                ],
+                appearanceTypes: ["skin", "decoration", "vfx", "animation", "sound"]
+            },
+            "DOTA2": {
+                category: "moba",
+                overview: "饰品系统最自由的MOBA，Steam市场驱动经济",
+                model: {
+                    primary: "饰品箱开箱 + 社区市场",
+                    secondary: "本子系统（TI互动指南）、工作坊",
+                    pricing: "饰品市场化定价，稀有饰品可达万元"
+                },
+                highlights: [
+                    "饰品可交易、可拆分，形成二级市场",
+                    "TI本子众筹模式，奖金池破亿",
+                    "社区创作饰品（工作坊）分成激励",
+                    "英雄饰品位细分（武器、头、肩等）"
+                ],
+                cases: [
+                    { name: "TI互动指南", type: "本子", price: "10-100美元", highlight: "众筹赛事奖金", sales: "年化破亿" },
+                    { name: "弧光饰品", type: "特效", price: "市场定价", highlight: "改变技能特效", sales: "稀有高价" }
+                ],
+                insights: [
+                    "二级市场增加饰品投资价值",
+                    "众筹模式绑定玩家与赛事情感",
+                    "社区创作降低官方美术成本",
+                    "细分饰品位增加收集深度"
+                ],
+                appearanceTypes: ["skin", "decoration", "vfx", "animation"]
+            },
+
+            // FPS类竞品
+            "和平精英": {
+                category: "fps",
+                overview: "国内最大FPS手游，军武皮肤商业化成熟",
+                model: {
+                    primary: "军需箱抽奖",
+                    secondary: "通行证、限时直售、转盘",
+                    pricing: "单套军需约600-2000元"
+                },
+                highlights: [
+                    "军需箱抽奖模式收入占比最高",
+                    "联动IP丰富（特斯拉、玛莎拉蒂、高达）",
+                    "载具皮肤溢价能力强",
+                    "赛季手册稳定DAU"
+                ],
+                cases: [
+                    { name: "特斯拉皮肤", type: "载具", price: "约1500元", highlight: "载具皮肤标杆", sales: "爆款级" },
+                    { name: "玛莎拉蒂", type: "载具", price: "约800元", highlight: "豪车联动", sales: "现象级" },
+                    { name: "高达联动", type: "套装", price: "军需抽取", highlight: "IP跨界", sales: "粉丝向爆款" }
+                ],
+                insights: [
+                    "载具皮肤是差异化收入来源",
+                    "豪车/奢侈品牌联动提升调性",
+                    "抽奖模式ARPU高但争议大",
+                    "IP联动需平衡版权成本和ROI"
+                ],
+                appearanceTypes: ["weapon_skin", "character_skin", "vfx", "melee"]
+            },
+            "CS2": {
+                category: "fps",
+                overview: "武器皮肤经济系统最成熟的FPS，二级市场驱动",
+                model: {
+                    primary: "武器箱开箱 + 市场交易",
+                    secondary: "纪念包、大行动",
+                    pricing: "市场化定价，稀有皮肤可达百万"
+                },
+                highlights: [
+                    "皮肤可交易、可投资，形成经济系统",
+                    "磨损度系统影响外观和价格",
+                    "贴纸系统增加个性化空间",
+                    "赛事纪念包绑定电竞情感"
+                ],
+                cases: [
+                    { name: "龙狙", type: "AWP皮肤", price: "1万-100万+", highlight: "最贵皮肤之一", sales: "收藏价值" },
+                    { name: "蝴蝶刀", type: "刀具", price: "2000-2万", highlight: "切刀动画", sales: "炫富符号" },
+                    { name: "贴纸胶囊", type: "贴纸", price: "几元-上千", highlight: "赛事限定", sales: "投资品" }
+                ],
+                insights: [
+                    "投资属性让皮肤超越消费属性",
+                    "稀有度和磨损度决定价格",
+                    "赛事贴纸可投资升值",
+                    "刀/手套是顶级消费出口"
+                ],
+                appearanceTypes: ["weapon_skin", "vfx", "melee"]
+            },
+            "VALORANT": {
+                category: "fps",
+                overview: "拳头FPS，皮肤系统强调视觉冲击和手感",
+                model: {
+                    primary: "皮肤商店轮换 + 捆绑包",
+                    secondary: "战斗通行证、活动",
+                    pricing: "皮肤捆绑包约50-100美元"
+                },
+                highlights: [
+                    "皮肤手感差异化（音效、换弹动画）",
+                    "商店轮换制造紧迫感",
+                    "至尊皮肤系列化（如奇点、极光）",
+                    "皮肤分级明确，定价清晰"
+                ],
+                cases: [
+                    { name: "极光系列", type: "捆绑包", price: "约80美元", highlight: "全特效联动", sales: "顶级热销" },
+                    { name: "奇点系列", type: "捆绑包", price: "约70美元", highlight: "科幻风格", sales: "口碑爆款" },
+                    { name: "RGX系列", type: "捆绑包", price: "约60美元", highlight: "透明枪身+特效", sales: "差异化卖点" }
+                ],
+                insights: [
+                    "手感差异化是核心卖点",
+                    "捆绑包销售提高客单价",
+                    "轮换商店利用FOMO心理",
+                    "皮肤世界观增强品牌感"
+                ],
+                appearanceTypes: ["weapon_skin", "character_skin", "vfx", "melee"]
+            },
+            "Apex英雄": {
+                category: "fps",
+                overview: "英雄射击FPS，皮肤系统与传奇角色绑定",
+                model: {
+                    primary: "Apex币直购 + 传家宝活动",
+                    secondary: "战斗通行证、合成材料",
+                    pricing: "传说皮肤1800Apex币（约18美元）"
+                },
+                highlights: [
+                    "传家宝系统是顶级氪金出口",
+                    "皮肤与角色深度绑定",
+                    "活动轮换制造稀缺感",
+                    "传家宝碎片保底机制"
+                ],
+                cases: [
+                    { name: "传家宝", type: "近战武器", price: "约160美元保底", highlight: "顶级稀有", sales: "土豪专属" },
+                    { name: "觉醒活动", type: "组合包", price: "活动定价", highlight: "角色主题捆绑", sales: "活动驱动" }
+                ],
+                insights: [
+                    "传家宝是最高价值单品",
+                    "角色绑定增加收集深度",
+                    "保底机制平衡公平性",
+                    "活动节奏控制收入波动"
+                ],
+                appearanceTypes: ["weapon_skin", "character_skin", "vfx", "melee"]
+            },
+            "穿越火线": {
+                category: "fps",
+                overview: "国民FPS，英雄级武器开创付费先河",
+                model: {
+                    primary: "武器直售 + VIP特权",
+                    secondary: "活动、抽奖",
+                    pricing: "英雄级武器300-500元"
+                },
+                highlights: [
+                    "英雄级武器定义付费武器概念",
+                    "VIP等级系统绑定付费用户",
+                    "武器属性差异曾有争议",
+                    "情怀IP价值高"
+                ],
+                cases: [
+                    { name: "火麒麟", type: "英雄级AK", price: "约400元", highlight: "经典神武器", sales: "销量神话" },
+                    { name: "雷神", type: "英雄级M4", price: "约400元", highlight: "火麒麟竞品", sales: "双雄并立" }
+                ],
+                insights: [
+                    "武器属性差异化是双刃剑",
+                    "VIP系统提高用户留存",
+                    "情怀价值支撑高溢价",
+                    "移动端继承IP价值"
+                ],
+                appearanceTypes: ["weapon_skin", "character_skin", "vfx", "melee"]
+            },
+
+            // 模拟经营/开放世界类竞品
+            "原神": {
+                category: "simulation",
+                overview: "开放世界RPG，角色驱动商业化典范",
+                model: {
+                    primary: "角色抽卡 + 武器抽卡",
+                    secondary: "纪行（通行证）、皮肤直售",
+                    pricing: "角色保底约160-240元，皮肤68-198元"
+                },
+                highlights: [
+                    "角色即内容，皮肤是增值服务",
+                    "皮肤定价克制，主打好感度",
+                    "纪行皮肤增加付费点",
+                    "联动皮肤（如神里绫华）高溢价"
+                ],
+                cases: [
+                    { name: "甘雨·霓裾翩跹", type: "角色皮肤", price: "168元", highlight: "海灯节限定", sales: "角色粉丝向" },
+                    { name: "芭芭拉·闪耀协奏", type: "免费皮肤", price: "活动获取", highlight: "活跃奖励", sales: "DAU驱动" },
+                    { name: "刻晴·霓裾翩跹", type: "联动皮肤", price: "198元", highlight: "云堇戏曲联动", sales: "文化出圈" }
+                ],
+                insights: [
+                    "皮肤是角色经济的补充而非核心",
+                    "定价克制反而提高好感度",
+                    "免费皮肤提高活跃度",
+                    "文化联动提升品牌价值"
+                ],
+                appearanceTypes: ["character_skin", "home_decor", "mount", "theme"]
+            },
+            "崩坏：星穹铁道": {
+                category: "simulation",
+                overview: "回合制RPG，沿袭原神商业模式",
+                model: {
+                    primary: "角色抽卡",
+                    secondary: "光锥抽卡、纪行皮肤",
+                    pricing: "与原神类似"
+                },
+                highlights: [
+                    "继承原神商业框架",
+                    "皮肤仍处于早期阶段",
+                    "光锥系统增加武器外观价值",
+                    "角色设计质量高，皮肤溢价空间大"
+                ],
+                cases: [
+                    { name: "三月七皮肤", type: "活动皮肤", price: "免费/活动", highlight: "主线奖励", sales: "活跃驱动" }
+                ],
+                insights: [
+                    "角色价值高于皮肤",
+                    "光锥外观可做差异化",
+                    "未来皮肤潜力大"
+                ],
+                appearanceTypes: ["character_skin", "home_decor", "theme"]
+            },
+            "梦幻西游": {
+                category: "simulation",
+                overview: "经典MMO，外观经济系统成熟",
+                model: {
+                    primary: "锦衣系统（外观）",
+                    secondary: "祥瑞（坐骑）、特效、染色",
+                    pricing: "锦衣几十到几百元不等"
+                },
+                highlights: [
+                    "锦衣系统分类详细，收藏价值高",
+                    "限定锦衣稀缺性强，二手市场活跃",
+                    "染色系统增加个性化",
+                    "祥瑞坐骑差异化收入"
+                ],
+                cases: [
+                    { name: "水云归锦衣", type: "限定锦衣", price: "二手市场溢价", highlight: "稀缺收藏", sales: "投资价值" },
+                    { name: "年年有余祥瑞", type: "年兽坐骑", price: "活动限定", highlight: "节日限定", sales: "稀缺驱动" }
+                ],
+                insights: [
+                    "限定外观二级市场溢价",
+                    "染色系统延长外观生命周期",
+                    "祥瑞系统拓展收入来源",
+                    "老IP情怀价值支撑溢价"
+                ],
+                appearanceTypes: ["character_skin", "home_decor", "mount", "theme"]
+            },
+            "魔兽世界": {
+                category: "mmorpg",
+                overview: "MMO鼻祖，外观收集生态成熟",
+                model: {
+                    primary: "商城坐骑/宠物 + 订阅制",
+                    secondary: "典藏版、幻化系统",
+                    pricing: "坐骑20-25美元，宠物10美元"
+                },
+                highlights: [
+                    "坐骑宠物商城稳定收入",
+                    "幻化系统驱动副本farm",
+                    "典藏版绑定版本销售",
+                    "TCG卡牌兑换稀有外观"
+                ],
+                cases: [
+                    { name: "雷龙", type: "商城坐骑", price: "25美元", highlight: "带拍卖行功能", sales: "功能+外观" },
+                    { name: "炼狱火坐骑", type: "典藏版", price: "典藏版绑定", highlight: "预购奖励", sales: "版本驱动" }
+                ],
+                insights: [
+                    "功能性外观溢价更高",
+                    "幻化延长旧内容生命周期",
+                    "典藏版捆绑提高客单价",
+                    "订阅制是基础，外观是增值"
+                ],
+                appearanceTypes: ["character_skin", "home_decor", "mount", "theme"]
+            },
+            "剑网3": {
+                category: "mmorpg",
+                overview: "国产武侠MMO，外观收入占比极高",
+                model: {
+                    primary: "外观商城（成衣/盒子）",
+                    secondary: "限时外观、染色、特效",
+                    pricing: "外观几十到几百元，盒子皮肤上百"
+                },
+                highlights: [
+                    "外观收入占总收入主要部分",
+                    "盒子系统（盲盒）热度高",
+                    "染色系统个性化程度高",
+                    "同人生态驱动外观消费"
+                ],
+                cases: [
+                    { name: "盒子外观", type: "限时外观", price: "100-300元", highlight: "限时稀缺", sales: "FOMO驱动" },
+                    { name: "成衣商城", type: "直购外观", price: "几十元", highlight: "常驻可选", sales: "稳定收入" }
+                ],
+                insights: [
+                    "外观是核心收入来源",
+                    "限时制造稀缺性",
+                    "染色增加用户投入",
+                    "同人社区反哺外观消费"
+                ],
+                appearanceTypes: ["character_skin", "home_decor", "mount", "theme"]
+            },
+            "最终幻想14": {
+                category: "mmorpg",
+                overview: "日式MMO，商城外观克制，游戏内收集为主",
+                model: {
+                    primary: "订阅制",
+                    secondary: "商城外观、坐骑、宠物",
+                    pricing: "商城外观几美元到十几美元"
+                },
+                highlights: [
+                    "商城外观定价克制，主打好感度",
+                    "游戏内外观获取途径丰富",
+                    "联动外观（如尼尔）稀缺性高",
+                    "买房系统驱动家具消费"
+                ],
+                cases: [
+                    { name: "尼尔联动装备", type: "游戏内获取", price: "副本掉落", highlight: "联动稀缺", sales: "Farm驱动" },
+                    { name: "商城时装", type: "直购", price: "5-15美元", highlight: "定价克制", sales: "好感度优先" }
+                ],
+                insights: [
+                    "克制商业化赢得口碑",
+                    "游戏内外观增加长期目标",
+                    "家具系统是隐形消费点",
+                    "联动内容稀缺性强"
+                ],
+                appearanceTypes: ["character_skin", "home_decor", "mount", "theme"]
+            },
+
+            // 其他热门竞品
+            "永劫无间": {
+                category: "action",
+                overview: "武侠吃鸡，皮肤系统成熟",
+                model: {
+                    primary: "皮肤直售 + 抽奖",
+                    secondary: "通行证、赛季皮肤",
+                    pricing: "皮肤几十到几百元"
+                },
+                highlights: [
+                    "武侠风格外观差异化",
+                    "武器皮肤与角色皮肤并重",
+                    "赛季皮肤绑定排位",
+                    "IP联动丰富（如尼尔）"
+                ],
+                cases: [
+                    { name: "尼尔联动皮肤", type: "IP联动", price: "捆绑包", highlight: "跨IP联动", sales: "粉丝向" },
+                    { name: "季莹莹皮肤", type: "角色皮肤", price: "直售", highlight: "人气角色", sales: "角色驱动" }
+                ],
+                insights: [
+                    "武侠风格是核心差异化",
+                    "武器皮肤是特色品类",
+                    "IP联动需精准匹配用户"
+                ],
+                appearanceTypes: ["character_skin", "weapon_skin", "vfx"]
+            },
+            "蛋仔派对": {
+                category: "casual",
+                overview: "休闲竞技，外观商业化成熟",
+                model: {
+                    primary: "外观直售 + 盲盒",
+                    secondary: "通行证、活动",
+                    pricing: "外观几十元为主"
+                },
+                highlights: [
+                    "外观品类丰富（皮肤、动作、特效）",
+                    "盲盒模式热度高",
+                    "UGC内容反哺外观消费",
+                    "社交属性强，外观是社交货币"
+                ],
+                cases: [
+                    { name: "限定盲盒", type: "盲盒外观", price: "抽奖获取", highlight: "稀缺驱动", sales: "盲盒模式" },
+                    { name: "联动外观", type: "IP联动", price: "直售", highlight: "热门IP", sales: "粉丝向" }
+                ],
+                insights: [
+                    "休闲游戏客单价低但DAU高",
+                    "盲盒模式适合轻量消费",
+                    "社交属性放大外观价值",
+                    "UGC生态延长游戏生命周期"
+                ],
+                appearanceTypes: ["character_skin", "decoration", "vfx"]
+            },
+            "明日方舟": {
+                category: "strategy",
+                overview: "塔防手游，皮肤系统克制",
+                model: {
+                    primary: "角色抽卡",
+                    secondary: "皮肤直售（源石）",
+                    pricing: "皮肤15-21源石（约90-126元）"
+                },
+                highlights: [
+                    "皮肤定价统一，无稀缺性炒作",
+                    "皮肤可免费源石获取",
+                    "皮肤高质量，立绘动态化",
+                    "玩家好感度极高"
+                ],
+                cases: [
+                    { name: "浊心斯卡蒂皮肤", type: "角色皮肤", price: "18源石", highlight: "人设反转", sales: "口碑爆款" },
+                    { name: "限定皮肤", type: "活动皮肤", price: "活动获取", highlight: "活跃奖励", sales: "DAU驱动" }
+                ],
+                insights: [
+                    "克制商业化赢得口碑",
+                    "统一定价降低决策成本",
+                    "高质量是核心卖点",
+                    "免费获取提高好感度"
+                ],
+                appearanceTypes: ["character_skin", "decoration", "vfx"]
+            },
+            "阴阳师": {
+                category: "rpg",
+                overview: "日式回合制，皮肤系统成熟",
+                model: {
+                    primary: "皮肤直售 + 抽奖",
+                    secondary: "活动、典藏皮肤",
+                    pricing: "皮肤几十到上百元"
+                },
+                highlights: [
+                    "典藏皮肤品质高，价格高",
+                    "皮肤与式神深度绑定",
+                    "活动皮肤驱动活跃度",
+                    "IP联动丰富"
+                ],
+                cases: [
+                    { name: "典藏皮肤", type: "高品质皮肤", price: "上百元", highlight: "顶级品质", sales: "粉丝向" },
+                    { name: "联动皮肤", type: "IP联动", price: "活动/直售", highlight: "跨界联动", sales: "IP驱动" }
+                ],
+                insights: [
+                    "式神是核心，皮肤是增值",
+                    "典藏皮肤提高天花板",
+                    "联动需匹配用户调性"
+                ],
+                appearanceTypes: ["character_skin", "decoration", "vfx"]
+            },
+            "第五人格": {
+                category: "casual",
+                overview: "非对称竞技，皮肤驱动明显",
+                model: {
+                    primary: "皮肤抽奖",
+                    secondary: "推理径、活动",
+                    pricing: "皮肤几百元起"
+                },
+                highlights: [
+                    "皮肤是主要付费点",
+                    "推理径系统增加目标感",
+                    "联动皮肤丰富（如伊藤润二）",
+                    "哥特风格差异化"
+                ],
+                cases: [
+                    { name: "联动皮肤", type: "IP联动", price: "抽奖获取", highlight: "恐怖IP联动", sales: "粉丝向" },
+                    { name: "限定金皮", type: "顶级皮肤", price: "抽奖", highlight: "稀缺性", sales: "顶级消费" }
+                ],
+                insights: [
+                    "风格化皮肤是核心卖点",
+                    "恐怖/暗黑IP联动匹配用户",
+                    "抽奖模式ARPU高"
+                ],
+                appearanceTypes: ["character_skin", "decoration", "vfx"]
+            },
+            "地下城与勇士": {
+                category: "action",
+                overview: "经典动作格斗，时装系统成熟",
+                model: {
+                    primary: "时装商城 + 礼包",
+                    secondary: "天空套（稀有）、活动",
+                    pricing: "时装套装几百元"
+                },
+                highlights: [
+                    "天空套是时装天花板",
+                    "时装属性加成曾是争议点",
+                    "礼包时装绑定节日销售",
+                    "联动时装丰富"
+                ],
+                cases: [
+                    { name: "天空套", type: "稀有时装", price: "合成获取", highlight: "顶级稀缺", sales: "土豪标配" },
+                    { name: "春节礼包", type: "节日礼包", price: "礼包定价", highlight: "节日消费", sales: "年度峰值" }
+                ],
+                insights: [
+                    "天空套定义顶级时装",
+                    "礼包模式绑定节日消费",
+                    "属性加成需谨慎平衡"
+                ],
+                appearanceTypes: ["character_skin", "decoration", "vfx"]
+            }
+        };
+
+        // 外观类型对应的内容规划
+        const APPEARANCE_CONTENT = {
+            skin: {
+                name: "皮肤设计",
+                dimensions: [
+                    { name: "品质等级", options: ["普通/基础", "稀有/勇者", "史诗", "传说", "限定"], spec: "决定制作投入和定价" },
+                    { name: "主题风格", options: ["节日限定", "IP联动", "原创系列", "文化主题", "风格主题"], spec: "决定整体视觉方向" },
+                    { name: "模型改动", options: ["仅换色/贴图", "局部修改", "完全重制"], spec: "影响制作成本" },
+                    { name: "特效等级", options: ["无特效", "基础特效", "全套特效"], spec: "史诗以上必须" }
+                ],
+                tools: [
+                    { name: "Pinterest", icon: "📌", desc: "搜索 'MOBA皮肤设计'", url: "https://pinterest.com" },
+                    { name: "ArtStation", icon: "🎨", desc: "游戏美术作品平台", url: "https://artstation.com" },
+                    { name: "可灵AI", icon: "🤖", desc: "AI生成概念图", url: "https://klingai.com" }
+                ],
+                risks: {
+                    critical: ["内容是否无敏感元素（政治、宗教、暴力等）", "IP授权是否完整合规"],
+                    high: ["颜色是否影响游戏辨识度", "特效是否影响游戏性能", "是否与角色原有形象冲突"],
+                    medium: ["定价策略是否合理", "上线时间是否有冲突"]
+                }
+            },
+            weapon_skin: {
+                name: "武器皮肤",
+                dimensions: [
+                    { name: "品质等级", options: ["消费级", "工业级", "军规级", "受限", "保密", "隐秘", "特殊"], spec: "决定稀有度" },
+                    { name: "获取方式", options: ["开箱", "直购", "掉落", "交易", "通行证"], spec: "影响收入模式" },
+                    { name: "磨损度", options: ["崭新出厂", "略有磨损", "久经沙场", "破损不堪", "战痕累累"], spec: "影响视觉和价格" }
+                ],
+                tools: [
+                    { name: "CSGOStash", icon: "🔫", desc: "CS2皮肤数据库", url: "https://csgostash.com" },
+                    { name: "Pinterest", icon: "📌", desc: "搜索 'weapon skin design'", url: "https://pinterest.com" },
+                    { name: "ArtStation", icon: "🎨", desc: "武器概念设计", url: "https://artstation.com" }
+                ],
+                risks: {
+                    critical: ["内容是否无敏感元素", "武器模型是否合规"],
+                    high: ["颜色是否影响辨识度", "性能是否达标"],
+                    medium: ["定价策略是否合理", "磨损度分级是否清晰"]
+                }
+            },
+            vfx: {
+                name: "特效设计",
+                dimensions: [
+                    { name: "特效类型", options: ["技能特效", "回城特效", "击杀特效", "死亡特效", "被动特效"], spec: "特效应用场景" },
+                    { name: "风格方向", options: ["元素系", "粒子系", "流光系", "暗黑系", "科技系"], spec: "视觉风格定位" },
+                    { name: "性能预算", options: ["低配(<50粒子)", "中配(50-100)", "高配(100-200)", "旗舰(>200)"], spec: "性能限制" }
+                ],
+                tools: [
+                    { name: "Unity Asset Store", icon: "🎮", desc: "VFX资源商店", url: "https://assetstore.unity.com" },
+                    { name: "Unreal Marketplace", icon: "🔷", desc: "UE特效资源", url: "https://unrealengine.com/marketplace" },
+                    { name: "YouTube", icon: "📺", desc: "VFX教程和案例", url: "https://youtube.com" }
+                ],
+                risks: {
+                    critical: ["特效是否包含敏感内容"],
+                    high: ["性能是否达标（帧率≥30fps）", "粒子数是否超预算", "跨平台兼容性"],
+                    medium: ["特效辨识度是否足够", "是否与技能指示器冲突"]
+                }
+            },
+            home_decor: {
+                name: "家园装饰",
+                dimensions: [
+                    { name: "装饰类型", options: ["建筑外观", "家具", "摆件", "墙纸地板", "花园装饰"], spec: "装饰分类" },
+                    { name: "主题风格", options: ["现代简约", "古典欧式", "日式和风", "中式古典", "奇幻童话"], spec: "视觉风格" },
+                    { name: "互动功能", options: ["纯装饰", "可交互", "功能家具", "动画家具"], spec: "功能定位" }
+                ],
+                tools: [
+                    { name: "Pinterest", icon: "📌", desc: "家居设计灵感", url: "https://pinterest.com" },
+                    { name: "Behance", icon: "🖼️", desc: "室内设计案例", url: "https://behance.net" },
+                    { name: "Unity Asset Store", icon: "🎮", desc: "低多边形家具资源", url: "https://assetstore.unity.com" }
+                ],
+                risks: {
+                    critical: ["内容是否无敏感元素"],
+                    high: ["模型面数是否超限", "内存占用是否合理"],
+                    medium: ["主题是否与游戏世界观一致", "定价是否合理"]
+                }
+            },
+            decoration: {
+                name: "装饰系统",
+                dimensions: [
+                    { name: "类型", options: ["翅膀/背饰", "光环/特效", "头像框", "击杀特效", "印记/脚印"], spec: "装饰分类" },
+                    { name: "获取方式", options: ["付费直购", "活动获取", "战令奖励", "成就解锁"], spec: "获取途径" }
+                ],
+                tools: [
+                    { name: "Pinterest", icon: "📌", desc: "装饰设计灵感", url: "https://pinterest.com" },
+                    { name: "ArtStation", icon: "🎨", desc: "游戏装饰作品", url: "https://artstation.com" }
+                ],
+                risks: {
+                    critical: ["内容是否合规"],
+                    high: ["是否影响角色辨识度", "性能影响"],
+                    medium: ["获取方式是否合理"]
+                }
+            },
+            animation: {
+                name: "动画设计",
+                dimensions: [
+                    { name: "动画类型", options: ["待机动画", "回城动画", "胜利动画", "表情动作", "特殊交互"], spec: "动画用途" },
+                    { name: "风格", options: ["帅气", "搞笑", "优雅", "霸气", "可爱"], spec: "动作风格" },
+                    { name: "时长", options: ["3秒以内", "3-5秒", "5-8秒", "8秒以上"], spec: "动画时长" }
+                ],
+                tools: [
+                    { name: "Mixamo", icon: "🏃", desc: "免费动画资源", url: "https://mixamo.com" },
+                    { name: "YouTube", icon: "📺", desc: "动画参考视频", url: "https://youtube.com" }
+                ],
+                risks: {
+                    critical: ["动作是否包含敏感内容"],
+                    high: ["动画是否穿模", "性能影响"],
+                    medium: ["风格是否与角色匹配"]
+                }
+            },
+            sound: {
+                name: "音效设计",
+                dimensions: [
+                    { name: "音效类型", options: ["语音包", "技能音效", "回城音效", "击杀音效", "主题BGM"], spec: "音效分类" },
+                    { name: "风格", options: ["原声延伸", "主题定制", "搞笑/彩蛋", "明星配音"], spec: "风格定位" }
+                ],
+                tools: [
+                    { name: "Freesound", icon: "🔊", desc: "免费音效库", url: "https://freesound.org" },
+                    { name: "YouTube", icon: "📺", desc: "音效参考", url: "https://youtube.com" }
+                ],
+                risks: {
+                    critical: ["配音是否获得授权", "内容是否合规"],
+                    high: ["音效是否影响游戏体验"],
+                    medium: ["音质是否达标"]
+                }
+            },
+            character_skin: {
+                name: "角色皮肤",
+                dimensions: [
+                    { name: "品质等级", options: ["基础", "稀有", "史诗", "限定", "联名"], spec: "品质定位" },
+                    { name: "获取方式", options: ["直购", "季节通行证", "活动兑换", "好友赠送"], spec: "获取途径" }
+                ],
+                tools: [
+                    { name: "Pinterest", icon: "📌", desc: "角色设计灵感", url: "https://pinterest.com" },
+                    { name: "ArtStation", icon: "🎨", desc: "角色美术作品", url: "https://artstation.com" }
+                ],
+                risks: {
+                    critical: ["内容是否合规"],
+                    high: ["是否影响辨识度", "性能影响"],
+                    medium: ["定价是否合理"]
+                }
+            },
+            mount: {
+                name: "坐骑载具",
+                dimensions: [
+                    { name: "类型", options: ["陆地坐骑", "飞行坐骑", "水上载具", "特殊载具"], spec: "坐骑分类" },
+                    { name: "稀有度", options: ["普通", "稀有", "史诗", "传说", "限定"], spec: "稀有度定位" }
+                ],
+                tools: [
+                    { name: "Pinterest", icon: "📌", desc: "坐骑设计灵感", url: "https://pinterest.com" },
+                    { name: "ArtStation", icon: "🎨", desc: "坐骑概念设计", url: "https://artstation.com" }
+                ],
+                risks: {
+                    critical: ["内容是否合规"],
+                    high: ["是否影响游戏平衡", "性能影响"],
+                    medium: ["获取难度是否合理"]
+                }
+            },
+            theme: {
+                name: "主题套装",
+                dimensions: [
+                    { name: "套装类型", options: ["季节主题", "节日主题", "IP联动", "原创系列"], spec: "主题分类" },
+                    { name: "内容构成", options: ["角色+装饰", "全套装饰", "主题礼包"], spec: "内容组成" }
+                ],
+                tools: [
+                    { name: "Pinterest", icon: "📌", desc: "主题设计灵感", url: "https://pinterest.com" },
+                    { name: "Addog", icon: "📱", desc: "营销案例库", url: "https://addog.vip" }
+                ],
+                risks: {
+                    critical: ["IP授权是否完整", "内容是否合规"],
+                    high: ["内容量是否足够", "定价是否合理"],
+                    medium: ["上线时间是否合适"]
+                }
+            },
+            melee: {
+                name: "近战武器",
+                dimensions: [
+                    { name: "类型", options: ["匕首", "刀具", "拳套", "斧头", "特殊"], spec: "武器分类" },
+                    { name: "稀有度", options: ["普通", "稀有", "史诗", "传说", "特殊"], spec: "稀有度" }
+                ],
+                tools: [
+                    { name: "CSGOStash", icon: "🔪", desc: "近战武器数据库", url: "https://csgostash.com" },
+                    { name: "ArtStation", icon: "🎨", desc: "武器概念设计", url: "https://artstation.com" }
+                ],
+                risks: {
+                    critical: ["武器模型是否合规"],
+                    high: ["是否影响游戏平衡", "辨识度"],
+                    medium: ["定价是否合理"]
+                }
+            }
+        };
+
+        // 通用搜索工具
+        const GENERAL_TOOLS = [
+            { name: "Pinterest", icon: "📌", desc: "视觉灵感收集", url: "https://pinterest.com" },
+            { name: "可灵AI", icon: "🤖", desc: "AI生成概念图", url: "https://klingai.com" },
+            { name: "ArtStation", icon: "🎨", desc: "游戏美术作品", url: "https://artstation.com" },
+            { name: "Addog", icon: "📱", desc: "广告营销案例", url: "https://addog.vip" },
+            { name: "机核", icon: "📰", desc: "游戏文化社区", url: "https://gcores.com" },
+            { name: "Unity商店", icon: "🎮", desc: "游戏资源商店", url: "https://assetstore.unity.com" }
+        ];
+
+        // ==================== 状态管理 ====================
+        let currentStep = 1;
+        let selectedGame = null;
+        let selectedGameName = null;
+        let selectedAppearance = null;
+        let selectedAppearanceName = null;
+        let selectedTheme = null;
+        let selectedQuality = null;
+        let selectedCompetitors = new Set();
+        let currentPlatform = 'ios';
+        let checkedRisks = new Set();
+
+        // ==================== DOM 元素 ====================
+        const steps = document.querySelectorAll('.step');
+        const stepContents = document.querySelectorAll('.step-content');
+        const progressLine = document.getElementById('progressLine');
+
+        // ==================== 初始化 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            initGameSelection();
+            initAppearanceSelection();
+            initPlatformTabs();
+            initNavigation();
+            initTabs();
+        });
+
+        // ==================== 游戏选择 ====================
+        function initGameSelection() {
+            document.querySelectorAll('.game-option').forEach(option => {
+                option.addEventListener('click', () => {
+                    document.querySelectorAll('.game-option').forEach(o => o.classList.remove('selected'));
+                    option.classList.add('selected');
+                    selectedGame = option.dataset.game;
+                    selectedGameName = option.querySelector('.game-name').textContent;
+                    document.getElementById('customGameInput').value = '';
+                    document.getElementById('nextStep1').disabled = false;
+                });
+            });
+
+            document.getElementById('customGameInput').addEventListener('input', (e) => {
+                if (e.target.value.trim()) {
+                    document.querySelectorAll('.game-option').forEach(o => o.classList.remove('selected'));
+                    selectedGame = 'custom';
+                    selectedGameName = e.target.value.trim();
+                    document.getElementById('nextStep1').disabled = false;
+                } else if (!selectedGame) {
+                    document.getElementById('nextStep1').disabled = true;
+                }
+            });
+        }
+
+        // ==================== 外观选择 ====================
+        function initAppearanceSelection() {
+            // 在 renderAppearanceOptions 中动态绑定
+        }
+
+        function renderAppearanceOptions() {
+            const gameConfig = CONFIG[selectedGame];
+            const appearances = gameConfig?.appearances || [];
+            
+            document.getElementById('appearanceSubtitle').textContent = 
+                selectedGame === 'custom' ? `自定义品类：${selectedGameName}` : gameConfig?.fullName || selectedGameName;
+            
+            const grid = document.getElementById('appearanceGrid');
+            
+            if (appearances.length > 0) {
+                grid.innerHTML = appearances.map(app => `
+                    <div class="appearance-item" data-appearance="${app.id}">
+                        <div class="icon">${app.icon}</div>
+                        <div class="name">${app.name}</div>
+                    </div>
+                `).join('');
+
+                grid.querySelectorAll('.appearance-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        grid.querySelectorAll('.appearance-item').forEach(i => i.classList.remove('selected'));
+                        item.classList.add('selected');
+                        selectedAppearance = item.dataset.appearance;
+                        selectedAppearanceName = item.querySelector('.name').textContent;
+                        document.getElementById('customAppearanceInput').value = '';
+                        document.getElementById('nextStep2').disabled = false;
+                    });
+                });
+            } else {
+                grid.innerHTML = '<p style="color: var(--text-light); padding: 20px; text-align: center;">请在下方自定义输入外观类型</p>';
+            }
+        }
+
+        // ==================== 平台切换 ====================
+        function initPlatformTabs() {
+            document.querySelectorAll('.platform-tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.platform-tab').forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    currentPlatform = tab.dataset.platform;
+                    renderCompetitorList();
+                });
+            });
+        }
+
+        // ==================== 竞品列表 ====================
+        function renderCompetitorList() {
+            const games = PLATFORM_GAMES[currentPlatform];
+            const list = document.getElementById('competitorList');
+            
+            list.innerHTML = games.map((game, index) => `
+                <div class="competitor-item ${selectedCompetitors.has(game.name) ? 'selected' : ''}" data-name="${game.name}">
+                    <div class="competitor-rank ${index < 3 ? 'top' + (index + 1) : 'normal'}">${index + 1}</div>
+                    <div class="competitor-name">${game.name}</div>
+                    <div class="competitor-platform">${game.category}</div>
+                </div>
+            `).join('');
+
+            list.querySelectorAll('.competitor-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const name = item.dataset.name;
+                    if (selectedCompetitors.has(name)) {
+                        selectedCompetitors.delete(name);
+                        item.classList.remove('selected');
+                    } else {
+                        selectedCompetitors.add(name);
+                        item.classList.add('selected');
+                    }
+                    document.getElementById('selectedCount').textContent = selectedCompetitors.size;
+                });
+            });
+        }
+
+        // ==================== 导航 ====================
+        function initNavigation() {
+            document.getElementById('nextStep1').addEventListener('click', () => {
+                if (selectedGame) {
+                    goToStep(2);
+                    renderAppearanceOptions();
+                }
+            });
+
+            document.getElementById('nextStep2').addEventListener('click', () => {
+                if (selectedAppearance || document.getElementById('customAppearanceInput').value.trim()) {
+                    selectedTheme = document.getElementById('themeInput').value;
+                    selectedQuality = document.getElementById('qualitySelect').value;
+                    goToStep(3);
+                    renderCompetitorList();
+                }
+            });
+
+            document.getElementById('nextStep3').addEventListener('click', () => {
+                goToStep(4);
+                renderAnalysis();
+            });
+
+            document.getElementById('prevStep2').addEventListener('click', () => goToStep(1));
+            document.getElementById('prevStep3').addEventListener('click', () => goToStep(2));
+            document.getElementById('prevStep4').addEventListener('click', () => goToStep(3));
+
+            document.getElementById('resetBtn').addEventListener('click', () => {
+                resetAll();
+                goToStep(1);
+            });
+
+            // 自定义外观输入
+            document.getElementById('customAppearanceInput').addEventListener('input', (e) => {
+                if (e.target.value.trim()) {
+                    document.querySelectorAll('.appearance-item').forEach(i => i.classList.remove('selected'));
+                    selectedAppearance = 'custom';
+                    selectedAppearanceName = e.target.value.trim();
+                    document.getElementById('nextStep2').disabled = false;
+                } else if (!selectedAppearance) {
+                    document.getElementById('nextStep2').disabled = true;
+                }
+            });
+        }
+
+        function goToStep(step) {
+            currentStep = step;
+            
+            steps.forEach((s, i) => {
+                s.classList.remove('active', 'completed');
+                if (i + 1 < step) s.classList.add('completed');
+                if (i + 1 === step) s.classList.add('active');
+            });
+
+            const progress = ((step - 1) / (steps.length - 1)) * 76;
+            progressLine.style.width = `${12 + progress}%`;
+
+            stepContents.forEach((content, i) => {
+                content.classList.toggle('hidden', i + 1 !== step);
+            });
+        }
+
+        function resetAll() {
+            selectedGame = null;
+            selectedGameName = null;
+            selectedAppearance = null;
+            selectedAppearanceName = null;
+            selectedTheme = null;
+            selectedQuality = null;
+            selectedCompetitors.clear();
+            checkedRisks.clear();
+            
+            document.querySelectorAll('.game-option').forEach(o => o.classList.remove('selected'));
+            document.querySelectorAll('.appearance-item').forEach(i => i.classList.remove('selected'));
+            document.getElementById('customGameInput').value = '';
+            document.getElementById('customAppearanceInput').value = '';
+            document.getElementById('themeInput').value = '';
+            document.getElementById('qualitySelect').value = '';
+            document.getElementById('nextStep1').disabled = true;
+            document.getElementById('nextStep2').disabled = true;
+        }
+
+        // ==================== 分析渲染 ====================
+        function renderAnalysis() {
+            // 更新摘要
+            document.getElementById('summaryGame').textContent = selectedGameName;
+            document.getElementById('summaryAppearance').textContent = selectedAppearanceName;
+            document.getElementById('summaryCompetitors').textContent = 
+                selectedCompetitors.size > 0 ? Array.from(selectedCompetitors).join('、') : '未选择';
+            document.getElementById('analysisSubtitle').textContent = `${selectedGameName} - ${selectedAppearanceName}`;
+
+            // 渲染内容规划
+            renderContentAnalysis();
+            // 渲染工具
+            renderTools();
+            // 渲染风险检查
+            renderRisks();
+        }
+
+        function renderContentAnalysis() {
+            const container = document.getElementById('contentAnalysis');
+            const content = APPEARANCE_CONTENT[selectedAppearance] || APPEARANCE_CONTENT.skin;
+            
+            let html = `<div class="analysis-section">
+                <div class="section-title">📐 ${content.name}维度规划</div>`;
+            
+            content.dimensions.forEach(dim => {
+                html += `
+                    <div class="dimension-card">
+                        <div class="dimension-title">🎯 ${dim.name}</div>
+                        <div class="dimension-options">
+                            ${dim.options.map(opt => `<span class="option-chip">${opt}</span>`).join('')}
+                        </div>
+                        <p style="color: var(--text-light); font-size: 0.8rem; margin-top: 8px;">💡 ${dim.spec}</p>
+                    </div>`;
+            });
+
+            // 竞品商业化分析
+            if (selectedCompetitors.size > 0) {
+                html += `<div class="section-title" style="margin-top: 24px;">🏆 竞品商业化分析</div>`;
+                
+                Array.from(selectedCompetitors).forEach(competitorName => {
+                    const data = COMPETITOR_DATA[competitorName];
+                    if (data) {
+                        // 检查该竞品是否有当前选择的外观类型
+                        const hasAppearanceType = data.appearanceTypes && 
+                            data.appearanceTypes.includes(selectedAppearance);
+                        
+                        html += `
+                            <div class="competitor-analysis-card">
+                                <div class="competitor-header">
+                                    <div class="competitor-title-area">
+                                        <h4 class="competitor-name-title">${competitorName}</h4>
+                                        <span class="competitor-category-tag">${getCategoryName(data.category)}</span>
+                                        ${hasAppearanceType ? '<span class="appearance-match-tag">✓ 含此外观</span>' : ''}
+                                    </div>
+                                    <p class="competitor-overview">${data.overview}</p>
+                                </div>
+                                
+                                <div class="competitor-section">
+                                    <div class="competitor-section-title">💰 商业化模式</div>
+                                    <div class="model-grid">
+                                        <div class="model-item">
+                                            <span class="model-label">主要模式</span>
+                                            <span class="model-value">${data.model.primary}</span>
+                                        </div>
+                                        <div class="model-item">
+                                            <span class="model-label">辅助模式</span>
+                                            <span class="model-value">${data.model.secondary}</span>
+                                        </div>
+                                        <div class="model-item">
+                                            <span class="model-label">价格区间</span>
+                                            <span class="model-value">${data.model.pricing}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="competitor-section">
+                                    <div class="competitor-section-title">✨ 核心亮点</div>
+                                    <ul class="highlight-list">
+                                        ${data.highlights.map(h => `<li>${h}</li>`).join('')}
+                                    </ul>
+                                </div>
+                                
+                                <div class="competitor-section">
+                                    <div class="competitor-section-title">📊 成功案例</div>
+                                    <div class="case-grid">
+                                        ${data.cases.map(c => `
+                                            <div class="case-item">
+                                                <div class="case-name">${c.name}</div>
+                                                <div class="case-meta">
+                                                    <span class="case-type">${c.type}</span>
+                                                    <span class="case-price">${c.price}</span>
+                                                </div>
+                                                <div class="case-highlight">${c.highlight}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                                
+                                <div class="competitor-section">
+                                    <div class="competitor-section-title">💡 关键洞察</div>
+                                    <ul class="insight-list">
+                                        ${data.insights.map(i => `<li>${i}</li>`).join('')}
+                                    </ul>
+                                </div>
+                            </div>`;
+                    }
+                });
+                
+                // 汇总建议
+                html += `
+                    <div class="competitor-summary-card">
+                        <div class="summary-title">📌 竞品分析汇总</div>
+                        <div class="summary-content">
+                            <p>已分析 <strong>${selectedCompetitors.size}</strong> 款竞品游戏，建议重点关注：</p>
+                            <ul class="summary-list">
+                                <li>对比各竞品的<strong>定价策略</strong>，找出合理的价格区间</li>
+                                <li>学习<strong>成功案例</strong>的设计亮点和营销方式</li>
+                                <li>避免竞品已验证的<strong>失败点</strong>和争议项</li>
+                                <li>结合自身游戏特点，做<strong>差异化定位</strong></li>
+                            </ul>
+                            <p style="margin-top: 12px; color: var(--text-light); font-size: 0.85rem;">
+                                💡 建议在 <a href="https://pinterest.com" target="_blank" style="color: var(--primary);">Pinterest</a> 搜索竞品名称 + "${selectedAppearanceName}" 获取更多视觉参考
+                            </p>
+                        </div>
+                    </div>`;
+            } else {
+                html += `
+                    <div class="no-competitor-tip" style="margin-top: 20px;">
+                        <p style="color: var(--text-light); text-align: center; padding: 20px;">
+                            💡 未选择竞品参考。<br>
+                            <span style="font-size: 0.85rem;">返回步骤3选择竞品，可获取详细商业化分析。</span>
+                        </p>
+                    </div>`;
+            }
+
+            // 主题方向
+            if (selectedTheme) {
+                html += `
+                    <div class="section-title" style="margin-top: 20px;">🎭 主题方向：${selectedTheme}</div>
+                    <div class="dimension-card">
+                        <p style="margin-bottom: 10px;">搜索建议：</p>
+                        <div class="dimension-options">
+                            <span class="option-chip">${selectedTheme}主题</span>
+                            <span class="option-chip">${selectedTheme}${selectedAppearanceName}</span>
+                            <span class="option-chip">${selectedTheme}游戏设计</span>
+                        </div>
+                    </div>`;
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+        
+        // 获取品类名称
+        function getCategoryName(category) {
+            const categoryMap = {
+                'moba': 'MOBA',
+                'fps': 'FPS',
+                'simulation': '模拟经营',
+                'mmorpg': 'MMORPG',
+                'action': '动作',
+                'casual': '休闲',
+                'strategy': '策略',
+                'rpg': 'RPG',
+                'card': '卡牌'
+            };
+            return categoryMap[category] || category;
+        }
+
+        function renderTools() {
+            const container = document.getElementById('toolsContent');
+            const content = APPEARANCE_CONTENT[selectedAppearance] || APPEARANCE_CONTENT.skin;
+            const specificTools = content.tools || [];
+            
+            let html = `
+                <div class="analysis-section">
+                    <div class="section-title">🔍 专属搜索工具 <span class="badge">${selectedAppearanceName}</span></div>
+                    <div class="tool-grid">`;
+            
+            specificTools.forEach(tool => {
+                html += `
+                    <div class="tool-card" onclick="window.open('${tool.url}', '_blank')">
+                        <div class="tool-icon">${tool.icon}</div>
+                        <div class="tool-name">${tool.name}</div>
+                        <div class="tool-desc">${tool.desc}</div>
+                    </div>`;
+            });
+
+            html += `</div></div>
+                <div class="analysis-section" style="margin-top: 20px;">
+                    <div class="section-title">🛠️ 通用工具</div>
+                    <div class="tool-grid">`;
+            
+            GENERAL_TOOLS.forEach(tool => {
+                html += `
+                    <div class="tool-card" onclick="window.open('${tool.url}', '_blank')">
+                        <div class="tool-icon">${tool.icon}</div>
+                        <div class="tool-name">${tool.name}</div>
+                        <div class="tool-desc">${tool.desc}</div>
+                    </div>`;
+            });
+
+            html += '</div></div>';
+            container.innerHTML = html;
+        }
+
+        function renderRisks() {
+            const container = document.getElementById('risksContent');
+            const content = APPEARANCE_CONTENT[selectedAppearance] || APPEARANCE_CONTENT.skin;
+            const risks = content.risks || {};
+            checkedRisks.clear();
+            
+            let totalRisks = 0;
+            let html = '<div class="analysis-section">';
+
+            // 严重风险
+            if (risks.critical && risks.critical.length > 0) {
+                html += `
+                    <div class="risk-section">
+                        <div class="risk-header critical">
+                            <span>🔴</span>
+                            <span class="risk-title">合规风险</span>
+                            <span class="risk-badge critical">严重</span>
+                        </div>`;
+                risks.critical.forEach((item, i) => {
+                    totalRisks++;
+                    html += `
+                        <div class="checklist-item" data-risk="critical-${i}" onclick="toggleRisk(this, 'critical-${i}')">
+                            <div class="checklist-checkbox"></div>
+                            <span class="checklist-text">${item}</span>
+                        </div>`;
+                });
+                html += '</div>';
+            }
+
+            // 高风险
+            if (risks.high && risks.high.length > 0) {
+                html += `
+                    <div class="risk-section">
+                        <div class="risk-header high">
+                            <span>🟠</span>
+                            <span class="risk-title">设计/技术风险</span>
+                            <span class="risk-badge high">高</span>
+                        </div>`;
+                risks.high.forEach((item, i) => {
+                    totalRisks++;
+                    html += `
+                        <div class="checklist-item" data-risk="high-${i}" onclick="toggleRisk(this, 'high-${i}')">
+                            <div class="checklist-checkbox"></div>
+                            <span class="checklist-text">${item}</span>
+                        </div>`;
+                });
+                html += '</div>';
+            }
+
+            // 中风险
+            if (risks.medium && risks.medium.length > 0) {
+                html += `
+                    <div class="risk-section">
+                        <div class="risk-header medium">
+                            <span>🟡</span>
+                            <span class="risk-title">运营风险</span>
+                            <span class="risk-badge medium">中</span>
+                        </div>`;
+                risks.medium.forEach((item, i) => {
+                    totalRisks++;
+                    html += `
+                        <div class="checklist-item" data-risk="medium-${i}" onclick="toggleRisk(this, 'medium-${i}')">
+                            <div class="checklist-checkbox"></div>
+                            <span class="checklist-text">${item}</span>
+                        </div>`;
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+            container.innerHTML = html;
+
+            document.getElementById('riskTotal').textContent = totalRisks;
+            document.getElementById('riskCount').textContent = '0';
+            document.getElementById('riskProgress').style.width = '0%';
+        }
+
+        function toggleRisk(element, id) {
+            element.classList.toggle('checked');
+            const checkbox = element.querySelector('.checklist-checkbox');
+            checkbox.textContent = element.classList.contains('checked') ? '✓' : '';
+            
+            if (checkedRisks.has(id)) {
+                checkedRisks.delete(id);
+            } else {
+                checkedRisks.add(id);
+            }
+
+            const total = parseInt(document.getElementById('riskTotal').textContent);
+            const checked = checkedRisks.size;
+            const percent = Math.round((checked / total) * 100);
+            
+            document.getElementById('riskCount').textContent = checked;
+            document.getElementById('riskProgress').style.width = `${percent}%`;
+        }
+
+        // ==================== Tabs ====================
+        function initTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    tab.classList.add('active');
+                    document.getElementById(`tab-${tab.dataset.tab}`).classList.add('active');
+                });
+            });
+        }
+
+        // ==================== Toast ====================
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>

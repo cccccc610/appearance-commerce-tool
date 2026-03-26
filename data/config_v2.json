@@ -1,0 +1,543 @@
+{
+  "meta": {
+    "version": "2.0",
+    "description": "外观商业化思考小工具 - 美术策划运营复合型岗位专用",
+    "updated": "2025-03-25"
+  },
+  
+  "reference_links": {
+    "美术参考": {
+      "Pinterest": {
+        "url": "https://jp.pinterest.com/",
+        "description": "全球视觉灵感收集平台，搜索关键词：游戏皮肤、角色设计、特效参考",
+        "usage": "搜索 '{品类}皮肤设计'、'{主题}特效'、'{风格}角色概念'"
+      },
+      "可灵AI": {
+        "url": "https://app.klingai.com/cn/",
+        "description": "AI生成美术素材，快速验证设计概念",
+        "usage": "输入主题描述生成概念图，用于前期方案验证"
+      },
+      "Eagle": {
+        "url": "https://cn.eagle.cool/",
+        "description": "设计师素材管理工具，本地整理参考图",
+        "usage": "收集整理竞品皮肤、特效、UI等素材"
+      },
+      "Unity Asset Store": {
+        "url": "https://assetstore.unity.com/zh-CN/",
+        "description": "Unity官方资源商店，购买现成美术资源",
+        "usage": "搜索 'character skin'、'VFX'、'animation' 找免费/付费资源"
+      },
+      "ArtStation": {
+        "url": "https://www.artstation.com/",
+        "description": "全球游戏美术作品展示平台",
+        "usage": "搜索具体游戏名称或皮肤系列名"
+      },
+      "Behance": {
+        "url": "https://www.behance.net/",
+        "description": "Adobe旗下创意作品展示平台",
+        "usage": "搜索游戏UI、角色设计、品牌设计"
+      }
+    },
+    "市场参考": {
+      "Addog": {
+        "url": "https://www.addog.vip/",
+        "description": "广告营销案例库，查看品牌营销案例",
+        "usage": "搜索游戏品牌、皮肤发布会、节日营销"
+      },
+      "SocialBeta": {
+        "url": "https://socialbeta.com/",
+        "description": "社交媒体营销案例",
+        "usage": "搜索游戏社交营销、玩家运营案例"
+      },
+      "数英": {
+        "url": "https://www.digitaling.com/",
+        "description": "数字营销案例库",
+        "usage": "搜索游戏品牌营销、跨界合作案例"
+      }
+    },
+    "游戏资讯": {
+      "机核": {
+        "url": "https://www.gcores.com/",
+        "description": "游戏文化社区，游戏评测与行业分析",
+        "usage": "查看游戏评测、设计分析、行业趋势"
+      },
+      "游研社": {
+        "url": "https://www.yystv.cn/",
+        "description": "深度游戏文化媒体",
+        "usage": "游戏设计分析、玩家文化研究"
+      },
+      "GameRes": {
+        "url": "https://www.gameres.com/",
+        "description": "游戏开发者社区",
+        "usage": "技术实现、美术流程、策划设计"
+      }
+    },
+    "运营资源": {
+      "神策数据": {
+        "url": "https://www.sensorsdata.cn/",
+        "description": "用户行为分析平台",
+        "usage": "数据分析方法论、用户运营案例"
+      },
+      "GrowingIO": {
+        "url": "https://www.growingio.com/",
+        "description": "增长分析平台",
+        "usage": "增长策略、数据驱动运营"
+      },
+      "人人都是产品经理": {
+        "url": "https://www.woshipm.com/",
+        "description": "产品运营知识社区",
+        "usage": "搜索游戏运营、用户增长、商业化"
+      }
+    }
+  },
+
+  "moba": {
+    "name": "MOBA（多人在线战术竞技）",
+    "description": "如王者荣耀、英雄联盟、DOTA2等",
+    "characteristics": {
+      "target_users": "竞技玩家为主，追求操作感和个性化表达",
+      "monetization_model": "英雄免费/付费解锁 + 皮肤付费 + 战令系统",
+      "key_metrics": ["DAU", "皮肤销量", "ARPU", "皮肤拥有率", "皮肤使用率"]
+    },
+    "art_categories": {
+      "皮肤设计": {
+        "description": "角色外观替换，是MOBA最核心的商业化内容",
+        "dimensions": [
+          {
+            "name": "品质等级",
+            "options": ["普通/基础", "稀有/勇者", "史诗", "传说", "限定"],
+            "spec": "决定制作投入和定价"
+          },
+          {
+            "name": "主题风格",
+            "options": ["节日限定", "IP联动", "原创系列", "文化主题", "风格主题"],
+            "spec": "决定整体视觉方向"
+          },
+          {
+            "name": "模型改动",
+            "options": ["仅换色/贴图", "局部修改", "完全重制"],
+            "spec": "影响制作成本和工期"
+          },
+          {
+            "name": "特效等级",
+            "options": ["无特效", "基础特效", "全套特效"],
+            "spec": "史诗以上必须"
+          },
+          {
+            "name": "动画内容",
+            "options": ["无", "回城动画", "待机动画", "全套动画"],
+            "spec": "传说级必备"
+          },
+          {
+            "name": "音效内容",
+            "options": ["无", "基础音效", "专属语音包"],
+            "spec": "高等级增值内容"
+          }
+        ],
+        "reference_search": [
+          "Pinterest: 'MOBA skin design' 'League of Legends skin' '王者荣耀皮肤'",
+          "ArtStation: 'character skin' 'game character design'",
+          "YouTube: '{游戏名} skin showcase' 'skin reveal trailer'"
+        ]
+      },
+      "装饰系统": {
+        "description": "附加外观元素，翅膀、光环、头像框等",
+        "dimensions": [
+          {"name": "类型", "options": ["翅膀/背饰", "光环/特效", "头像框", "击杀特效", "印记/脚印"]},
+          {"name": "获取方式", "options": ["付费直购", "活动获取", "战令奖励", "成就解锁"]},
+          {"name": "稀缺性", "options": ["永久", "限时", "赛季限定"]}
+        ]
+      },
+      "特效设计": {
+        "description": "技能、击杀、回城等视觉特效",
+        "dimensions": [
+          {"name": "特效类型", "options": ["技能特效", "回城特效", "击杀特效", "死亡特效", "被动特效"]},
+          {"name": "风格方向", "options": ["元素系(火/冰/雷)", "粒子系", "流光系", "暗黑系", "科技系"]},
+          {"name": "性能预算", "options": ["低配(<50粒子)", "中配(50-100)", "高配(100-200)", "旗舰(>200)"]}
+        ],
+        "reference_search": [
+          "Unity Asset Store: 'VFX pack' 'particle effects'",
+          "YouTube: 'VFX breakdown' 'game effects tutorial'"
+        ]
+      },
+      "动画设计": {
+        "description": "角色动作、待机、回城、胜利动画等",
+        "dimensions": [
+          {"name": "动画类型", "options": ["待机动画", "回城动画", "胜利动画", "表情动作", "特殊交互"]},
+          {"name": "风格", "options": ["帅气", "搞笑", "优雅", "霸气", "可爱"]},
+          {"name": "时长", "options": ["3秒以内", "3-5秒", "5-8秒", "8秒以上"]}
+        ]
+      },
+      "音效设计": {
+        "description": "语音包、技能音效、主题BGM等",
+        "dimensions": [
+          {"name": "音效类型", "options": ["语音包", "技能音效", "回城音效", "击杀音效", "主题BGM"]},
+          {"name": "风格", "options": ["原声延伸", "主题定制", "搞笑/彩蛋", "明星配音"]}
+        ]
+      }
+    },
+    "operation_features": {
+      "运营功能": {
+        "description": "皮肤相关的运营系统设计",
+        "dimensions": [
+          {
+            "name": "获取方式",
+            "options": ["直购", "战令", "抽奖/夺宝", "活动兑换", "碎片合成", "限时秒杀"],
+            "spec": "影响收入模式和玩家体验"
+          },
+          {
+            "name": "定价策略",
+            "options": ["固定定价", "首周折扣", "阶梯定价", "套餐捆绑"],
+            "spec": "影响首周销量和整体收入"
+          },
+          {
+            "name": "稀缺设计",
+            "options": ["常驻", "限时销售", "永不返场", "赛季限定"],
+            "spec": "影响稀缺性和收藏价值"
+          },
+          {
+            "name": "社交功能",
+            "options": ["赠送系统", "分享解锁", "组队加成", "展示系统"],
+            "spec": "促进社交传播"
+          },
+          {
+            "name": "增值服务",
+            "options": ["7天体验", "试用券", "以旧换新", "升级系统"],
+            "spec": "降低决策门槛"
+          }
+        ]
+      },
+      "活动运营": {
+        "description": "皮肤上线相关的活动设计",
+        "dimensions": [
+          {"name": "预热活动", "options": ["悬念海报", "倒计时", "社区投票", "线索解谜"]},
+          {"name": "上线活动", "options": ["首发折扣", "限时礼包", "累计充值", "任务解锁"]},
+          {"name": "延续活动", "options": ["返场投票", "周年庆典", "皮肤投票", "创意征集"]}
+        ]
+      }
+    },
+    "competitors": [
+      {
+        "name": "王者荣耀",
+        "company": "腾讯",
+        "pricing_model": "点券制（1元=10点券）",
+        "price_range": {"普通": "免费/288点券", "勇者": "588点券", "史诗": "888点券", "传说": "1688点券", "限定": "1788-2888点券"},
+        "key_features": ["英雄+皮肤捆绑", "战令系统(38/68元)", "碎片商店", "皮肤夺宝", "周年返场投票"],
+        "success_cases": [
+          {"name": "凤求凰·李白", "type": "鸡年限定", "sales": "首周超百万套", "key": "国风+高人气英雄+限定稀缺"},
+          {"name": "白鹤梁神女·大乔", "type": "文化联动", "sales": "文化标杆", "key": "博物馆联动+独特设计+口碑传播"}
+        ],
+        "reference_links": ["https://pvp.qq.com/web201605/herodetail/", "https://weibo.com/wzry"]
+      },
+      {
+        "name": "英雄联盟",
+        "company": "Riot Games",
+        "pricing_model": "RP点券制",
+        "price_range": {"普通": "520RP(~$4)", "史诗": "975RP(~$8)", "传说": "1350RP(~$10)", "终极": "3250RP(~$25)"},
+        "key_features": ["皮肤分级定价", "至臻系列", "海克斯抽奖", "电竞战队联名", "神话精萃兑换"],
+        "success_cases": [
+          {"name": "星之守护者系列", "type": "主题系列", "sales": "年度最畅销", "key": "魔法少女+多英雄+世界观"},
+          {"name": "K/DA女团系列", "type": "虚拟偶像", "sales": "破圈传播", "key": "音乐+偶像+时尚融合"}
+        ],
+        "reference_links": ["https://www.leagueoflegends.com/en-us/news/skin-spotlight/", "https://universe.leagueoflegends.com/"]
+      },
+      {
+        "name": "DOTA2",
+        "company": "Valve",
+        "pricing_model": "Steam市场+创意工坊",
+        "price_range": {"普通套装": "$1-5", "稀有": "$5-15", "至宝": "$25-35"},
+        "key_features": ["创意工坊UGC", "国际赛本子", "饰品独立交易", "社区投票选型"],
+        "success_cases": [
+          {"name": "TI本子至宝", "type": "赛事限定", "sales": "奖金池破亿", "key": "玩家投票+赛事绑定+等级解锁"}
+        ],
+        "reference_links": ["https://www.dota2.com/store", "https://steamcommunity.com/market/"]
+      },
+      {
+        "name": "决战！平安京",
+        "company": "网易",
+        "pricing_model": "勾玉制",
+        "price_range": {"史诗": "88-128元", "传说": "168-198元", "限定": "198-298元"},
+        "key_features": ["阴阳师IP联动", "和风主题差异化", "皮肤试玩", "签到免费皮肤"],
+        "reference_links": ["https://moba.163.com/"]
+      }
+    ]
+  },
+
+  "fps": {
+    "name": "FPS（第一人称射击）",
+    "description": "如CS2、VALORANT、Apex、穿越火线等",
+    "characteristics": {
+      "target_users": "竞技玩家为主，追求操作手感、视觉辨识度和身份认同",
+      "monetization_model": "武器皮肤为主 + 角色皮肤 + 战斗通行证",
+      "key_metrics": ["DAU", "皮肤/武器销量", "开箱收入", "交易额(Steam)", "通行证购买率"]
+    },
+    "art_categories": {
+      "武器皮肤": {
+        "description": "FPS最核心的商业化内容",
+        "dimensions": [
+          {"name": "品质等级", "options": ["消费级", "工业级", "军规级", "受限", "保密", "隐秘", "特殊(刀/手套)"]},
+          {"name": "获取方式", "options": ["开箱", "直购", "掉落", "交易", "通行证"]},
+          {"name": "磨损度", "options": ["崭新出厂", "略有磨损", "久经沙场", "破损不堪", "战痕累累"]},
+          {"name": "特殊属性", "options": ["计数器(StatTrak)", "纪念品", "渐变", "多普勒"]}
+        ],
+        "reference_search": [
+          "CS2: csgostash.com",
+          "Pinterest: 'CS2 skins' 'FPS weapon skin'",
+          "ArtStation: 'weapon design' 'gun concept'"
+        ]
+      },
+      "角色皮肤": {
+        "description": "角色外观，部分FPS游戏重要收入来源",
+        "dimensions": [
+          {"name": "品质等级", "options": ["基础", "精选", "豪华", "Premium", "Ultra", "限定"]},
+          {"name": "内容类型", "options": ["外观套装", "单独皮肤", "传家宝", "表情动作"]}
+        ]
+      },
+      "特效设计": {
+        "description": "武器特效、击杀特效等",
+        "dimensions": [
+          {"name": "特效类型", "options": ["枪口火焰", "弹道特效", "击杀特效", "检视动画", "换弹动画"]},
+          {"name": "声音设计", "options": ["枪声替换", "换弹音效", "击杀音效"]}
+        ]
+      }
+    },
+    "operation_features": {
+      "运营功能": {
+        "dimensions": [
+          {"name": "获取系统", "options": ["开箱系统", "夜市场", "战斗通行证", "直购商店", "活动掉落"]},
+          {"name": "交易系统", "options": ["自由交易", "限时交易", "禁止交易"]},
+          {"name": "升级系统", "options": ["Radianite升级", "任务解锁变体", "成就解锁"]}
+        ]
+      }
+    },
+    "competitors": [
+      {
+        "name": "CS2",
+        "company": "Valve",
+        "pricing_model": "Steam市场交易",
+        "price_range": {"消费级": "$0.03-1", "受限": "$15-50", "隐秘": "$200-1000+", "特殊级": "$100-10000+"},
+        "key_features": ["开箱系统", "磨损度差异", "独立交易市场", "印花/贴纸"],
+        "success_cases": [
+          {"name": "龙狙", "type": "稀有收藏", "sales": "数万美元", "key": "极低掉率+收藏价值+身份象征"}
+        ],
+        "reference_links": ["https://csgostash.com/", "https://steamcommunity.com/market/"]
+      },
+      {
+        "name": "VALORANT",
+        "company": "Riot Games",
+        "pricing_model": "VP点券制",
+        "price_range": {"精选": "875VP(~$9)", "Premium": "1775VP(~$18)", "Ultra": "2175VP(~$22)"},
+        "key_features": ["套装捆绑", "变体升级系统", "枪械检视动画", "夜市场"],
+        "success_cases": [
+          {"name": "Glitchpop系列", "type": "科幻主题", "sales": "最畅销之一", "key": "霓虹美学+枪声+击杀特效"}
+        ],
+        "reference_links": ["https://valorant.fandom.com/wiki/Skins"]
+      },
+      {
+        "name": "Apex英雄",
+        "company": "EA/Respawn",
+        "pricing_model": "Apex金币制",
+        "price_range": {"普通": "400金币(~$4)", "传说": "1800金币(~$18)", "传家宝": "碎片兑换"},
+        "key_features": ["战斗通行证", "传家宝系统", "保底机制", "活动商店"],
+        "success_cases": [
+          {"name": "传家宝系列", "type": "终极收藏", "sales": "核心付费驱动力", "key": "保底机制+近战武器设计+身份象征"}
+        ],
+        "reference_links": ["https://www.ea.com/games/apex-legends"]
+      },
+      {
+        "name": "穿越火线",
+        "company": "腾讯/Smilegate",
+        "pricing_model": "CF点制",
+        "price_range": {"英雄级": "488-688元", "王者级": "888-1288元"},
+        "key_features": ["武器属性加成", "套装系统", "VVG抽奖"],
+        "reference_links": ["https://cf.qq.com/"]
+      }
+    ]
+  },
+
+  "simulation": {
+    "name": "模拟经营",
+    "description": "如动森、原神家园、光遇、梦幻西游等",
+    "characteristics": {
+      "target_users": "休闲玩家为主，追求收集乐趣、个性表达、社交互动",
+      "monetization_model": "角色皮肤 + 家园装饰 + 通行证 + 礼包",
+      "key_metrics": ["DAU", "皮肤销量", "装饰销量", "通行证购买率", "用户留存"]
+    },
+    "art_categories": {
+      "角色皮肤": {
+        "description": "角色外观装扮",
+        "dimensions": [
+          {"name": "品质等级", "options": ["基础", "稀有", "史诗", "限定", "联名"]},
+          {"name": "获取方式", "options": ["直购", "季节通行证", "活动兑换", "好友赠送"]},
+          {"name": "互动功能", "options": ["无", "特殊动作", "特殊表情", "特殊音效"]}
+        ]
+      },
+      "家园装饰": {
+        "description": "房屋、家具、摆件等装饰品",
+        "dimensions": [
+          {"name": "装饰类型", "options": ["建筑外观", "家具", "摆件", "墙纸地板", "花园装饰"]},
+          {"name": "主题风格", "options": ["现代简约", "古典欧式", "日式和风", "中式古典", "奇幻童话"]},
+          {"name": "互动功能", "options": ["纯装饰", "可交互", "功能家具", "动画家具"]}
+        ]
+      },
+      "载具坐骑": {
+        "description": "移动工具外观",
+        "dimensions": [
+          {"name": "类型", "options": ["陆地坐骑", "飞行坐骑", "水上载具", "特殊载具"]},
+          {"name": "稀有度", "options": ["普通", "稀有", "史诗", "传说", "限定"]}
+        ]
+      },
+      "主题套装": {
+        "description": "成套主题内容",
+        "dimensions": [
+          {"name": "套装类型", "options": ["季节主题", "节日主题", "IP联动", "原创系列"]},
+          {"name": "内容构成", "options": ["角色+装饰", "全套装饰", "主题礼包"]}
+        ]
+      }
+    },
+    "operation_features": {
+      "运营功能": {
+        "dimensions": [
+          {"name": "季节系统", "options": ["季节通行证", "季节限定", "季节活动"]},
+          {"name": "社交功能", "options": ["好友赠送", "访问解锁", "合照功能", "分享奖励"]},
+          {"name": "收集系统", "options": ["图鉴系统", "成就系统", "收集奖励"]}
+        ]
+      }
+    },
+    "competitors": [
+      {
+        "name": "动物森友会",
+        "company": "任天堂",
+        "pricing_model": "买断+Amiibo+DLC",
+        "price_range": {"Amiibo": "¥100-150", "DLC": "248港币"},
+        "key_features": ["季节限定", "DIY系统", "设计码分享", "Nook里数"],
+        "success_cases": [
+          {"name": "节日限定家具", "type": "季节活动", "sales": "核心内容", "key": "限时稀缺+收集欲+社交分享"}
+        ],
+        "reference_links": ["https://nookipedia.com/"]
+      },
+      {
+        "name": "原神(家园)",
+        "company": "米哈游",
+        "pricing_model": "原石/创世结晶",
+        "price_range": {"角色皮肤": "1680原石(~¥168)", "家园装饰": "洞天宝钱/活动"},
+        "key_features": ["角色皮肤", "家园装饰", "尘歌壶", "好感度奖励"],
+        "success_cases": [
+          {"name": "甘雨海灯节皮肤", "type": "节日限定", "sales": "销量优异", "key": "节日+高人气+限时折扣"}
+        ],
+        "reference_links": ["https://genshin-impact.fandom.com/"]
+      },
+      {
+        "name": "光·遇",
+        "company": "thatgamecompany",
+        "pricing_model": "蜡烛/爱心+IAP",
+        "price_range": {"季节通行证": "¥68/季", "礼包": "¥6-128"},
+        "key_features": ["季节限定", "先祖兑换", "社交礼物", "限时复刻"],
+        "success_cases": [
+          {"name": "季节限定斗篷", "type": "季节通行证", "sales": "核心付费", "key": "稀缺性+社交展示+治愈风格"}
+        ],
+        "reference_links": ["https://sky-children-of-the-light.fandom.com/"]
+      },
+      {
+        "name": "梦幻西游",
+        "company": "网易",
+        "pricing_model": "仙玉/点卡制",
+        "price_range": {"锦衣": "¥200-600", "祥瑞": "¥300-1000", "限定礼盒": "¥500-2000"},
+        "key_features": ["锦衣系统", "祥瑞系统", "周年限定", "染色系统"],
+        "success_cases": [
+          {"name": "周年庆锦衣", "type": "年度限定", "sales": "MMO标杆", "key": "年度限定+社交身份+长期保值"}
+        ],
+        "reference_links": ["https://xyq.163.com/"]
+      }
+    ]
+  },
+
+  "thinking_frameworks": {
+    "商业化判断框架": {
+      "description": "评估外观商业化方案的核心维度",
+      "dimensions": [
+        {
+          "name": "市场适配",
+          "questions": [
+            "目标用户是否匹配？",
+            "定价是否在用户接受范围内？",
+            "上线时间是否避开竞品冲突？",
+            "是否契合当前版本/赛季节奏？"
+          ]
+        },
+        {
+          "name": "美术品质",
+          "questions": [
+            "视觉风格是否符合目标用户审美？",
+            "与现有皮肤是否有足够区分度？",
+            "特效/动画是否达到对应品质标准？",
+            "是否存在技术实现风险？"
+          ]
+        },
+        {
+          "name": "运营潜力",
+          "questions": [
+            "是否有预热/传播空间？",
+            "是否支持社交分享？",
+            "是否有复购/复用价值？",
+            "是否支持后续增值？"
+          ]
+        },
+        {
+          "name": "收益预期",
+          "questions": [
+            "首周销量预期？",
+            "生命周期收入预期？",
+            "ROI预估？",
+            "是否有长期运营价值？"
+          ]
+        }
+      ]
+    },
+    "风险检查框架": {
+      "description": "识别潜在风险点",
+      "risk_categories": [
+        {
+          "name": "设计风险",
+          "level": "高",
+          "items": [
+            "颜色是否影响游戏辨识度",
+            "特效是否影响游戏性能",
+            "是否与角色原有形象冲突",
+            "是否可能引发玩家争议"
+          ]
+        },
+        {
+          "name": "技术风险",
+          "level": "高",
+          "items": [
+            "性能是否达标(帧率≥30fps)",
+            "资源包体是否过大",
+            "跨平台兼容性是否验证",
+            "特效粒子数是否超预算"
+          ]
+        },
+        {
+          "name": "运营风险",
+          "level": "中",
+          "items": [
+            "定价策略是否合理",
+            "限定规则是否清晰",
+            "上线时间是否有冲突",
+            "舆情预案是否准备"
+          ]
+        },
+        {
+          "name": "合规风险",
+          "level": "严重",
+          "items": [
+            "内容是否无敏感元素",
+            "IP授权是否完整合规",
+            "是否通过法务审核",
+            "广告宣传是否合规"
+          ]
+        }
+      ]
+    }
+  }
+}

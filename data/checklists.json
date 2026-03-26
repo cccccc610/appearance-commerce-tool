@@ -1,0 +1,142 @@
+{
+  "completeness": {
+    "name": "完整性检查",
+    "description": "确保方案覆盖所有关键环节",
+    "categories": [
+      {
+        "name": "设计定位",
+        "items": [
+          {"id": "D01", "content": "目标用户群体已明确定义", "weight": 10},
+          {"id": "D02", "content": "主题方向与风格已确定", "weight": 10},
+          {"id": "D03", "content": "品质等级已定位（普通/稀有/史诗/传说/限定）", "weight": 10},
+          {"id": "D04", "content": "差异化卖点已提炼", "weight": 8},
+          {"id": "D05", "content": "与现有皮肤的区分度已确认", "weight": 8},
+          {"id": "D06", "content": "参考对标已确定", "weight": 6}
+        ]
+      },
+      {
+        "name": "美术内容",
+        "items": [
+          {"id": "A01", "content": "主题题材/故事背景已设计", "weight": 10},
+          {"id": "A02", "content": "视觉风格/配色方案已确定", "weight": 10},
+          {"id": "A03", "content": "模型设计规格已明确", "weight": 8},
+          {"id": "A04", "content": "特效设计方向已确定", "weight": 8},
+          {"id": "A05", "content": "动画需求已梳理（待机/回城/表情）", "weight": 7},
+          {"id": "A06", "content": "音效/语音需求已明确", "weight": 6}
+        ]
+      },
+      {
+        "name": "定价策略",
+        "items": [
+          {"id": "P01", "content": "基础定价已确定", "weight": 10},
+          {"id": "P02", "content": "定价系数已计算（人气/主题/限定等）", "weight": 8},
+          {"id": "P03", "content": "折扣/促销策略已规划", "weight": 7},
+          {"id": "P04", "content": "套餐组合方案已设计", "weight": 6},
+          {"id": "P05", "content": "与竞品定价对比已完成", "weight": 6}
+        ]
+      },
+      {
+        "name": "制作排期",
+        "items": [
+          {"id": "S01", "content": "各阶段时间节点已规划", "weight": 10},
+          {"id": "S02", "content": "里程碑评审点已设置", "weight": 8},
+          {"id": "S03", "content": "资源需求已评估", "weight": 8},
+          {"id": "S04", "content": "上线时间已确定", "weight": 10},
+          {"id": "S05", "content": "预热/运营时间线已规划", "weight": 7}
+        ]
+      },
+      {
+        "name": "运营规划",
+        "items": [
+          {"id": "O01", "content": "预热宣传计划已制定", "weight": 8},
+          {"id": "O02", "content": "上线活动方案已设计", "weight": 8},
+          {"id": "O03", "content": "数据指标目标已设定", "weight": 10},
+          {"id": "O04", "content": "监控方案已制定", "weight": 6},
+          {"id": "O05", "content": "返场/长尾策略已考虑", "weight": 5}
+        ]
+      }
+    ]
+  },
+  "rationality": {
+    "name": "合理性检查",
+    "description": "确保方案定价、排期、目标合理可行",
+    "categories": [
+      {
+        "name": "定价合理性",
+        "items": [
+          {"id": "R01", "content": "定价与品质等级匹配", "weight": 10},
+          {"id": "R02", "content": "定价与竞品对比合理", "weight": 8},
+          {"id": "R03", "content": "折扣力度不损害品牌价值", "weight": 7},
+          {"id": "R04", "content": "套餐定价有吸引力", "weight": 6},
+          {"id": "R05", "content": "付费用户价格接受度已评估", "weight": 8}
+        ]
+      },
+      {
+        "name": "排期合理性",
+        "items": [
+          {"id": "R06", "content": "制作周期与品质要求匹配", "weight": 10},
+          {"id": "R07", "content": "评审节点时间充足", "weight": 7},
+          {"id": "R08", "content": "上线时间避开竞品/活动冲突", "weight": 8},
+          {"id": "R09", "content": "团队资源可支撑", "weight": 10},
+          {"id": "R10", "content": "预留了缓冲时间", "weight": 6}
+        ]
+      },
+      {
+        "name": "目标合理性",
+        "items": [
+          {"id": "R11", "content": "销量目标有历史数据支撑", "weight": 10},
+          {"id": "R12", "content": "营收目标可达成", "weight": 10},
+          {"id": "R13", "content": "用户满意度目标可衡量", "weight": 7},
+          {"id": "R14", "content": "ROI 预估为正", "weight": 10},
+          {"id": "R15", "content": "风险预案已准备", "weight": 8}
+        ]
+      }
+    ]
+  },
+  "risk": {
+    "name": "风险检查",
+    "description": "识别方案潜在风险点",
+    "categories": [
+      {
+        "name": "设计风险",
+        "items": [
+          {"id": "RK01", "content": "风格是否符合目标用户审美偏好", "weight": 10, "risk_level": "high"},
+          {"id": "RK02", "content": "是否与英雄/角色原有形象冲突", "weight": 9, "risk_level": "high"},
+          {"id": "RK03", "content": "特效是否过度影响游戏体验", "weight": 10, "risk_level": "high"},
+          {"id": "RK04", "content": "颜色是否影响敌我辨识（FPS需特别关注）", "weight": 10, "risk_level": "critical"},
+          {"id": "RK05", "content": "是否存在穿模/模型冲突问题", "weight": 7, "risk_level": "medium"}
+        ]
+      },
+      {
+        "name": "技术风险",
+        "items": [
+          {"id": "RK06", "content": "性能是否达标（目标机型帧率≥30fps）", "weight": 10, "risk_level": "high"},
+          {"id": "RK07", "content": "特效粒子数是否在预算内", "weight": 8, "risk_level": "medium"},
+          {"id": "RK08", "content": "资源包体是否过大", "weight": 7, "risk_level": "medium"},
+          {"id": "RK09", "content": "跨平台兼容性是否验证", "weight": 8, "risk_level": "high"},
+          {"id": "RK10", "content": "是否有低配模式开关", "weight": 6, "risk_level": "low"}
+        ]
+      },
+      {
+        "name": "运营风险",
+        "items": [
+          {"id": "RK11", "content": "定价是否过高导致销量不及预期", "weight": 10, "risk_level": "high"},
+          {"id": "RK12", "content": "上线时间是否与其他活动冲突", "weight": 8, "risk_level": "medium"},
+          {"id": "RK13", "content": "限定规则是否清晰、避免争议", "weight": 9, "risk_level": "high"},
+          {"id": "RK14", "content": "返场规则是否提前告知", "weight": 7, "risk_level": "medium"},
+          {"id": "RK15", "content": "是否准备了舆情应对预案", "weight": 8, "risk_level": "high"}
+        ]
+      },
+      {
+        "name": "合规风险",
+        "items": [
+          {"id": "RK16", "content": "内容是否涉及敏感元素（宗教/政治等）", "weight": 10, "risk_level": "critical"},
+          {"id": "RK17", "content": "IP授权是否完整合规", "weight": 10, "risk_level": "critical"},
+          {"id": "RK18", "content": "是否通过法务审核", "weight": 10, "risk_level": "critical"},
+          {"id": "RK19", "content": "抽奖概率是否公示", "weight": 8, "risk_level": "high"},
+          {"id": "RK20", "content": "未成年人保护措施是否到位", "weight": 9, "risk_level": "high"}
+        ]
+      }
+    ]
+  }
+}

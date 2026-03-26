@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具访问方式说明</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        h1 {
+            color: #6366f1;
+        }
+        .url {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #6366f1;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            margin: 10px 5px;
+        }
+        .btn:hover {
+            background: #4f46e5;
+        }
+        .btn.disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🎨 外观商业化思考小工具</h1>
+        <p>AI驱动的竞品分析和参考生成系统</p>
+    </div>
+
+    <div class="card">
+        <h2>📍 访问地址</h2>
+
+        <h3>✅ 本地访问（当前服务器）</h3>
+        <div class="url">http://localhost:5001</div>
+        <a href="http://localhost:5001" class="btn" target="_blank">立即访问</a>
+
+        <h3>⚠️ 公网访问（需配置安全组）</h3>
+        <div class="url">http://14.103.84.36:5001</div>
+        <div class="warning">
+            <strong>注意：</strong>需要先在云服务商控制台配置安全组，开放5001端口
+        </div>
+        <a href="http://14.103.84.36:5001" class="btn disabled">无法访问（需要配置）</a>
+    </div>
+
+    <div class="card">
+        <h2>🔧 配置安全组（公网访问必需）</h2>
+
+        <h3>阿里云 ECS</h3>
+        <ol>
+            <li>登录阿里云控制台</li>
+            <li>进入「云服务器ECS」→「实例与镜像」</li>
+            <li>找到服务器，点击「更多」→「网络和安全组」→「安全组配置」</li>
+            <li>点击「配置规则」→「快速添加」</li>
+            <li>选择「HTTP」，修改端口为「5001」</li>
+        </ol>
+
+        <h3>腾讯云 CVM</h3>
+        <ol>
+            <li>登录腾讯云控制台</li>
+            <li>进入「云服务器」→「实例」</li>
+            <li>找到服务器，点击「更多」→「安全组」→「配置安全组」</li>
+            <li>点击「添加规则」</li>
+            <li>入站规则：端口 5001，协议 TCP，来源 0.0.0.0/0</li>
+        </ol>
+
+        <h3>华为云 ECS</h3>
+        <ol>
+            <li>登录华为云控制台</li>
+            <li>进入「弹性云服务器ECS」</li>
+            <li>找到服务器，点击「安全组」</li>
+            <li>添加入站规则：端口 5001</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2>🎯 使用流程</h2>
+        <ol>
+            <li>选择游戏品类（MOBA/FPS/模拟经营）</li>
+            <li>选择外观类型（皮肤/装饰/特效等）</li>
+            <li>完成决策树引导（3个决策）</li>
+            <li>完成检查清单验证</li>
+            <li>生成AI分析报告！</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2>✨ 新增功能</h2>
+        <ul>
+            <li>🏆 <strong>AI竞品分析</strong>：自动分析王者荣耀、英雄联盟等竞品</li>
+            <li>🎨 <strong>美术参考生成</strong>：材质、配色方案、主题推荐</li>
+            <li>📈 <strong>市场趋势分析</strong>：2025-2026年行业趋势</li>
+            <li>✅ <strong>智能建议</strong>：15条可执行建议</li>
+            <li>🔗 <strong>外部链接</strong>：Pinterest、Eagle、Unity资源商店</li>
+        </ul>
+    </div>
+
+    <div class="card success">
+        <h2>📊 服务状态</h2>
+        <p><strong>✅ 服务运行中</strong></p>
+        <p><strong>✅ 端口5001已监听</strong></p>
+        <p><strong>✅ 公网IP：14.103.84.36</strong></p>
+    </div>
+</body>
+</html>
