@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v3.2</title>
+    <title>游戏外观商业化分析平台 v3.4</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -114,7 +114,7 @@
         .platform-tab:hover { border-color: var(--primary-light); }
         .platform-tab.active.ios { border-color: #007AFF; background: rgba(0,122,255,0.15); color: #007AFF; }
         .platform-tab.active.android { border-color: #3DDC84; background: rgba(61,220,132,0.15); color: #3DDC84; }
-        .platform-tab.active.steam { border-color: #1b2838; background: rgba(27,40,56,0.3); color: #66c0f4; }
+        .platform-tab.active.console { border-color: #FF6B6B; background: rgba(255,107,107,0.15); color: #FF6B6B; }
 
         .ranking-list { display: flex; flex-direction: column; gap: 8px; }
         .ranking-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--bg-card); border-radius: 10px; border: 1px solid var(--border); transition: all 0.2s; }
@@ -272,7 +272,8 @@
             <h1>🎮 游戏外观商业化分析平台</h1>
             <p class="subtitle">竞品分析 · 榜单追踪 · 创意拆解 · 运营规划</p>
             <div class="badge-row">
-                <span class="badge">100+ 竞品数据</span>
+                <span class="badge">50+ 竞品数据</span>
+                <span class="badge">全平台覆盖</span>
                 <span class="badge">分层定价体系</span>
                 <span class="badge">实时榜单</span>
                 <span class="badge">创意工具库</span>
@@ -352,6 +353,7 @@
                                 <div class="platform-tab active ios" data-platform="ios">🍎 iOS畅销榜</div>
                                 <div class="platform-tab android" data-platform="android">🤖 安卓畅销榜</div>
                                 <div class="platform-tab steam" data-platform="steam">🎮 Steam热销榜</div>
+                                <div class="platform-tab console" data-platform="console">🕹️ 主机热销榜</div>
                             </div>
                             <div class="ranking-list" id="rankingList"></div>
                         </div>
@@ -503,25 +505,27 @@
 
     <script>
         // ==================== 竞品数据（含分层定价和美术任务）====================
+        // 涵盖手游、端游、主机平台，覆盖MOBA/FPS/RPG/动作/策略/休闲全品类
         // tasks 改为数组格式，每个任务独立
         const COMPETITOR_DATA = {
+            // ==================== MOBA品类 ====================
             "王者荣耀": {
-                category: "moba", icon: "⚔️", rank: 1,
-                overview: "全球收入最高的MOBA手游，皮肤商业化标杆",
+                category: "moba", icon: "⚔️", rank: 1, platform: "mobile",
+                overview: "全球收入最高的MOBA手游，皮肤商业化标杆，月活超2亿",
                 appearanceTypes: ["skin", "decoration", "vfx", "mount"],
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "伴生/勇者", price: "288-60点券", tasks: ["基础模型换色", "简单特效调整", "无专属语音"] },
-                            { name: "史诗", price: "888点券", tasks: ["全新模型", "技能特效重制", "专属语音包", "回城特效"] },
-                            { name: "传说", price: "1688点券", tasks: ["高质量模型", "全套特效重制", "专属语音+音效", "回城+出生特效", "头像框"] },
-                            { name: "荣耀典藏", price: "积分夺宝", tasks: ["顶级品质模型", "双形态设计", "全特效定制", "专属动画", "专属标识"] }
+                            { name: "伴生/勇者", game: "288-600点券", rmb: "¥29-60", tasks: ["基础模型换色", "简单特效调整", "无专属语音"] },
+                            { name: "史诗", game: "888点券", rmb: "¥89", tasks: ["全新模型", "技能特效重制", "专属语音包", "回城特效"] },
+                            { name: "传说", game: "1688点券", rmb: "¥169", tasks: ["高质量模型", "全套特效重制", "专属语音+音效", "回城+出生特效", "头像框"] },
+                            { name: "荣耀典藏", game: "积分夺宝", rmb: "¥2000+", tasks: ["顶级品质模型", "双形态设计", "全特效定制", "专属动画", "专属标识"] }
                         ]
                     },
                     decoration: {
                         tiers: [
-                            { name: "普通", price: "60-180点券", tasks: ["基础装饰模型", "简单粒子效果"] },
-                            { name: "限定", price: "300-500点券", tasks: ["主题装饰设计", "专属特效", "动态效果"] }
+                            { name: "普通", game: "60-180点券", rmb: "¥6-18", tasks: ["基础装饰模型", "简单粒子效果"] },
+                            { name: "限定", game: "300-500点券", rmb: "¥30-50", tasks: ["主题装饰设计", "专属特效", "动态效果"] }
                         ]
                     }
                 },
@@ -534,11 +538,11 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "基础", price: "750 RP", tasks: ["模型换色", "无特效"] },
-                            { name: "史诗", price: "1350 RP", tasks: ["新模型", "新纹理", "新粒子效果"] },
-                            { name: "传说", price: "1820 RP", tasks: ["全新模型+动画", "全套特效", "新语音", "独特音效"] },
-                            { name: "终极", price: "3250 RP", tasks: ["多形态设计", "全套定制内容", "专属交互", "独特音效语音"] },
-                            { name: "至臻", price: "代币兑换", tasks: ["传说级品质+", "专属边框", "稀有标识"] }
+                            { name: "基础", game: "750 RP", rmb: "¥38", tasks: ["模型换色", "无特效"] },
+                            { name: "史诗", game: "1350 RP", rmb: "¥68", tasks: ["新模型", "新纹理", "新粒子效果"] },
+                            { name: "传说", game: "1820 RP", rmb: "¥91", tasks: ["全新模型+动画", "全套特效", "新语音", "独特音效"] },
+                            { name: "终极", game: "3250 RP", rmb: "¥163", tasks: ["多形态设计", "全套定制内容", "专属交互", "独特音效语音"] },
+                            { name: "至臻", game: "代币兑换", rmb: "¥100+", tasks: ["传说级品质+", "专属边框", "稀有标识"] }
                         ]
                     }
                 },
@@ -551,14 +555,14 @@
                 pricing: {
                     board: {
                         tiers: [
-                            { name: "普通棋盘", price: "4500点券", tasks: ["棋盘贴图设计", "基础环境光效", "2-3种地形变化"] },
-                            { name: "史诗棋盘", price: "7900点券", tasks: ["全3D棋盘建模", "动态环境效果", "专属音效", "交互反馈"] },
-                            { name: "传说棋盘", price: "11500点券", tasks: ["高质量场景设计", "完整动画系统", "专属BGM", "粒子特效", "主题角色"] }
+                            { name: "普通棋盘", game: "4500点券", rmb: "¥450", tasks: ["棋盘贴图设计", "基础环境光效", "2-3种地形变化"] },
+                            { name: "史诗棋盘", game: "7900点券", rmb: "¥790", tasks: ["全3D棋盘建模", "动态环境效果", "专属音效", "交互反馈"] },
+                            { name: "传说棋盘", game: "11500点券", rmb: "¥1150", tasks: ["高质量场景设计", "完整动画系统", "专属BGM", "粒子特效", "主题角色"] }
                         ]
                     },
                     skin: {
                         tiers: [
-                            { name: "小小英雄", price: "2300-4500点券", tasks: ["角色模型设计", "专属动画", "升级形态"] }
+                            { name: "小小英雄", game: "2300-4500点券", rmb: "¥230-450", tasks: ["角色模型设计", "专属动画", "升级形态"] }
                         ]
                     }
                 },
@@ -571,15 +575,15 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "活动皮肤", price: "免费/活动", tasks: ["模型调整", "配色更换", "简单特效"] },
-                            { name: "商城皮肤", price: "1680原石", tasks: ["新模型设计", "技能特效", "专属动画", "立绘更新"] },
-                            { name: "联动皮肤", price: "1980原石", tasks: ["主题设计", "全套特效", "专属剧情", "联动元素"] }
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["模型调整", "配色更换", "简单特效"] },
+                            { name: "商城皮肤", game: "1680原石", rmb: "¥168", tasks: ["新模型设计", "技能特效", "专属动画", "立绘更新"] },
+                            { name: "联动皮肤", game: "1980原石", rmb: "¥198", tasks: ["主题设计", "全套特效", "专属剧情", "联动元素"] }
                         ]
                     },
                     home_decor: {
                         tiers: [
-                            { name: "普通家具", price: "洞天宝钱", tasks: ["基础模型", "简单动画"] },
-                            { name: "限定家具", price: "创世结晶", tasks: ["主题设计", "交互功能", "专属特效"] }
+                            { name: "普通家具", game: "洞天宝钱", rmb: "游戏内获取", tasks: ["基础模型", "简单动画"] },
+                            { name: "限定家具", game: "创世结晶", rmb: "¥30+", tasks: ["主题设计", "交互功能", "专属特效"] }
                         ]
                     }
                 },
@@ -592,15 +596,15 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "活动皮肤", price: "免费/活动", tasks: ["模型调整", "配色更换", "简单特效"] },
-                            { name: "商城皮肤", price: "1680-1980星声", tasks: ["新模型设计", "技能特效", "专属动画", "待机动作"] },
-                            { name: "限定皮肤", price: "活动限定", tasks: ["主题设计", "全套特效", "专属剧情", "限定标识"] }
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["模型调整", "配色更换", "简单特效"] },
+                            { name: "商城皮肤", game: "1680-1980星声", rmb: "¥100-120", tasks: ["新模型设计", "技能特效", "专属动画", "待机动作"] },
+                            { name: "限定皮肤", game: "活动限定", rmb: "活动获取", tasks: ["主题设计", "全套特效", "专属剧情", "限定标识"] }
                         ]
                     },
                     weapon_skin: {
                         tiers: [
-                            { name: "活动武器皮", price: "免费", tasks: ["武器换色", "简单特效"] },
-                            { name: "限定武器皮", price: "活动获取", tasks: ["武器建模", "专属特效", "专属音效"] }
+                            { name: "活动武器皮", game: "免费", rmb: "免费", tasks: ["武器换色", "简单特效"] },
+                            { name: "限定武器皮", game: "活动获取", rmb: "活动获取", tasks: ["武器建模", "专属特效", "专属音效"] }
                         ]
                     }
                 },
@@ -613,15 +617,15 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "普通枪皮", price: "军需抽取", tasks: ["枪械换色", "基础贴图"] },
-                            { name: "稀有枪皮", price: "军需抽取", tasks: ["新模型细节", "专属检视动画", "击杀特效"] },
-                            { name: "传说枪皮", price: "军需抽取", tasks: ["完整建模", "全套动画", "专属音效", "升级特效"] }
+                            { name: "普通枪皮", game: "军需抽取", rmb: "¥100-500", tasks: ["枪械换色", "基础贴图"] },
+                            { name: "稀有枪皮", game: "军需抽取", rmb: "¥300-800", tasks: ["新模型细节", "专属检视动画", "击杀特效"] },
+                            { name: "传说枪皮", game: "军需抽取", rmb: "¥500-2000", tasks: ["完整建模", "全套动画", "专属音效", "升级特效"] }
                         ]
                     },
                     mount: {
                         tiers: [
-                            { name: "普通载具", price: "军需抽取", tasks: ["载具换色", "简单贴图"] },
-                            { name: "联动载具", price: "1500元+", tasks: ["完整建模", "专属音效", "联动元素", "特效"] }
+                            { name: "普通载具", game: "军需抽取", rmb: "¥200-500", tasks: ["载具换色", "简单贴图"] },
+                            { name: "联动载具", game: "军需抽取", rmb: "¥1500+", tasks: ["完整建模", "专属音效", "联动元素", "特效"] }
                         ]
                     }
                 },
@@ -634,13 +638,13 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "消费级", price: "几元", tasks: ["基础换色", "简单纹理"] },
-                            { name: "工业级", price: "十几元", tasks: ["基础纹理设计"] },
-                            { name: "军规级", price: "几十元", tasks: ["主题纹理", "磨损度设计"] },
-                            { name: "受限", price: "百元内", tasks: ["完整主题设计", "多磨损度"] },
-                            { name: "保密", price: "几百元", tasks: ["高品质设计", "特殊纹理"] },
-                            { name: "隐秘", price: "上千元", tasks: ["顶级设计", "稀有纹理", "收藏价值"] },
-                            { name: "特殊/刀", price: "数千元+", tasks: ["独特设计", "动画系统", "极高收藏价值"] }
+                            { name: "消费级", game: "市场购买", rmb: "¥5-10", tasks: ["基础换色", "简单纹理"] },
+                            { name: "工业级", game: "市场购买", rmb: "¥10-30", tasks: ["基础纹理设计"] },
+                            { name: "军规级", game: "市场购买", rmb: "¥30-80", tasks: ["主题纹理", "磨损度设计"] },
+                            { name: "受限", game: "开箱/市场", rmb: "¥80-200", tasks: ["完整主题设计", "多磨损度"] },
+                            { name: "保密", game: "开箱/市场", rmb: "¥200-500", tasks: ["高品质设计", "特殊纹理"] },
+                            { name: "隐秘", game: "开箱/市场", rmb: "¥500-2000", tasks: ["顶级设计", "稀有纹理", "收藏价值"] },
+                            { name: "特殊/刀", game: "开箱/市场", rmb: "¥2000-10000+", tasks: ["独特设计", "动画系统", "极高收藏价值"] }
                         ]
                     }
                 },
@@ -653,10 +657,10 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "精选", price: "875 VP", tasks: ["换色贴图", "无特效"] },
-                            { name: "豪华", price: "1275 VP", tasks: ["新模型细节", "新音效"] },
-                            { name: "至尊", price: "1775 VP", tasks: ["全新模型", "全套特效", "专属动画", "终结特效"] },
-                            { name: "至尊2.0", price: "2175 VP", tasks: ["传说级+", "演变系统", "专属特效", "可升级"] }
+                            { name: "精选", game: "875 VP", rmb: "¥61", tasks: ["换色贴图", "无特效"] },
+                            { name: "豪华", game: "1275 VP", rmb: "¥89", tasks: ["新模型细节", "新音效"] },
+                            { name: "至尊", game: "1775 VP", rmb: "¥124", tasks: ["全新模型", "全套特效", "专属动画", "终结特效"] },
+                            { name: "至尊2.0", game: "2175 VP", rmb: "¥152", tasks: ["传说级+", "演变系统", "专属特效", "可升级"] }
                         ]
                     }
                 },
@@ -669,15 +673,15 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通", price: "直购/活动", tasks: ["基础换色", "简单调整"] },
-                            { name: "稀有", price: "金块购买", tasks: ["新模型设计", "专属特效", "主题元素"] },
-                            { name: "传说", price: "限定活动", tasks: ["顶级设计", "全套特效", "专属动画", "联动元素"] }
+                            { name: "普通", game: "直购/活动", rmb: "¥30-50", tasks: ["基础换色", "简单调整"] },
+                            { name: "稀有", game: "金块购买", rmb: "¥60-150", tasks: ["新模型设计", "专属特效", "主题元素"] },
+                            { name: "传说", game: "限定活动", rmb: "¥150-500", tasks: ["顶级设计", "全套特效", "专属动画", "联动元素"] }
                         ]
                     },
                     weapon_skin: {
                         tiers: [
-                            { name: "普通武器", price: "直购", tasks: ["武器换色", "简单纹理"] },
-                            { name: "传说武器", price: "限定活动", tasks: ["完整建模", "专属特效", "专属音效"] }
+                            { name: "普通武器", game: "直购", rmb: "¥20-50", tasks: ["武器换色", "简单纹理"] },
+                            { name: "传说武器", game: "限定活动", rmb: "¥100-300", tasks: ["完整建模", "专属特效", "专属音效"] }
                         ]
                     }
                 },
@@ -690,8 +694,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "源石皮肤", price: "15-21源石", tasks: ["新立绘", "动态效果", "技能特效", "基建形象"] },
-                            { name: "活动皮肤", price: "免费/活动", tasks: ["新立绘", "基础特效"] }
+                            { name: "源石皮肤", game: "15-21源石", rmb: "¥90-126", tasks: ["新立绘", "动态效果", "技能特效", "基建形象"] },
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["新立绘", "基础特效"] }
                         ]
                     }
                 },
@@ -704,8 +708,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通皮肤", price: "皮肤券/勾玉", tasks: ["新立绘", "建模调整", "基础特效"] },
-                            { name: "典藏皮肤", price: "128-198元", tasks: ["顶级立绘", "完整建模", "全套特效", "专属动画", "专属音效"] }
+                            { name: "普通皮肤", game: "皮肤券/勾玉", rmb: "¥30-60", tasks: ["新立绘", "建模调整", "基础特效"] },
+                            { name: "典藏皮肤", game: "128-198魂玉", rmb: "¥128-198", tasks: ["顶级立绘", "完整建模", "全套特效", "专属动画", "专属音效"] }
                         ]
                     }
                 },
@@ -718,9 +722,9 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "蓝皮", price: "碎片兑换", tasks: ["模型换色", "简单调整"] },
-                            { name: "紫皮", price: "推理径/抽奖", tasks: ["新模型设计", "专属特效", "主题元素"] },
-                            { name: "金皮", price: "抽奖", tasks: ["顶级设计", "全套特效", "专属动画", "专属音效"] }
+                            { name: "蓝皮", game: "碎片兑换", rmb: "免费/肝", tasks: ["模型换色", "简单调整"] },
+                            { name: "紫皮", game: "推理径/抽奖", rmb: "¥50-200", tasks: ["新模型设计", "专属特效", "主题元素"] },
+                            { name: "金皮", game: "抽奖", rmb: "¥200+", tasks: ["顶级设计", "全套特效", "专属动画", "专属音效"] }
                         ]
                     }
                 },
@@ -733,9 +737,9 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "成衣", price: "几十元", tasks: ["基础服装设计", "染色系统"] },
-                            { name: "盒子外观", price: "100-300元", tasks: ["主题设计", "全套建模", "专属特效", "限时稀缺"] },
-                            { name: "限量外观", price: "活动限定", tasks: ["顶级设计", "稀有标识", "收藏价值"] }
+                            { name: "成衣", game: "2000-5000通宝", rmb: "¥20-50", tasks: ["基础服装设计", "染色系统"] },
+                            { name: "盒子外观", game: "10000-30000通宝", rmb: "¥100-300", tasks: ["主题设计", "全套建模", "专属特效", "限时稀缺"] },
+                            { name: "限量外观", game: "活动限定", rmb: "¥500+", tasks: ["顶级设计", "稀有标识", "收藏价值"] }
                         ]
                     }
                 },
@@ -748,10 +752,10 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通饰品", price: "几元", tasks: ["单品设计", "基础模型"] },
-                            { name: "稀有套装", price: "几十元", tasks: ["整套设计", "多部位", "专属特效"] },
-                            { name: "不朽/神话", price: "百元+", tasks: ["顶级设计", "专属特效", "独特动画", "稀有标识"] },
-                            { name: "弧光/至宝", price: "数百元+", tasks: ["顶级品质", "改变技能特效", "专属动画", "极高收藏价值"] }
+                            { name: "普通饰品", game: "市场购买", rmb: "¥5-20", tasks: ["单品设计", "基础模型"] },
+                            { name: "稀有套装", game: "市场购买", rmb: "¥30-80", tasks: ["整套设计", "多部位", "专属特效"] },
+                            { name: "不朽/神话", game: "开箱/市场", rmb: "¥100-300", tasks: ["顶级设计", "专属特效", "独特动画", "稀有标识"] },
+                            { name: "弧光/至宝", game: "开箱/市场", rmb: "¥300-1000+", tasks: ["顶级品质", "改变技能特效", "专属动画", "极高收藏价值"] }
                         ]
                     }
                 },
@@ -764,8 +768,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通外观", price: "几十元", tasks: ["角色换装", "基础动画"] },
-                            { name: "盲盒外观", price: "抽奖", tasks: ["主题设计", "专属动画", "稀有度"] }
+                            { name: "普通外观", game: "蛋币购买", rmb: "¥20-50", tasks: ["角色换装", "基础动画"] },
+                            { name: "盲盒外观", game: "抽奖", rmb: "¥50-200", tasks: ["主题设计", "专属动画", "稀有度"] }
                         ]
                     }
                 },
@@ -778,8 +782,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通时装", price: "几十元", tasks: ["服装设计", "基础属性"] },
-                            { name: "天空套", price: "合成获取", tasks: ["顶级设计", "套装属性", "专属特效", "稀有标识"] }
+                            { name: "普通时装", game: "点券购买", rmb: "¥30-100", tasks: ["服装设计", "基础属性"] },
+                            { name: "天空套", game: "合成获取", rmb: "¥500-2000", tasks: ["顶级设计", "套装属性", "专属特效", "稀有标识"] }
                         ]
                     }
                 },
@@ -792,9 +796,9 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "伴生", price: "350点券", tasks: ["基础换色", "简单调整"] },
-                            { name: "史诗", price: "790点券", tasks: ["新模型", "新特效"] },
-                            { name: "传说", price: "990点券", tasks: ["全套重制", "专属语音", "回城特效"] }
+                            { name: "伴生", game: "350点券", rmb: "¥35", tasks: ["基础换色", "简单调整"] },
+                            { name: "史诗", game: "790点券", rmb: "¥79", tasks: ["新模型", "新特效"] },
+                            { name: "传说", game: "990点券", rmb: "¥99", tasks: ["全套重制", "专属语音", "回城特效"] }
                         ]
                     }
                 },
@@ -807,8 +811,8 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "普通", price: "制造金属", tasks: ["基础换色"] },
-                            { name: "传说", price: "1800金币", tasks: ["全套设计", "专属动画", "终结特效"] }
+                            { name: "普通", game: "制造金属", rmb: "免费/肝", tasks: ["基础换色"] },
+                            { name: "传说", game: "1800金币", rmb: "¥126", tasks: ["全套设计", "专属动画", "终结特效"] }
                         ]
                     }
                 },
@@ -821,8 +825,8 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "普通武器", price: "GP购买", tasks: ["基础模型"] },
-                            { name: "英雄级", price: "300-500元", tasks: ["顶级设计", "专属属性", "专属特效", "专属音效"] }
+                            { name: "普通武器", game: "GP购买", rmb: "游戏内获取", tasks: ["基础模型"] },
+                            { name: "英雄级", game: "CF点购买", rmb: "¥300-500", tasks: ["顶级设计", "专属属性", "专属特效", "专属音效"] }
                         ]
                     }
                 },
@@ -835,8 +839,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通", price: "几十元", tasks: ["基础设计", "简单特效"] },
-                            { name: "传说", price: "168元", tasks: ["顶级设计", "全套特效", "专属动画"] }
+                            { name: "普通", game: "勾玉购买", rmb: "¥30-60", tasks: ["基础设计", "简单特效"] },
+                            { name: "传说", game: "限定活动", rmb: "¥168", tasks: ["顶级设计", "全套特效", "专属动画"] }
                         ]
                     }
                 },
@@ -849,47 +853,698 @@
                 pricing: {
                     mount: {
                         tiers: [
-                            { name: "商城坐骑", price: "20-25美元", tasks: ["完整建模", "专属动画", "部分功能"] }
+                            { name: "商城坐骑", game: "暴雪商城", rmb: "$20-25", tasks: ["完整建模", "专属动画", "部分功能"] }
                         ]
                     }
                 },
                 model: { primary: "商城坐骑/宠物+订阅制", pricing: "20-25美元" }
             },
             "崩坏3": {
-                category: "action", icon: "💫", rank: 7,
+                category: "action", icon: "💫", rank: 7, platform: "mobile",
                 overview: "动作手游",
                 appearanceTypes: ["skin", "decoration", "vfx"],
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通皮肤", price: "几十元", tasks: ["服装设计", "基础特效"] },
-                            { name: "礼服皮肤", price: "168元", tasks: ["顶级设计", "全套特效", "专属动画"] }
+                            { name: "普通皮肤", game: "水晶购买", rmb: "¥50-100", tasks: ["服装设计", "基础特效"] },
+                            { name: "礼服皮肤", game: "水晶购买", rmb: "¥168", tasks: ["顶级设计", "全套特效", "专属动画"] }
                         ]
                     }
                 },
                 model: { primary: "皮肤直售+抽奖", pricing: "几十到几百元" }
+            },
+            // ==================== 更多手游 ====================
+            "绝区零": {
+                category: "action", icon: "⚡", rank: 1, platform: "mobile",
+                overview: "米哈游都市动作游戏，2024年新品",
+                appearanceTypes: ["skin", "weapon_skin", "vfx", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["模型调整", "配色更换"] },
+                            { name: "商城皮肤", game: "1680菲林", rmb: "¥100+", tasks: ["新模型设计", "技能特效", "专属动画"] }
+                        ]
+                    }
+                },
+                model: { primary: "角色抽卡+皮肤直售", pricing: "68-98元" }
+            },
+            "幻塔": {
+                category: "action", icon: "🌟", rank: 2, platform: "mobile",
+                overview: "完美世界开放世界MMORPG",
+                appearanceTypes: ["skin", "weapon_skin", "mount", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通时装", game: "墨晶直购", rmb: "¥50-100", tasks: ["服装设计", "基础动画"] },
+                            { name: "限定时装", game: "抽奖", rmb: "¥100-500", tasks: ["主题设计", "专属特效", "稀有标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "时装直售+抽奖", pricing: "几十到几百元" }
+            },
+            "崩坏：星穹铁道": {
+                category: "rpg", icon: "🚂", rank: 1, platform: "mobile",
+                overview: "米哈游回合制RPG，2023年新品",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["模型调整", "配色更换"] }
+                        ]
+                    }
+                },
+                model: { primary: "角色抽卡为主", pricing: "皮肤较少" }
+            },
+            "光·遇": {
+                category: "casual", icon: "✨", rank: 1, platform: "mobile",
+                overview: "thatgamecompany社交冒险游戏",
+                appearanceTypes: ["skin", "decoration", "mount", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "季节礼包", game: "季节通行证", rmb: "$10-15", tasks: ["主题斗篷设计", "专属动作"] },
+                            { name: "商城礼包", game: "蜡烛/爱心", rmb: "$5-20", tasks: ["限定斗篷", "专属特效", "互动动作"] }
+                        ]
+                    },
+                    mount: {
+                        tiers: [
+                            { name: "普通坐骑", game: "活动获取", rmb: "免费/肝", tasks: ["坐骑模型", "基础动画"] },
+                            { name: "限定坐骑", game: "礼包购买", rmb: "$10-20", tasks: ["独特建模", "专属特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "季节通行证+礼包", pricing: "几美元到几十美元" }
+            },
+            "QQ飞车手游": {
+                category: "casual", icon: "🏎️", rank: 2, platform: "mobile",
+                overview: "腾讯竞速手游",
+                appearanceTypes: ["skin", "mount", "vfx"],
+                pricing: {
+                    mount: {
+                        tiers: [
+                            { name: "A车", game: "点券/抽奖", rmb: "¥50-500", tasks: ["赛车建模", "专属特效", "属性加成"] },
+                            { name: "S车", game: "限定抽奖", rmb: "¥500-2000+", tasks: ["顶级建模", "全套特效", "专属音效", "稀有标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "赛车抽奖+直售", pricing: "几百到上千元" }
+            },
+            "跑跑卡丁车官方竞速版": {
+                category: "casual", icon: "🚗", rank: 3, platform: "mobile",
+                overview: "世纪天成竞速手游",
+                appearanceTypes: ["skin", "mount", "vfx"],
+                pricing: {
+                    mount: {
+                        tiers: [
+                            { name: "普通赛车", game: "电池直购", rmb: "¥30-100", tasks: ["赛车建模", "基础特效"] },
+                            { name: "传说赛车", game: "抽奖", rmb: "¥100-500", tasks: ["顶级建模", "专属特效", "稀有标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "赛车抽奖+直售", pricing: "几十到几百元" }
+            },
+            "三国杀移动版": {
+                category: "card", icon: "🎴", rank: 1, platform: "mobile",
+                overview: "经典卡牌手游",
+                appearanceTypes: ["skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通皮肤", game: "皮肤券兑换", rmb: "免费/肝", tasks: ["卡面设计", "简单动画"] },
+                            { name: "史诗皮肤", game: "元宝购买", rmb: "¥20-50", tasks: ["动态卡面", "专属特效", "专属语音"] },
+                            { name: "传说皮肤", game: "限定活动", rmb: "¥50+", tasks: ["全动态卡面", "全套特效", "专属语音", "稀有标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "皮肤直售+活动", pricing: "几元到几十元" }
+            },
+            "率土之滨": {
+                category: "strategy", icon: "🏰", rank: 1, platform: "mobile",
+                overview: "网易SLG策略手游",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "武将皮肤", game: "玉符购买", rmb: "¥30-100", tasks: ["武将立绘", "卡面特效", "语音"] }
+                        ]
+                    }
+                },
+                model: { primary: "武将皮肤直售", pricing: "几十元" }
+            },
+            "万国觉醒": {
+                category: "strategy", icon: "🌍", rank: 2, platform: "mobile",
+                overview: "莉莉丝SLG策略手游",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "统帅皮肤", game: "宝石购买", rmb: "¥30-100", tasks: ["统帅立绘", "专属特效", "属性加成"] }
+                        ]
+                    }
+                },
+                model: { primary: "统帅皮肤直售", pricing: "几十元" }
+            },
+            "逆水寒手游": {
+                category: "simulation", icon: "💧", rank: 1, platform: "mobile",
+                overview: "网易武侠MMO手游，外观系统标杆",
+                appearanceTypes: ["skin", "mount", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通时装", game: "纹玉购买", rmb: "¥50-100", tasks: ["服装设计", "基础染色"] },
+                            { name: "限定时装", game: "纹玉购买", rmb: "¥100-300", tasks: ["主题设计", "专属特效", "动态效果", "限定标识"] },
+                            { name: "天赏时装", game: "天赏抽奖", rmb: "¥500+", tasks: ["顶级设计", "全套特效", "专属动画", "稀有标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "时装直售+抽奖", pricing: "几十到上千元" }
+            },
+            "梦幻西游": {
+                category: "simulation", icon: "🐷", rank: 1, platform: "mobile",
+                overview: "网易经典回合制MMO",
+                appearanceTypes: ["skin", "mount", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通时装", game: "仙玉购买", rmb: "¥30-80", tasks: ["服装设计", "染色系统"] },
+                            { name: "限定时装", game: "活动限定", rmb: "¥100+", tasks: ["主题设计", "专属特效", "稀有标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "时装直售+活动", pricing: "几十元" }
+            },
+            "天涯明月刀手游": {
+                category: "simulation", icon: "🌙", rank: 2, platform: "mobile",
+                overview: "腾讯武侠MMO手游",
+                appearanceTypes: ["skin", "mount", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通时装", game: "点券直购", rmb: "¥50-100", tasks: ["服装设计", "染色系统"] },
+                            { name: "限定时装", game: "点券购买", rmb: "¥100-200", tasks: ["主题设计", "专属特效", "动态效果"] }
+                        ]
+                    }
+                },
+                model: { primary: "时装直售+活动", pricing: "几十到几百元" }
+            },
+            "一念逍遥": {
+                category: "simulation", icon: "☯️", rank: 3, platform: "mobile",
+                overview: "雷霆放置修仙手游",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "时装", game: "机缘购买", rmb: "¥30-100", tasks: ["角色时装设计", "基础特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "时装直售", pricing: "几十元" }
+            },
+            "问道手游": {
+                category: "simulation", icon: "🌀", rank: 4, platform: "mobile",
+                overview: "经典回合制修仙手游",
+                appearanceTypes: ["skin", "mount", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通时装", game: "银元宝购买", rmb: "¥30-80", tasks: ["服装设计", "染色系统"] }
+                        ]
+                    }
+                },
+                model: { primary: "时装直售", pricing: "几十元" }
+            },
+            "碧蓝航线": {
+                category: "rpg", icon: "⚓", rank: 2, platform: "mobile",
+                overview: "哔哩哔哩舰娘手游",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通皮肤", game: "钻石购买", rmb: "¥30-70", tasks: ["立绘设计", "Live2D", "配音"] },
+                            { name: "L2D皮肤", game: "钻石购买", rmb: "¥70-100", tasks: ["动态立绘", "专属动画", "配音", "特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "皮肤直售", pricing: "几十元" }
+            },
+            "碧蓝档案": {
+                category: "rpg", icon: "📘", rank: 3, platform: "mobile",
+                overview: "Nexon校园RPG手游",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["立绘设计", "基础动画"] },
+                            { name: "商城皮肤", game: "青辉石购买", rmb: "¥50-100", tasks: ["新立绘", "L2D动画", "配音"] }
+                        ]
+                    }
+                },
+                model: { primary: "皮肤直售", pricing: "几十元" }
+            },
+            "Fate/Grand Order": {
+                category: "rpg", icon: "🗡️", rank: 4, platform: "mobile",
+                overview: "TYPE-MOON Fate系列手游",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "灵基再临", game: "角色培养", rmb: "免费", tasks: ["立绘变化", "服装更新"] },
+                            { name: "礼装", game: "卡池抽取", rmb: "抽卡获取", tasks: ["卡面设计", "角色立绘"] }
+                        ]
+                    }
+                },
+                model: { primary: "角色抽卡为主", pricing: "皮肤较少" }
+            },
+            "公主连结Re:Dive": {
+                category: "rpg", icon: "👑", rank: 5, platform: "mobile",
+                overview: "Cygames动画RPG手游",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通皮肤", game: "宝石购买", rmb: "¥50-100", tasks: ["新立绘", "SD模型更新"] },
+                            { name: "限定皮肤", game: "活动获取", rmb: "免费", tasks: ["主题立绘", "专属剧情"] }
+                        ]
+                    }
+                },
+                model: { primary: "皮肤直售", pricing: "几十元" }
+            },
+            // ==================== 端游/主机游戏 ====================
+            "黑神话：悟空": {
+                category: "action", icon: "🐵", rank: 1, platform: "pc/console",
+                overview: "国产3A动作游戏，2024年爆款",
+                appearanceTypes: ["skin", "weapon_skin", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "预购皮肤", game: "预购特典", rmb: "免费(预购)", tasks: ["角色皮肤设计", "特效调整"] }
+                        ]
+                    }
+                },
+                model: { primary: "买断制，皮肤较少", pricing: "预购特典为主" }
+            },
+            "艾尔登法环": {
+                category: "action", icon: "🔱", rank: 2, platform: "pc/console",
+                overview: "FromSoftware开放世界魂系游戏",
+                appearanceTypes: ["skin", "weapon_skin", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "DLC装备", game: "DLC购买", rmb: "$40/¥268", tasks: ["装备设计", "特效系统"] }
+                        ]
+                    }
+                },
+                model: { primary: "买断制+DLC", pricing: "DLC扩展" }
+            },
+            "怪物猎人：世界": {
+                category: "action", icon: "🐉", rank: 3, platform: "pc/console",
+                overview: "Capcom共斗动作游戏",
+                appearanceTypes: ["skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "活动装备", game: "活动获取", rmb: "免费", tasks: ["装备设计", "外观贴皮"] }
+                        ]
+                    }
+                },
+                model: { primary: "买断制+DLC", pricing: "DLC扩展" }
+            },
+            "赛博朋克2077": {
+                category: "action", icon: "🌃", rank: 4, platform: "pc/console",
+                overview: "CDPR开放世界RPG",
+                appearanceTypes: ["skin", "weapon_skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "游戏内服装", game: "游戏获取", rmb: "免费", tasks: ["服装设计", "属性系统"] },
+                            { name: "DLC服装", game: "DLC购买", rmb: "$30/¥198", tasks: ["主题服装", "专属设计"] }
+                        ]
+                    }
+                },
+                model: { primary: "买断制+DLC", pricing: "DLC扩展" }
+            },
+            "最终幻想14": {
+                category: "simulation", icon: "⚡", rank: 1, platform: "pc/console",
+                overview: "Square Enix MMORPG",
+                appearanceTypes: ["skin", "mount", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "游戏内装备", game: "游戏获取", rmb: "免费", tasks: ["装备设计", "染色系统"] },
+                            { name: "商城服装", game: "Mog Station", rmb: "$5-15", tasks: ["主题服装", "专属动画"] }
+                        ]
+                    },
+                    mount: {
+                        tiers: [
+                            { name: "商城坐骑", game: "Mog Station", rmb: "$10-30", tasks: ["坐骑建模", "专属动画", "特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "订阅制+商城", pricing: "几美元到几十美元" }
+            },
+            "堡垒之夜": {
+                category: "fps", icon: "🏗️", rank: 1, platform: "cross-platform",
+                overview: "Epic大逃杀游戏，跨平台皮肤互通",
+                appearanceTypes: ["skin", "weapon_skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "稀有", game: "800 V币", rmb: "$8", tasks: ["角色设计", "基础特效"] },
+                            { name: "史诗", game: "1500 V币", rmb: "$15", tasks: ["完整设计", "专属动作", "特效"] },
+                            { name: "传说", game: "2000 V币", rmb: "$20", tasks: ["顶级设计", "可升级形态", "全套特效", "专属动画"] }
+                        ]
+                    }
+                },
+                model: { primary: "V币购买+战斗通行证", pricing: "8-20美元" }
+            },
+            "绝地求生": {
+                category: "fps", icon: "🔫", rank: 2, platform: "pc/console",
+                overview: "KRAFTON大逃杀游戏",
+                appearanceTypes: ["skin", "weapon_skin", "decoration"],
+                pricing: {
+                    weapon_skin: {
+                        tiers: [
+                            { name: "普通皮肤", game: "开箱/市场", rmb: "¥10-50", tasks: ["武器换色", "基础纹理"] },
+                            { name: "稀有皮肤", game: "市场交易", rmb: "¥50-500+", tasks: ["完整设计", "特效", "收藏价值"] }
+                        ]
+                    }
+                },
+                model: { primary: "开箱+市场交易", pricing: "市场化定价" }
+            },
+            "使命召唤手游": {
+                category: "fps", icon: "🎖️", rank: 1, platform: "mobile",
+                overview: "动视FPS手游，皮肤系统丰富",
+                appearanceTypes: ["skin", "weapon_skin", "vfx"],
+                pricing: {
+                    weapon_skin: {
+                        tiers: [
+                            { name: "普通武器", game: "CP点购买", rmb: "¥30-100", tasks: ["武器换色", "基础纹理"] },
+                            { name: "传说武器", game: "抽奖", rmb: "¥200-500", tasks: ["完整建模", "专属动画", "击杀特效", "专属音效"] }
+                        ]
+                    }
+                },
+                model: { primary: "CP点直售+抽奖", pricing: "几十到几百元" }
+            },
+            "守望先锋2": {
+                category: "fps", icon: "🎯", rank: 2, platform: "cross-platform",
+                overview: "暴雪英雄射击游戏",
+                appearanceTypes: ["skin", "weapon_skin", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "稀有", game: "商店购买", rmb: "¥30", tasks: ["基础换色"] },
+                            { name: "史诗", game: "商店购买", rmb: "¥60", tasks: ["新模型细节", "特效"] },
+                            { name: "传说", game: "1900金币", rmb: "¥130", tasks: ["全新设计", "全套特效", "专属语音", "动画"] },
+                            { name: "终极", game: "活动限定", rmb: "¥200+", tasks: ["顶级设计", "多形态", "全套特效", "专属互动"] }
+                        ]
+                    }
+                },
+                model: { primary: "商店购买+战斗通行证", pricing: "10-19美元" }
+            },
+            "彩虹六号：围攻": {
+                category: "fps", icon: "🛡️", rank: 3, platform: "pc/console",
+                overview: "育碧战术射击游戏",
+                appearanceTypes: ["skin", "weapon_skin", "decoration"],
+                pricing: {
+                    weapon_skin: {
+                        tiers: [
+                            { name: "精英皮肤", game: "R6点购买", rmb: "¥50-100", tasks: ["武器全套设计", "专属动画", "特效", "音效"] }
+                        ]
+                    }
+                },
+                model: { primary: "R6点购买", pricing: "几美元到十几美元" }
+            },
+            "无尽对决": {
+                category: "moba", icon: "⚔️", rank: 2, platform: "mobile",
+                overview: "沐瞳科技MOBA手游，海外市场领先",
+                appearanceTypes: ["skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通", game: "钻石购买", rmb: "$5-10", tasks: ["基础设计", "简单特效"] },
+                            { name: "史诗", game: "钻石购买", rmb: "$10-20", tasks: ["新模型", "全套特效", "专属动画"] },
+                            { name: "传说", game: "限定抽奖", rmb: "$20-50", tasks: ["顶级设计", "全套特效", "专属动画", "稀有标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "钻石直售+抽奖", pricing: "几美元到几十美元" }
+            },
+            "虚荣Vainglory": {
+                category: "moba", icon: "💎", rank: 7, platform: "mobile",
+                overview: "SEMC MOBA手游，画质标杆",
+                appearanceTypes: ["skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通皮肤", game: "ICE购买", rmb: "$5-10", tasks: ["基础换色", "特效调整"] },
+                            { name: "传说皮肤", game: "ICE购买", rmb: "$15-30", tasks: ["全新模型", "全套特效", "专属动画"] }
+                        ]
+                    }
+                },
+                model: { primary: "ICE直售", pricing: "几美元到几十美元" }
+            },
+            "炉石传说": {
+                category: "card", icon: "🔥", rank: 2, platform: "cross-platform",
+                overview: "暴雪卡牌游戏",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "英雄皮肤", game: "金币/真钱", rmb: "¥60-100", tasks: ["英雄立绘", "技能特效", "语音"] },
+                            { name: "卡背", game: "活动/购买", rmb: "免费/¥30", tasks: ["卡背设计", "动画效果"] }
+                        ]
+                    }
+                },
+                model: { primary: "卡包购买+皮肤直售", pricing: "几美元到十几美元" }
+            },
+            "云顶之弈": {
+                category: "card", icon: "♟️", rank: 2, platform: "cross-platform",
+                overview: "拳头自走棋游戏",
+                appearanceTypes: ["skin", "decoration", "board"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "小小英雄", game: "RP购买", rmb: "¥30-100", tasks: ["角色设计", "升级形态", "专属动画"] }
+                        ]
+                    }
+                },
+                model: { primary: "RP购买+通行证", pricing: "几美元到几十美元" }
+            },
+            "糖豆人": {
+                category: "casual", icon: "🍬", rank: 2, platform: "cross-platform",
+                overview: "Mediatonic休闲竞技游戏",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通服装", game: "游戏内货币", rmb: "免费/肝", tasks: ["服装设计", "基础动画"] },
+                            { name: "联动服装", game: "商店购买", rmb: "$5-15", tasks: ["IP联名设计", "专属特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "免费游戏+商店购买", pricing: "几美元" }
+            },
+            "动物森友会": {
+                category: "casual", icon: "🏝️", rank: 1, platform: "console",
+                overview: "任天堂社交模拟游戏",
+                appearanceTypes: ["skin", "decoration", "home_decor"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "游戏内服装", game: "游戏内获取", rmb: "免费", tasks: ["服装设计", "DIY系统"] }
+                        ]
+                    }
+                },
+                model: { primary: "买断制，无内购", pricing: "游戏内获取" }
+            },
+            "天涯明月刀": {
+                category: "simulation", icon: "🌙", rank: 6, platform: "pc",
+                overview: "腾讯武侠MMO端游",
+                appearanceTypes: ["skin", "mount", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通时装", game: "点券直购", rmb: "¥50-100", tasks: ["服装设计", "染色系统"] },
+                            { name: "限定时装", game: "点券购买", rmb: "¥100-500", tasks: ["主题设计", "专属特效", "动态效果", "稀有标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "时装直售+抽奖", pricing: "几十到上千元" }
+            },
+            "逆水寒": {
+                category: "simulation", icon: "💧", rank: 1, platform: "pc",
+                overview: "网易武侠MMO端游，外观系统标杆",
+                appearanceTypes: ["skin", "mount", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通时装", game: "纹玉购买", rmb: "¥50-100", tasks: ["服装设计", "染色系统"] },
+                            { name: "限定时装", game: "纹玉购买", rmb: "¥100-300", tasks: ["主题设计", "专属特效", "动态效果"] },
+                            { name: "天赏时装", game: "天赏抽奖", rmb: "¥500-10000+", tasks: ["顶级设计", "全套特效", "专属动画", "稀有标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "时装直售+抽奖", pricing: "几十到上万元" }
+            },
+            "剑灵": {
+                category: "action", icon: "🗡️", rank: 5, platform: "pc",
+                overview: "NCsoft武侠动作MMO",
+                appearanceTypes: ["skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通时装", game: "点券直购", rmb: "¥50-100", tasks: ["服装设计", "染色系统"] },
+                            { name: "限定时装", game: "活动限定", rmb: "¥100-500", tasks: ["主题设计", "专属特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "时装直售", pricing: "几十到几百元" }
+            },
+            "GTA Online": {
+                category: "action", icon: "🚗", rank: 1, platform: "pc/console",
+                overview: "Rockstar开放世界游戏",
+                appearanceTypes: ["skin", "mount", "decoration"],
+                pricing: {
+                    mount: {
+                        tiers: [
+                            { name: "载具", game: "游戏币/鲨鱼卡", rmb: "游戏内获取", tasks: ["载具建模", "改装系统"] }
+                        ]
+                    }
+                },
+                model: { primary: "游戏币购买+鲨鱼卡", pricing: "游戏币购买" }
+            },
+            "荒野大镖客Online": {
+                category: "simulation", icon: "🤠", rank: 2, platform: "pc/console",
+                overview: "Rockstar西部开放世界",
+                appearanceTypes: ["skin", "mount", "decoration"],
+                pricing: {
+                    mount: {
+                        tiers: [
+                            { name: "马匹", game: "游戏币购买", rmb: "免费", tasks: ["马匹建模", "装备系统"] }
+                        ]
+                    }
+                },
+                model: { primary: "游戏币购买", pricing: "游戏内获取" }
+            },
+            "激战2": {
+                category: "simulation", icon: "⚔️", rank: 3, platform: "pc",
+                overview: "ArenaNet MMORPG",
+                appearanceTypes: ["skin", "mount", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "商城皮肤", game: "宝石购买", rmb: "$5-25", tasks: ["武器/护甲设计", "特效"] }
+                        ]
+                    },
+                    mount: {
+                        tiers: [
+                            { name: "坐骑皮肤", game: "宝石购买", rmb: "$10-30", tasks: ["坐骑建模", "专属动画", "特效"] }
+                        ]
+                    }
+                },
+                model: { primary: "宝石商城", pricing: "几美元到几十美元" }
+            },
+            "命运2": {
+                category: "fps", icon: "🌟", rank: 4, platform: "cross-platform",
+                overview: "Bungie射击MMO",
+                appearanceTypes: ["skin", "weapon_skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "银光购买", game: "银光购买", rmb: "$5-20", tasks: ["护甲设计", "专属特效", "动画"] }
+                        ]
+                    }
+                },
+                model: { primary: "银光商城+通行证", pricing: "几美元到几十美元" }
+            },
+            "星际战甲": {
+                category: "action", icon: "🤖", rank: 4, platform: "cross-platform",
+                overview: "Digital Extremes免费合作射击",
+                appearanceTypes: ["skin", "weapon_skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "战甲皮肤", game: "白金购买", rmb: "$5-30", tasks: ["战甲设计", "专属特效", "动画"] }
+                        ]
+                    }
+                },
+                model: { primary: "白金商城", pricing: "几美元到几十美元" }
+            },
+            "星际争霸2": {
+                category: "strategy", icon: "🚀", rank: 5, platform: "pc",
+                overview: "暴雪RTS经典",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "指挥官皮肤", game: "商店购买", rmb: "$5-10", tasks: ["单位设计", "建筑皮肤"] }
+                        ]
+                    }
+                },
+                model: { primary: "商店购买", pricing: "几美元" }
+            },
+            "文明6": {
+                category: "strategy", icon: "🏛️", rank: 1, platform: "pc/console",
+                overview: "2K回合制策略游戏",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "领袖皮肤", game: "DLC购买", rmb: "$5-30", tasks: ["领袖设计", "特色元素"] }
+                        ]
+                    }
+                },
+                model: { primary: "买断制+DLC", pricing: "DLC扩展" }
+            },
+            "全境封锁2": {
+                category: "fps", icon: "🛡️", rank: 5, platform: "pc/console",
+                overview: "育碧射击RPG",
+                appearanceTypes: ["skin", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "服装", game: "游戏内获取", rmb: "免费", tasks: ["服装设计", "染色系统"] }
+                        ]
+                    }
+                },
+                model: { primary: "买断制+通行证", pricing: "游戏内获取" }
+            },
+            "战地2042": {
+                category: "fps", icon: "🎯", rank: 6, platform: "pc/console",
+                overview: "EA第一人称射击游戏",
+                appearanceTypes: ["skin", "weapon_skin", "decoration"],
+                pricing: {
+                    weapon_skin: {
+                        tiers: [
+                            { name: "武器皮肤", game: "战地币购买", rmb: "游戏内获取", tasks: ["武器换色", "基础纹理"] }
+                        ]
+                    }
+                },
+                model: { primary: "买断制+商店", pricing: "游戏内获取" }
             }
         };
 
-        // 品类TOP游戏
+        // 品类TOP游戏 - 覆盖全平台
         const TOP_GAMES = {
-            all: ["王者荣耀", "英雄联盟", "原神", "和平精英", "鸣潮"],
-            moba: ["王者荣耀", "英雄联盟", "DOTA2", "英雄联盟手游", "决战！平安京"],
-            fps: ["和平精英", "CS2", "VALORANT", "Apex英雄", "穿越火线"],
-            simulation: ["原神", "鸣潮", "梦幻西游", "魔兽世界", "剑网3"],
-            rpg: ["永劫无间", "明日方舟", "阴阳师", "第五人格", "崩坏3"],
-            action: ["鸣潮", "永劫无间", "崩坏3", "地下城与勇士"],
-            card: ["金铲铲之战"],
-            casual: ["蛋仔派对", "第五人格"]
+            all: ["王者荣耀", "英雄联盟", "原神", "和平精英", "鸣潮", "绝区零", "永劫无间", "蛋仔派对", "金铲铲之战", "崩坏：星穹铁道"],
+            moba: ["王者荣耀", "英雄联盟", "DOTA2", "英雄联盟手游", "决战！平安京", "无尽对决", "虚荣"],
+            fps: ["和平精英", "CS2", "VALORANT", "Apex英雄", "穿越火线", "堡垒之夜", "绝地求生", "使命召唤手游", "守望先锋2", "彩虹六号"],
+            simulation: ["原神", "鸣潮", "绝区零", "梦幻西游", "魔兽世界", "剑网3", "逆水寒", "最终幻想14", "激战2", "天涯明月刀"],
+            rpg: ["永劫无间", "明日方舟", "阴阳师", "第五人格", "崩坏3", "碧蓝航线", "碧蓝档案", "Fate/Grand Order", "公主连结"],
+            action: ["鸣潮", "永劫无间", "崩坏3", "绝区零", "幻塔", "黑神话：悟空", "艾尔登法环", "怪物猎人：世界", "赛博朋克2077", "地下城与勇士"],
+            card: ["金铲铲之战", "炉石传说", "云顶之弈", "三国杀移动版"],
+            strategy: ["率土之滨", "万国觉醒", "文明6", "星际争霸2"],
+            casual: ["蛋仔派对", "第五人格", "QQ飞车手游", "跑跑卡丁车", "糖豆人", "光·遇", "动物森友会"]
         };
 
-        // 实时榜单数据
+        // 实时榜单数据 - 覆盖iOS/Android/Steam/主机多平台
         const RANKING_DATA = {
             ios: [
                 { name: "王者荣耀", publisher: "腾讯游戏", trend: "stable", revenue: "¥2.1亿" },
                 { name: "和平精英", publisher: "腾讯游戏", trend: "up", revenue: "¥1.8亿" },
                 { name: "原神", publisher: "米哈游", trend: "up", revenue: "¥1.2亿" },
                 { name: "鸣潮", publisher: "库洛游戏", trend: "up", revenue: "¥9800万" },
+                { name: "绝区零", publisher: "米哈游", trend: "up", revenue: "¥9200万" },
                 { name: "金铲铲之战", publisher: "腾讯游戏", trend: "down", revenue: "¥8500万" },
                 { name: "英雄联盟手游", publisher: "腾讯游戏", trend: "stable", revenue: "¥7200万" },
                 { name: "梦幻西游", publisher: "网易游戏", trend: "stable", revenue: "¥6800万" },
@@ -898,15 +1553,20 @@
                 { name: "阴阳师", publisher: "网易游戏", trend: "stable", revenue: "¥4800万" },
                 { name: "蛋仔派对", publisher: "网易游戏", trend: "up", revenue: "¥4500万" },
                 { name: "第五人格", publisher: "网易游戏", trend: "stable", revenue: "¥3200万" },
+                { name: "逆水寒手游", publisher: "网易游戏", trend: "up", revenue: "¥5800万" },
                 { name: "明日方舟", publisher: "鹰角网络", trend: "up", revenue: "¥2800万" },
                 { name: "剑网3", publisher: "西山居", trend: "stable", revenue: "¥2500万" },
-                { name: "穿越火线", publisher: "腾讯游戏", trend: "down", revenue: "¥2200万" }
+                { name: "穿越火线", publisher: "腾讯游戏", trend: "down", revenue: "¥2200万" },
+                { name: "QQ飞车手游", publisher: "腾讯游戏", trend: "stable", revenue: "¥2000万" },
+                { name: "三国杀移动版", publisher: "游卡桌游", trend: "up", revenue: "¥1800万" },
+                { name: "光·遇", publisher: "网易游戏", trend: "stable", revenue: "¥1500万" }
             ],
             android: [
                 { name: "王者荣耀", publisher: "腾讯游戏", trend: "stable", revenue: "¥2.5亿" },
                 { name: "和平精英", publisher: "腾讯游戏", trend: "up", revenue: "¥2.1亿" },
                 { name: "原神", publisher: "米哈游", trend: "up", revenue: "¥1.5亿" },
                 { name: "鸣潮", publisher: "库洛游戏", trend: "up", revenue: "¥1.1亿" },
+                { name: "绝区零", publisher: "米哈游", trend: "up", revenue: "¥1.0亿" },
                 { name: "金铲铲之战", publisher: "腾讯游戏", trend: "stable", revenue: "¥1.0亿" },
                 { name: "梦幻西游", publisher: "网易游戏", trend: "down", revenue: "¥8500万" },
                 { name: "蛋仔派对", publisher: "网易游戏", trend: "up", revenue: "¥7800万" },
@@ -914,10 +1574,14 @@
                 { name: "英雄联盟手游", publisher: "腾讯游戏", trend: "stable", revenue: "¥6000万" },
                 { name: "崩坏：星穹铁道", publisher: "米哈游", trend: "down", revenue: "¥5500万" },
                 { name: "阴阳师", publisher: "网易游戏", trend: "stable", revenue: "¥5000万" },
+                { name: "逆水寒手游", publisher: "网易游戏", trend: "up", revenue: "¥6200万" },
                 { name: "明日方舟", publisher: "鹰角网络", trend: "up", revenue: "¥3800万" },
                 { name: "第五人格", publisher: "网易游戏", trend: "stable", revenue: "¥3500万" },
                 { name: "穿越火线", publisher: "腾讯游戏", trend: "down", revenue: "¥3200万" },
-                { name: "地下城与勇士", publisher: "腾讯游戏", trend: "stable", revenue: "¥3000万" }
+                { name: "地下城与勇士", publisher: "腾讯游戏", trend: "stable", revenue: "¥3000万" },
+                { name: "QQ飞车手游", publisher: "腾讯游戏", trend: "stable", revenue: "¥2800万" },
+                { name: "率土之滨", publisher: "网易游戏", trend: "stable", revenue: "¥2500万" },
+                { name: "三国杀移动版", publisher: "游卡桌游", trend: "up", revenue: "¥2200万" }
             ],
             steam: [
                 { name: "CS2", publisher: "Valve", trend: "up", revenue: "$45M" },
@@ -933,8 +1597,30 @@
                 { name: "怪物猎人：世界", publisher: "Capcom", trend: "stable", revenue: "$10M" },
                 { name: "GTA5", publisher: "Rockstar", trend: "stable", revenue: "$9M" },
                 { name: "文明6", publisher: "2K", trend: "stable", revenue: "$8M" },
+                { name: "最终幻想14", publisher: "Square Enix", trend: "up", revenue: "$12M" },
+                { name: "黑神话：悟空", publisher: "游戏科学", trend: "up", revenue: "$50M+" },
+                { name: "命运2", publisher: "Bungie", trend: "stable", revenue: "$7M" },
+                { name: "星际战甲", publisher: "Digital Extremes", trend: "stable", revenue: "$6M" },
                 { name: "星露谷物语", publisher: "ConcernedApe", trend: "up", revenue: "$6M" },
-                { name: "泰拉瑞亚", publisher: "Re-Logic", trend: "stable", revenue: "$5M" }
+                { name: "泰拉瑞亚", publisher: "Re-Logic", trend: "stable", revenue: "$5M" },
+                { name: "激战2", publisher: "ArenaNet", trend: "stable", revenue: "$4M" }
+            ],
+            console: [
+                { name: "黑神话：悟空", publisher: "游戏科学", trend: "up", platform: "PS5/PC" },
+                { name: "艾尔登法环", publisher: "FromSoftware", trend: "stable", platform: "PS/Xbox/PC" },
+                { name: "堡垒之夜", publisher: "Epic Games", trend: "up", platform: "全平台" },
+                { name: "使命召唤：现代战争", publisher: "Activision", trend: "stable", platform: "全平台" },
+                { name: "GTA5", publisher: "Rockstar", trend: "stable", platform: "PS/Xbox/PC" },
+                { name: "怪物猎人：世界", publisher: "Capcom", trend: "stable", platform: "PS/Xbox/PC" },
+                { name: "最终幻想16", publisher: "Square Enix", trend: "down", platform: "PS5/PC" },
+                { name: "塞尔达传说：王国之泪", publisher: "Nintendo", trend: "stable", platform: "Switch" },
+                { name: "动物森友会", publisher: "Nintendo", trend: "stable", platform: "Switch" },
+                { name: "守望先锋2", publisher: "Blizzard", trend: "stable", platform: "全平台" },
+                { name: "命运2", publisher: "Bungie", trend: "stable", platform: "PS/Xbox/PC" },
+                { name: "赛博朋克2077", publisher: "CDPR", trend: "up", platform: "PS/Xbox/PC" },
+                { name: "最终幻想14", publisher: "Square Enix", trend: "up", platform: "PS/PC" },
+                { name: "糖豆人", publisher: "Mediatonic", trend: "stable", platform: "全平台" },
+                { name: "霍格沃茨之遗", publisher: "WB Games", trend: "down", platform: "全平台" }
             ]
         };
 
@@ -1267,16 +1953,31 @@
         function renderRankingList() {
             const data = RANKING_DATA[currentPlatform];
             const container = document.getElementById('rankingList');
-            container.innerHTML = data.map((game, i) => `
-                <div class="ranking-item">
-                    <div class="rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : 'normal'}">${i + 1}</div>
-                    <div class="game-info">
-                        <div class="game-name">${game.name}</div>
-                        <div class="game-meta"><span>${game.publisher}</span><span>${game.revenue}</span></div>
+            
+            if (currentPlatform === 'console') {
+                // 主机平台显示不同格式
+                container.innerHTML = data.map((game, i) => `
+                    <div class="ranking-item">
+                        <div class="rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : 'normal'}">${i + 1}</div>
+                        <div class="game-info">
+                            <div class="game-name">${game.name}</div>
+                            <div class="game-meta"><span>${game.publisher}</span><span>${game.platform || ''}</span></div>
+                        </div>
+                        <div class="trend ${game.trend}">${game.trend === 'up' ? '↑ 上升' : game.trend === 'down' ? '↓ 下降' : '→ 稳定'}</div>
                     </div>
-                    <div class="trend ${game.trend}">${game.trend === 'up' ? '↑ 上升' : game.trend === 'down' ? '↓ 下降' : '→ 稳定'}</div>
-                </div>
-            `).join('');
+                `).join('');
+            } else {
+                container.innerHTML = data.map((game, i) => `
+                    <div class="ranking-item">
+                        <div class="rank ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : 'normal'}">${i + 1}</div>
+                        <div class="game-info">
+                            <div class="game-name">${game.name}</div>
+                            <div class="game-meta"><span>${game.publisher}</span><span>${game.revenue}</span></div>
+                        </div>
+                        <div class="trend ${game.trend}">${game.trend === 'up' ? '↑ 上升' : game.trend === 'down' ? '↓ 下降' : '→ 稳定'}</div>
+                    </div>
+                `).join('');
+            }
         }
 
         // ==================== 分析 ====================
@@ -1317,7 +2018,8 @@
                                 <thead>
                                     <tr>
                                         <th>品质层级</th>
-                                        <th>定价</th>
+                                        <th>游戏货币</th>
+                                        <th>人民币</th>
                                         <th>美术任务</th>
                                     </tr>
                                 </thead>
@@ -1330,7 +2032,8 @@
                             html += `
                                 <tr>
                                     ${taskIndex === 0 ? `<td class="tier-name" rowspan="${tier.tasks.length}">${tier.name}</td>` : ''}
-                                    ${taskIndex === 0 ? `<td class="price" rowspan="${tier.tasks.length}">${tier.price}</td>` : ''}
+                                    ${taskIndex === 0 ? `<td class="price" rowspan="${tier.tasks.length}">${tier.game || '-'}</td>` : ''}
+                                    ${taskIndex === 0 ? `<td class="price" rowspan="${tier.tasks.length}" style="color: var(--success); font-weight: 600;">${tier.rmb || '-'}</td>` : ''}
                                     <td class="task-cell">${task}</td>
                                 </tr>
                             `;
@@ -1355,17 +2058,18 @@
             if (!table) return;
             
             let text = `${gameName} - ${selectedAppearance === 'skin' ? '皮肤' : selectedAppearance}分层定价\n\n`;
-            text += '品质层级\t定价\t美术任务\n';
+            text += '品质层级\t游戏货币\t人民币\t美术任务\n';
             
             table.querySelectorAll('tbody tr').forEach(row => {
                 const cells = row.querySelectorAll('td');
-                if (cells.length >= 3) {
+                if (cells.length >= 4) {
                     const tier = cells[0]?.textContent || '';
-                    const price = cells[1]?.textContent || '';
-                    const task = cells[2]?.textContent || '';
-                    text += `${tier}\t${price}\t${task}\n`;
+                    const game = cells[1]?.textContent || '';
+                    const rmb = cells[2]?.textContent || '';
+                    const task = cells[3]?.textContent || '';
+                    text += `${tier}\t${game}\t${rmb}\t${task}\n`;
                 } else if (cells.length === 1) {
-                    text += `\t\t${cells[0].textContent}\n`;
+                    text += `\t\t\t${cells[0].textContent}\n`;
                 }
             });
 
@@ -1381,18 +2085,19 @@
             if (!table) return;
             
             let csv = '\uFEFF'; // BOM for Excel
-            csv += '品质层级,定价,美术任务\n';
+            csv += '品质层级,游戏货币,人民币,美术任务\n';
             
             table.querySelectorAll('tbody tr').forEach(row => {
                 const cells = row.querySelectorAll('td');
-                if (cells.length >= 3) {
+                if (cells.length >= 4) {
                     const tier = cells[0]?.textContent?.replace(/,/g, '，') || '';
-                    const price = cells[1]?.textContent?.replace(/,/g, '，') || '';
-                    const task = cells[2]?.textContent?.replace(/,/g, '，') || '';
-                    csv += `"${tier}","${price}","${task}"\n`;
+                    const game = cells[1]?.textContent?.replace(/,/g, '，') || '';
+                    const rmb = cells[2]?.textContent?.replace(/,/g, '，') || '';
+                    const task = cells[3]?.textContent?.replace(/,/g, '，') || '';
+                    csv += `"${tier}","${game}","${rmb}","${task}"\n`;
                 } else if (cells.length === 1) {
                     const task = cells[0]?.textContent?.replace(/,/g, '，') || '';
-                    csv += `,"","${task}"\n`;
+                    csv += `,"","","${task}"\n`;
                 }
             });
 
