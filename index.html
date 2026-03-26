@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v3.6</title>
+    <title>游戏外观商业化分析平台 v3.8</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -191,6 +191,21 @@
         .month-item.current { border-color: var(--accent); background: rgba(6, 182, 212, 0.15); }
         .month-item.selected { background: var(--primary); border-color: var(--primary); color: white; }
 
+        /* Date Quick Jump */
+        .date-quick-jump { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+        .date-quick-jump input[type="date"] { color-scheme: dark; }
+        
+        /* Date Detail Popup */
+        .date-detail-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1001; }
+        .date-detail-overlay.show { display: flex; }
+        .date-detail-popup { background: var(--bg-secondary); border-radius: 16px; padding: 20px; width: 400px; max-width: 90vw; max-height: 80vh; overflow-y: auto; border: 1px solid var(--border); }
+        .date-detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .date-detail-header h3 { font-size: 1rem; color: var(--text); }
+        .date-detail-content { font-size: 0.85rem; }
+        .date-event-item { padding: 12px; background: var(--bg-card); border-radius: 8px; margin-bottom: 8px; }
+        .date-event-item .event-name { font-weight: 600; margin-bottom: 4px; }
+        .date-event-item .event-desc { font-size: 0.8rem; color: var(--text-secondary); }
+
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .calendar-weekday { text-align: center; font-size: 0.7rem; color: var(--text-muted); padding: 8px 0; font-weight: 600; }
         .calendar-day { background: var(--bg-card); border-radius: 8px; padding: 8px; min-height: 70px; cursor: pointer; transition: all 0.2s; border: 1px solid transparent; }
@@ -205,11 +220,13 @@
         .month-suggestions { margin-top: 16px; padding: 16px; background: var(--bg-card); border-radius: 12px; border-left: 3px solid var(--accent); }
         .month-suggestions-title { font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
         .suggestion-list { display: flex; flex-direction: column; gap: 8px; }
-        .suggestion-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: var(--bg); border-radius: 8px; }
-        .suggestion-item .icon { font-size: 1rem; }
+        .suggestion-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: var(--bg); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+        .suggestion-item:hover { background: var(--bg-card); transform: translateX(4px); }
+        .suggestion-item .icon { font-size: 1.2rem; min-width: 28px; }
         .suggestion-item .content { flex: 1; }
-        .suggestion-item .name { font-size: 0.8rem; font-weight: 600; margin-bottom: 2px; }
-        .suggestion-item .desc { font-size: 0.7rem; color: var(--text-secondary); }
+        .suggestion-item .name { font-size: 0.85rem; font-weight: 600; margin-bottom: 2px; color: var(--text); }
+        .suggestion-item .desc { font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4; }
+        .suggestion-type { font-size: 0.65rem; padding: 2px 8px; border-radius: 6px; color: white; margin-top: 4px; display: inline-block; }
 
         .calendar-events { margin-top: 16px; }
         .calendar-events-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
@@ -230,6 +247,101 @@
         .template-actions { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
         .add-row-btn { margin-top: 8px; padding: 6px 12px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
         .add-row-btn:hover { border-color: var(--primary); color: var(--text); }
+
+        /* 飞书多维表格风格 */
+        .feishu-toolbar { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; margin-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .toolbar-left { display: flex; align-items: center; gap: 12px; }
+        .toolbar-right { display: flex; gap: 8px; }
+        .view-tabs { display: flex; background: var(--bg-secondary); border-radius: 8px; padding: 3px; }
+        .view-tab { padding: 6px 14px; background: transparent; border: none; color: var(--text-secondary); font-size: 0.8rem; cursor: pointer; border-radius: 6px; display: flex; align-items: center; gap: 4px; transition: all 0.2s; }
+        .view-tab:hover { color: var(--text); }
+        .view-tab.active { background: var(--primary); color: white; }
+        .toolbar-btn { padding: 6px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .toolbar-btn:hover { border-color: var(--primary); }
+        
+        .template-tabs { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; }
+        .template-tab { padding: 8px 16px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 0.8rem; cursor: pointer; transition: all 0.2s; }
+        .template-tab:hover { border-color: var(--primary-light); color: var(--text); }
+        .template-tab.active { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-color: transparent; color: white; }
+        
+        .feishu-table-container { background: var(--bg-card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+        .feishu-table-wrapper { overflow-x: auto; }
+        .feishu-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .feishu-header-row { background: var(--bg-secondary); }
+        .feishu-header-cell { padding: 12px 14px; text-align: left; border-bottom: 2px solid var(--border); font-weight: 600; white-space: nowrap; position: sticky; top: 0; }
+        .feishu-header-cell.row-num-cell { width: 50px; text-align: center; background: var(--bg-secondary); color: var(--text-muted); }
+        .header-content { display: flex; align-items: center; gap: 6px; }
+        .field-icon { font-size: 0.85rem; }
+        .field-name { color: var(--accent); }
+        
+        .feishu-row { transition: background 0.15s; }
+        .feishu-row:hover { background: rgba(99, 102, 241, 0.05); }
+        .feishu-cell { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        .feishu-cell.row-num-cell { text-align: center; color: var(--text-muted); font-size: 0.75rem; background: var(--bg-secondary); }
+        
+        .feishu-input { width: 100%; background: transparent; border: none; color: var(--text); font-size: 0.8rem; padding: 4px 0; }
+        .feishu-input:focus { outline: none; background: var(--bg); border-radius: 4px; padding: 4px 8px; }
+        .feishu-select { width: 100%; background: var(--bg); border: 1px solid transparent; border-radius: 6px; padding: 4px 8px; color: var(--text); font-size: 0.75rem; cursor: pointer; }
+        .feishu-select:focus { outline: none; border-color: var(--primary); }
+        
+        .multi-select-cell { position: relative; }
+        .multi-select-wrapper { min-height: 28px; cursor: pointer; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+        .multi-select-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+        .multi-tag { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.7rem; }
+        .multi-select-placeholder { color: var(--text-muted); font-size: 0.75rem; }
+        .multi-select-dropdown { display: none; position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; margin-top: 4px; z-index: 100; max-height: 200px; overflow-y: auto; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+        .multi-select-dropdown.show { display: block; }
+        .multi-select-option { padding: 8px 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; font-size: 0.75rem; }
+        .multi-select-option:hover { background: var(--bg-card); }
+        .multi-select-option.selected { background: rgba(99, 102, 241, 0.1); }
+        
+        .progress-cell { display: flex; align-items: center; gap: 8px; }
+        .progress-bar-bg { flex: 1; height: 6px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+        .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--success) 0%, var(--accent) 100%); border-radius: 3px; transition: width 0.3s; }
+        .progress-input { width: 50px; background: transparent; border: none; color: var(--text); font-size: 0.75rem; text-align: right; }
+        .progress-percent { color: var(--text-muted); font-size: 0.75rem; }
+        
+        @keyframes highlightRow {
+            0% { background: rgba(99, 102, 241, 0.2); }
+            100% { background: transparent; }
+        }
+        
+        /* 快速拆解预览 */
+        .quick-breakdown-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+        .quick-breakdown-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+        .quick-breakdown-item { background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 12px; text-align: center; }
+        .quick-breakdown-item.total { background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(6, 182, 212, 0.15) 100%); border-color: var(--accent); }
+        .quick-breakdown-item .breakdown-phase { font-weight: 700; font-size: 0.85rem; color: var(--accent); margin-bottom: 4px; }
+        .quick-breakdown-item .breakdown-time { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+        .quick-breakdown-item .breakdown-tasks { font-size: 0.7rem; color: var(--text-secondary); line-height: 1.3; }
+        .quick-breakdown-item.total .breakdown-phase { color: var(--success); }
+        .quick-breakdown-item.total .breakdown-time { color: var(--success); }
+        
+        /* 搜索链接优先级样式 */
+        .artwork-load-failed { padding: 20px; text-align: center; background: var(--bg); border-radius: 8px; }
+        .failed-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+        .failed-text { color: var(--text-muted); font-size: 0.85rem; margin-bottom: 12px; }
+        .search-links-grid { margin-top: 12px; }
+        .search-priority-label { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 8px; }
+        .search-links-row { display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; }
+        .search-link-chip { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; font-size: 0.7rem; color: var(--text); text-decoration: none; transition: all 0.2s; }
+        .search-link-chip:hover { transform: translateY(-2px); box-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+        .search-link-chip .link-icon { font-size: 0.9rem; }
+        .search-link-chip .link-name { font-weight: 600; }
+        .search-link-chip .link-priority { background: var(--bg); padding: 2px 5px; border-radius: 8px; font-size: 0.6rem; color: var(--text-muted); }
+        .search-link-chip.official { border-color: var(--primary); background: rgba(99, 102, 241, 0.1); }
+        .search-link-chip.official:hover { background: var(--primary); color: white; }
+        .search-link-chip.baidu { border-color: #2932e1; }
+        .search-link-chip.baidu:hover { background: #2932e1; color: white; }
+        .search-link-chip.bilibili { border-color: #fb7299; }
+        .search-link-chip.bilibili:hover { background: #fb7299; color: white; }
+        .search-link-chip.youtube { border-color: #ff0000; }
+        .search-link-chip.youtube:hover { background: #ff0000; color: white; }
+        .search-link-chip.google { border-color: #4285f4; }
+        .search-link-chip.google:hover { background: #4285f4; color: white; }
+        .search-link-chip.twitter { border-color: #1da1f2; }
+        .search-link-chip.twitter:hover { background: #1da1f2; color: white; }
 
         /* 美术拆解可编辑表格 */
         .breakdown-table-container { overflow-x: auto; }
@@ -610,6 +722,25 @@
                 <button id="nextYear">▶</button>
             </div>
             <div class="month-grid" id="monthGrid"></div>
+            <!-- 新增日期快速定位 -->
+            <div class="date-quick-jump">
+                <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">快速定位到具体日期</div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <input type="date" id="quickJumpDate" style="flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px; color: var(--text); font-size: 0.85rem;">
+                    <button class="btn btn-primary" style="padding: 8px 16px;" id="quickJumpBtn">跳转</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 日期详情弹窗 -->
+    <div class="date-detail-overlay" id="dateDetailOverlay">
+        <div class="date-detail-popup">
+            <div class="date-detail-header">
+                <h3 id="dateDetailTitle">📅 日期详情</h3>
+                <button class="month-picker-close" id="closeDateDetail">×</button>
+            </div>
+            <div class="date-detail-content" id="dateDetailContent"></div>
         </div>
     </div>
     
@@ -1220,18 +1351,71 @@
 
         // 月度运营建议
         const MONTH_SUGGESTIONS = {
-            1: [{ icon: "🎉", name: "元旦活动", desc: "新年主题皮肤/装饰上线" }, { icon: "🧧", name: "春节预热", desc: "春节版本预热宣传" }],
-            2: [{ icon: "🎊", name: "春节活动", desc: "年度最大活动，限定皮肤/福袋" }, { icon: "💕", name: "情人节活动", desc: "情侣皮肤/CP活动" }],
-            3: [{ icon: "🌸", name: "春季版本", desc: "春季主题更新" }, { icon: "👸", name: "女神节活动", desc: "女性向皮肤/福利" }],
-            4: [{ icon: "🌧️", name: "清明节活动", desc: "传统文化主题限定外观" }, { icon: "📖", name: "读书日活动", desc: "知识主题皮肤" }],
-            5: [{ icon: "👷", name: "劳动节活动", desc: "五一假期活动" }, { icon: "❤️", name: "520活动", desc: "表白主题皮肤" }],
-            6: [{ icon: "👶", name: "儿童节活动", desc: "童心主题皮肤" }, { icon: "🛒", name: "618电商联动", desc: "电商平台联动促销" }],
-            7: [{ icon: "🏖️", name: "暑期档开启", desc: "暑期大型活动" }, { icon: "🎆", name: "周年庆预热", desc: "周年庆活动预热" }],
-            8: [{ icon: "🎂", name: "周年庆活动", desc: "年度重点活动" }, { icon: "🎋", name: "七夕活动", desc: "情侣皮肤/活动" }],
-            9: [{ icon: "🌕", name: "中秋节活动", desc: "月饼/月亮主题皮肤" }, { icon: "🏫", name: "开学季活动", desc: "校园主题皮肤" }],
-            10: [{ icon: "🇨🇳", name: "国庆节活动", desc: "国庆长假活动" }, { icon: "🎃", name: "万圣节活动", desc: "恐怖/搞怪主题" }],
-            11: [{ icon: "🛍️", name: "双十一活动", desc: "电商联动促销" }, { icon: "🙏", name: "感恩节活动", desc: "感恩主题福利" }],
-            12: [{ icon: "❄️", name: "冬季/圣诞节活动", desc: "冰雪主题皮肤" }, { icon: "🎊", name: "跨年活动", desc: "年度收官活动" }]
+            1: [
+                { icon: "🎉", name: "元旦活动", desc: "新年主题皮肤/装饰上线", type: "节日活动" },
+                { icon: "🧧", name: "春节预热", desc: "春节版本预热宣传，限定皮肤预告", type: "版本更新" },
+                { icon: "❄️", name: "冬季活动收官", desc: "冬季主题皮肤最后售卖机会", type: "限时活动" }
+            ],
+            2: [
+                { icon: "🎊", name: "春节活动", desc: "年度最大活动，限定皮肤/福袋/红包", type: "节日活动" },
+                { icon: "💕", name: "情人节活动", desc: "情侣皮肤/CP活动/告白主题", type: "节日活动" },
+                { icon: "🏮", name: "元宵节活动", desc: "花灯主题皮肤/猜灯谜活动", type: "节日活动" }
+            ],
+            3: [
+                { icon: "🌸", name: "春季版本", desc: "春季主题更新，樱花系列皮肤", type: "版本更新" },
+                { icon: "👸", name: "女神节活动", desc: "女性向皮肤/福利/限定外观", type: "节日活动" },
+                { icon: "🌱", name: "植树节活动", desc: "自然主题皮肤/环保公益", type: "节日活动" }
+            ],
+            4: [
+                { icon: "🌧️", name: "清明节活动", desc: "传统文化主题限定外观/踏青主题", type: "节日活动" },
+                { icon: "📖", name: "读书日活动", desc: "知识主题皮肤/文化联动", type: "IP联动" },
+                { icon: "🤡", name: "愚人节活动", desc: "搞怪主题皮肤/趣味玩法", type: "节日活动" }
+            ],
+            5: [
+                { icon: "👷", name: "劳动节活动", desc: "五一假期活动/打工主题皮肤", type: "节日活动" },
+                { icon: "❤️", name: "520活动", desc: "表白主题皮肤/告白季限定", type: "节日活动" },
+                { icon: "👨‍👩‍👧", name: "母亲节活动", desc: "感恩主题皮肤/亲情互动", type: "节日活动" }
+            ],
+            6: [
+                { icon: "👶", name: "儿童节活动", desc: "童心主题皮肤/童年怀旧系列", type: "节日活动" },
+                { icon: "🛒", name: "618电商联动", desc: "电商平台联动促销/限定礼包", type: "IP联动" },
+                { icon: "🐉", name: "端午节活动", desc: "龙舟主题皮肤/粽子活动", type: "节日活动" },
+                { icon: "👨", name: "父亲节活动", desc: "父爱主题皮肤/感恩活动", type: "节日活动" }
+            ],
+            7: [
+                { icon: "🏖️", name: "暑期档开启", desc: "暑期大型活动/泳装系列皮肤", type: "大型活动" },
+                { icon: "🎆", name: "周年庆预热", desc: "周年庆活动预热/限定皮肤预告", type: "版本更新" },
+                { icon: "🍉", name: "夏日清凉活动", desc: "夏日主题皮肤/清凉外观", type: "限时活动" }
+            ],
+            8: [
+                { icon: "🎂", name: "周年庆活动", desc: "年度重点活动/周年限定皮肤/回馈福利", type: "大型活动" },
+                { icon: "🎋", name: "七夕活动", desc: "情侣皮肤/鹊桥主题活动", type: "节日活动" },
+                { icon: "🎓", name: "毕业季活动", desc: "校园主题皮肤/青春纪念", type: "限时活动" }
+            ],
+            9: [
+                { icon: "🌕", name: "中秋节活动", desc: "月饼/月亮主题皮肤/团圆活动", type: "节日活动" },
+                { icon: "🏫", name: "开学季活动", desc: "校园主题皮肤/学生优惠", type: "限时活动" },
+                { icon: "🍂", name: "秋季版本", desc: "秋季主题更新/枫叶系列", type: "版本更新" },
+                { icon: "🇨🇳", name: "国庆预热", desc: "国庆活动预告/爱国主题", type: "版本更新" }
+            ],
+            10: [
+                { icon: "🇨🇳", name: "国庆节活动", desc: "国庆长假活动/国庆限定皮肤", type: "节日活动" },
+                { icon: "🎃", name: "万圣节活动", desc: "恐怖/搞怪主题/南瓜皮肤", type: "节日活动" },
+                { icon: "👴", name: "重阳节活动", desc: "敬老主题/传统文化皮肤", type: "节日活动" },
+                { icon: "🎁", name: "双十一预热", desc: "双十一活动预告/预售开启", type: "电商联动" }
+            ],
+            11: [
+                { icon: "🛍️", name: "双十一活动", desc: "电商联动促销/限定礼包/折扣活动", type: "IP联动" },
+                { icon: "🙏", name: "感恩节活动", desc: "感恩主题福利/回馈活动", type: "节日活动" },
+                { icon: "⚽", name: "世界杯联动", desc: "足球主题皮肤/赛事活动(逢世界杯年)", type: "IP联动" },
+                { icon: "❄️", name: "冬季活动预热", desc: "冰雪主题皮肤预告", type: "版本更新" }
+            ],
+            12: [
+                { icon: "❄️", name: "冬季/圣诞节活动", desc: "冰雪主题皮肤/圣诞限定外观", type: "节日活动" },
+                { icon: "🎊", name: "跨年活动", desc: "年度收官活动/跨年限定皮肤", type: "大型活动" },
+                { icon: "🕎", name: "冬至活动", desc: "传统文化主题/冬至限定", type: "节日活动" },
+                { icon: "🧧", name: "元旦预热", desc: "新年活动预告/元旦皮肤预告", type: "版本更新" }
+            ]
         };
 
         // 运营日历事件
@@ -1246,12 +1430,72 @@
             { date: "2026-06-18", name: "618电商联动", type: "IP联动", color: "#8b5cf6" }
         ];
 
-        // 运营规划表格模板
+        // 运营规划表格模板 - 参考飞书多维表格
         const OPERATION_TEMPLATES = [
-            { icon: "🎉", name: "节日活动规划", columns: ["活动名称", "开始日期", "结束日期", "活动类型", "皮肤/外观", "负责人", "状态", "备注"] },
-            { icon: "🎁", name: "版本更新规划", columns: ["版本号", "上线日期", "主要内容", "新皮肤数", "美术负责人", "测试状态", "备注"] },
-            { icon: "🏆", name: "赛事活动规划", columns: ["赛事名称", "举办时间", "奖励内容", "限定皮肤", "合作方", "状态", "备注"] },
-            { icon: "🤝", name: "IP联动规划", columns: ["联动IP", "合作形式", "上线时间", "皮肤数量", "商务负责人", "状态", "备注"] }
+            { 
+                icon: "🎉", 
+                name: "节日活动规划", 
+                view: "table",
+                columns: [
+                    { id: "activity_name", name: "活动名称", type: "text", width: 150 },
+                    { id: "start_date", name: "开始日期", type: "date", width: 120 },
+                    { id: "end_date", name: "结束日期", type: "date", width: 120 },
+                    { id: "activity_type", name: "活动类型", type: "single_select", width: 100, options: ["节日活动", "版本更新", "IP联动", "赛事活动", "限时活动", "周年庆"] },
+                    { id: "appearance_type", name: "外观类型", type: "multi_select", width: 120, options: ["皮肤", "武器", "特效", "装饰", "坐骑", "棋盘", "个性化"] },
+                    { id: "appearance_name", name: "外观名称", type: "text", width: 150 },
+                    { id: "rarity", name: "品质等级", type: "single_select", width: 100, options: ["伴生", "勇者", "史诗", "传说", "荣耀典藏", "终极"] },
+                    { id: "owner", name: "负责人", type: "text", width: 80 },
+                    { id: "status", name: "状态", type: "single_select", width: 90, options: ["规划中", "设计中", "制作中", "测试中", "已上线", "已延期"] },
+                    { id: "progress", name: "进度", type: "progress", width: 100 },
+                    { id: "note", name: "备注", type: "text", width: 200 }
+                ]
+            },
+            { 
+                icon: "🎁", 
+                name: "版本更新规划", 
+                view: "table",
+                columns: [
+                    { id: "version", name: "版本号", type: "text", width: 100 },
+                    { id: "release_date", name: "上线日期", type: "date", width: 120 },
+                    { id: "content", name: "主要内容", type: "text", width: 200 },
+                    { id: "new_skin_count", name: "新皮肤数", type: "number", width: 80 },
+                    { id: "new_hero", name: "新英雄/角色", type: "text", width: 120 },
+                    { id: "art_owner", name: "美术负责人", type: "text", width: 100 },
+                    { id: "test_status", name: "测试状态", type: "single_select", width: 100, options: ["未开始", "内测中", "公测中", "已完成"] },
+                    { id: "progress", name: "进度", type: "progress", width: 100 },
+                    { id: "note", name: "备注", type: "text", width: 150 }
+                ]
+            },
+            { 
+                icon: "🏆", 
+                name: "赛事活动规划", 
+                view: "kanban",
+                columns: [
+                    { id: "event_name", name: "赛事名称", type: "text", width: 150 },
+                    { id: "event_date", name: "举办时间", type: "date", width: 120 },
+                    { id: "prize", name: "奖励内容", type: "text", width: 150 },
+                    { id: "limited_skin", name: "限定皮肤", type: "text", width: 120 },
+                    { id: "partner", name: "合作方", type: "text", width: 100 },
+                    { id: "status", name: "状态", type: "kanban_status", width: 100, options: ["筹备中", "报名中", "进行中", "已结束"] },
+                    { id: "note", name: "备注", type: "text", width: 150 }
+                ]
+            },
+            { 
+                icon: "🤝", 
+                name: "IP联动规划", 
+                view: "timeline",
+                columns: [
+                    { id: "ip_name", name: "联动IP", type: "text", width: 150 },
+                    { id: "cooperation_type", name: "合作形式", type: "single_select", width: 120, options: ["皮肤联动", "角色联动", "场景联动", "道具联动", "全案合作"] },
+                    { id: "release_date", name: "上线时间", type: "date", width: 120 },
+                    { id: "skin_count", name: "皮肤数量", type: "number", width: 80 },
+                    { id: "bd_owner", name: "商务负责人", type: "text", width: 100 },
+                    { id: "art_owner", name: "美术负责人", type: "text", width: 100 },
+                    { id: "status", name: "状态", type: "single_select", width: 90, options: ["洽谈中", "签约中", "制作中", "已上线", "已结束"] },
+                    { id: "revenue", name: "预计收入", type: "number", width: 100 },
+                    { id: "note", name: "备注", type: "text", width: 150 }
+                ]
+            }
         ];
 
         // 风险检查
@@ -1994,14 +2238,38 @@
             html += `</div></div></div>`;
 
             // ========== 增值商品建议 ==========
-            const appearanceKey = analysisData.appearance.split('_')[0]; // 获取主品类
-            const growthSuggestions = APPEARANCE_GROWTH_SUGGESTIONS[appearanceKey] || APPEARANCE_GROWTH_SUGGESTIONS.skin;
+            // 映射外观类型到增值建议key
+            const appearanceGrowthMap = {
+                'skin': 'skin',
+                'weapon_skin': 'weapon_skin',
+                'vfx': 'vfx',
+                'decoration': 'decoration',
+                'mount': 'mount',
+                'board': 'board',
+                'costume': 'costume',
+                'costume_clothes': 'costume',
+                'costume_accessory': 'costume',
+                'costume_head': 'costume',
+                'costume_hair': 'costume',
+                'costume_eyes': 'costume',
+                'costume_scene': 'costume',
+                'personalized': 'personalized',
+                'personalized_avatar': 'personalized',
+                'personalized_frame': 'personalized',
+                'personalized_card': 'personalized',
+                'personalized_emote': 'personalized',
+                'personalized_title': 'personalized',
+                'personalized_kill': 'personalized',
+                'home_decor': 'decoration'
+            };
+            const growthKey = appearanceGrowthMap[analysisData.appearance] || 'skin';
+            const growthSuggestions = APPEARANCE_GROWTH_SUGGESTIONS[growthKey] || APPEARANCE_GROWTH_SUGGESTIONS.skin;
             
             html += `
                 <div class="card" style="margin-bottom: 16px; background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(6, 182, 212, 0.05) 100%); border: 1px solid rgba(16, 185, 129, 0.2);">
                     <div class="card-header">
                         <div class="card-title">🚀 未来外观增值商品建议</div>
-                        <span style="font-size: 0.7rem; color: var(--text-muted);">基于${APPEARANCE_LABELS[appearanceKey]?.name || '皮肤'}品类</span>
+                        <span style="font-size: 0.7rem; color: var(--text-muted);">基于${APPEARANCE_LABELS[growthKey]?.name || APPEARANCE_LABELS['skin']?.name || '皮肤'}品类</span>
                     </div>
                     <div class="card-body">
                         <div class="growth-suggestions">
@@ -2112,9 +2380,105 @@
             });
         }
 
+        // 根据输入查找匹配的皮肤
+        function findMatchingSkin(input) {
+            const inputLower = input.toLowerCase();
+            
+            for (const game of Object.keys(SKIN_DETAIL_DATA)) {
+                const skins = SKIN_DETAIL_DATA[game];
+                for (const skinName of Object.keys(skins)) {
+                    if (skinName.toLowerCase().includes(inputLower) || inputLower.includes(skinName.toLowerCase())) {
+                        const skin = skins[skinName];
+                        return {
+                            game: game,
+                            skinName: skinName,
+                            hero: skin.hero,
+                            rarity: skin.rarity
+                        };
+                    }
+                }
+            }
+            return null;
+        }
+
+        // 从输入中提取英雄名
+        function extractHeroName(input) {
+            // 常见英雄名列表
+            const heroes = ['亚瑟', '妲己', '安琪拉', '鲁班七号', '后羿', '孙悟空', '李白', '韩信', '貂蝉', '王昭君', 
+                           '妲己', '小乔', '周瑜', '诸葛亮', '司马懿', '张良', '甄姬', '蔡文姬', '杨玉环', '公孙离',
+                           '沃里克', '亚索', '劫', '阿狸', '伊泽瑞尔', '金克丝', '锤石', '李青', '菲奥娜', '卢锡安',
+                           '盖伦', '卡特琳娜', '泰达米尔', '瑞雯', '薇恩', '杰斯', '艾克', '辛德拉', '维鲁斯', '烬'];
+            
+            for (const hero of heroes) {
+                if (input.includes(hero)) {
+                    return hero;
+                }
+            }
+            return null;
+        }
+
+        // 根据英雄名获取推荐的皮肤
+        // 处理图片加载失败，显示搜索链接
+        function handleImageError(img, game, skinName, type) {
+            const container = img.parentElement;
+            container.innerHTML = `
+                <div class="artwork-load-failed">
+                    <span class="failed-icon">❌</span>
+                    <span class="failed-text">${type}加载失败</span>
+                    <div class="search-links-grid">
+                        ${generateSearchLinks(game, skinName, type)}
+                    </div>
+                </div>
+            `;
+        }
+
+        // 生成按优先级排序的搜索链接
+        // 优先级：官网 > 百度 > Bilibili > YouTube > 谷歌 > X
+        function generateSearchLinks(game, skinName, type) {
+            const query = `${game} ${skinName} ${type}`;
+            const encodedQuery = encodeURIComponent(query);
+            
+            // 官网链接（根据游戏类型）
+            const officialSites = {
+                '王者荣耀': { url: 'https://pvp.qq.com/webplat/info/news_pub.shtml', name: '王者荣耀官网' },
+                '英雄联盟': { url: 'https://lol.qq.com/', name: '英雄联盟官网' },
+                '原神': { url: 'https://ys.mihoyo.com/', name: '原神官网' },
+                '永劫无间': { url: 'https://www.yjwujian.cn/', name: '永劫无间官网' },
+                '和平精英': { url: 'https://gp.qq.com/', name: '和平精英官网' }
+            };
+            
+            const official = officialSites[game] || { url: '#', name: '官网' };
+            
+            const searchLinks = [
+                { priority: 1, name: '官网', url: official.url, icon: '🏠', class: 'official' },
+                { priority: 2, name: '百度', url: `https://www.baidu.com/s?wd=${encodedQuery}`, icon: '🔍', class: 'baidu' },
+                { priority: 3, name: 'Bilibili', url: `https://search.bilibili.com/all?keyword=${encodedQuery}`, icon: '📺', class: 'bilibili' },
+                { priority: 4, name: 'YouTube', url: `https://www.youtube.com/results?search_query=${encodedQuery}`, icon: '▶️', class: 'youtube' },
+                { priority: 5, name: 'Google', url: `https://www.google.com/search?q=${encodedQuery}`, icon: '🌐', class: 'google' },
+                { priority: 6, name: 'X', url: `https://twitter.com/search?q=${encodedQuery}`, icon: '🐦', class: 'twitter' }
+            ];
+            
+            return `
+                <div class="search-priority-label">按优先级搜索：</div>
+                <div class="search-links-row">
+                    ${searchLinks.map(link => `
+                        <a href="${link.url}" target="_blank" class="search-link-chip ${link.class}" title="${link.name} (优先级 ${link.priority})">
+                            <span class="link-icon">${link.icon}</span>
+                            <span class="link-name">${link.name}</span>
+                            <span class="link-priority">${link.priority}</span>
+                        </a>
+                    `).join('')}
+                </div>
+            `;
+        }
+
         function renderBreakdown(skinName) {
             const template = BREAKDOWN_TEMPLATES[breakdownType];
             const container = document.getElementById('breakdownResult');
+            
+            // 尝试匹配皮肤/英雄数据
+            const matchedSkin = findMatchingSkin(skinName);
+            const heroName = extractHeroName(skinName);
             
             let html = `
                 <div style="background: var(--bg-card); border-radius: 10px; padding: 16px; margin-top: 12px;">
@@ -2125,6 +2489,29 @@
                             <button class="download-btn" onclick="downloadBreakdownTable('${skinName}')">⬇️ 下载CSV</button>
                         </div>
                     </div>
+                    
+                    ${matchedSkin ? `
+                        <div class="matched-skin-info" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
+                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                                <span style="font-size: 0.8rem; color: var(--accent);">🎯 已匹配到参考皮肤</span>
+                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.7rem;" onclick="renderSkinDetail('${matchedSkin.game}', '${matchedSkin.skinName}')">查看详情</button>
+                            </div>
+                            <div style="font-size: 0.85rem; font-weight: 600;">${matchedSkin.skinName}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-secondary);">英雄: ${matchedSkin.hero} | 品质: ${matchedSkin.rarity} | 游戏: ${matchedSkin.game}</div>
+                        </div>
+                    ` : `
+                        ${heroName ? `
+                            <div class="hero-search-suggestions" style="background: var(--bg); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">💡 检测到英雄名"${heroName}"，相关皮肤推荐：</div>
+                                <div class="suggested-skins" style="display: flex; flex-wrap: wrap; gap: 6px;">
+                                    ${getSuggestedSkins(heroName).map(s => `
+                                        <span class="skin-suggestion-chip" onclick="document.getElementById('breakdownInput').value='${s.name}'; renderBreakdown('${s.name}');" style="background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">${s.name}</span>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    `}
+                    
                     <div class="breakdown-table-container">
                         <table class="breakdown-table" id="breakdownTable">
                             <thead>
@@ -2314,18 +2701,19 @@
                         <div class="artwork-container">
                             ${skin.splashUrl ? `
                                 <div class="artwork-item splash">
-                                    <img src="${skin.splashUrl}" alt="${matchedKey} 原画" onerror="this.parentElement.innerHTML='<div class=\\'artwork-placeholder\\'>原画加载失败</div>'">
+                                    <img src="${skin.splashUrl}" alt="${matchedKey} 原画" onerror="handleImageError(this, '${game}', '${matchedKey}', '原画')">
                                     <div class="artwork-label">Splash Art 原画</div>
                                 </div>
                             ` : `
                                 <div class="artwork-placeholder">
                                     <span>🖼️</span>
                                     <span>暂无原画</span>
+                                    ${generateSearchLinks(game, matchedKey, '原画')}
                                 </div>
                             `}
                             ${skin.modelUrl ? `
                                 <div class="artwork-item model">
-                                    <img src="${skin.modelUrl}" alt="${matchedKey} 模型" onerror="this.parentElement.innerHTML='<div class=\\'artwork-placeholder\\'>模型图加载失败</div>'">
+                                    <img src="${skin.modelUrl}" alt="${matchedKey} 模型" onerror="handleImageError(this, '${game}', '${matchedKey}', '模型')">
                                     <div class="artwork-label">Loading Art 加载图</div>
                                 </div>
                             ` : ''}
@@ -2346,24 +2734,123 @@
                             <div class="video-placeholder">
                                 <span>🎬</span>
                                 <span>暂无视频</span>
-                                <a href="https://www.bilibili.com/search?keyword=${encodeURIComponent(game + ' ' + matchedKey + ' 皮肤展示')}" target="_blank" class="search-link">
-                                    去B站搜索 →
-                                </a>
+                                ${generateSearchLinks(game, matchedKey, '视频')}
                             </div>
                         `}
                     </div>
 
                     <!-- 美术任务清单 -->
                     <div class="skin-tasks-section">
-                        <h4 class="section-title">📋 美术制作任务清单</h4>
+                        <div class="section-header">
+                            <h4 class="section-title">📋 美术制作任务清单</h4>
+                            <button class="btn btn-primary" style="padding: 6px 12px; font-size: 0.75rem;" onclick="jumpToBreakdown('${matchedKey}', '${skin.rarity}')">
+                                🔧 开始详细拆解
+                            </button>
+                        </div>
                         <div class="task-checklist">
                             ${generateSkinTasks(skin.rarity, matchedKey)}
+                        </div>
+                    </div>
+                    
+                    <!-- 快速拆解预览 -->
+                    <div class="quick-breakdown-section">
+                        <h4 class="section-title">⚡ 快速拆解预览</h4>
+                        <div class="quick-breakdown-grid">
+                            ${generateQuickBreakdown(skin.rarity)}
                         </div>
                     </div>
                 </div>
             `;
 
             container.innerHTML = html;
+        }
+
+        function jumpToBreakdown(skinName, rarity) {
+            // 切换到创意工具tab
+            switchTab('creative');
+            // 填充拆解输入框
+            const breakdownInput = document.getElementById('breakdownInput');
+            if (breakdownInput) {
+                breakdownInput.value = skinName;
+            }
+            // 自动触发拆解
+            setTimeout(() => {
+                renderBreakdown(skinName);
+                showToast('已加载"' + skinName + '"的美术拆解任务', 'success');
+            }, 300);
+        }
+
+        function generateQuickBreakdown(rarity) {
+            const breakdownByRarity = {
+                '伴生': [
+                    { phase: '概念', time: '1天', tasks: '主题定调、配色方案' },
+                    { phase: '模型', time: '2天', tasks: '换色贴图、简单调整' },
+                    { phase: '特效', time: '1天', tasks: '基础特效微调' },
+                    { phase: '总计', time: '4天', tasks: '约16工时' }
+                ],
+                '勇者': [
+                    { phase: '概念', time: '2天', tasks: '主题设计、细节概念' },
+                    { phase: '模型', time: '3天', tasks: '模型优化、贴图绘制' },
+                    { phase: '特效', time: '2天', tasks: '技能特效、回城特效' },
+                    { phase: '音效', time: '1天', tasks: '基础音效调整' },
+                    { phase: '总计', time: '8天', tasks: '约32工时' }
+                ],
+                '史诗': [
+                    { phase: '概念', time: '3天', tasks: '完整概念设计、三视图' },
+                    { phase: '模型', time: '5天', tasks: '高模雕刻、低模拓扑' },
+                    { phase: '贴图', time: '3天', tasks: 'PBR贴图全套' },
+                    { phase: '特效', time: '4天', tasks: '全套技能特效' },
+                    { phase: '动画', time: '3天', tasks: '待机+技能动画' },
+                    { phase: '音效', time: '2天', tasks: '专属语音音效' },
+                    { phase: '总计', time: '20天', tasks: '约80工时' }
+                ],
+                '传说': [
+                    { phase: '概念', time: '4天', tasks: '高质量概念、多方案' },
+                    { phase: '模型', time: '7天', tasks: '顶级品质建模' },
+                    { phase: '贴图', time: '4天', tasks: '精细化PBR贴图' },
+                    { phase: '特效', time: '5天', tasks: '全特效定制' },
+                    { phase: '动画', time: '4天', tasks: '全套动画调整' },
+                    { phase: '音效', time: '3天', tasks: '专属语音音效包' },
+                    { phase: '总计', time: '27天', tasks: '约108工时' }
+                ],
+                '荣耀典藏': [
+                    { phase: '概念', time: '5天', tasks: '双形态概念设计' },
+                    { phase: '模型', time: '10天', tasks: '双形态顶级建模' },
+                    { phase: '贴图', time: '5天', tasks: '双套PBR贴图' },
+                    { phase: '特效', time: '7天', tasks: '全特效+专属特效' },
+                    { phase: '动画', time: '5天', tasks: '专属动作动画' },
+                    { phase: '音效', time: '4天', tasks: '全套专属音效' },
+                    { phase: 'UI', time: '2天', tasks: '专属加载边框、头像' },
+                    { phase: '总计', time: '38天', tasks: '约152工时' }
+                ],
+                '终极': [
+                    { phase: '概念', time: '7天', tasks: '多形态概念设计' },
+                    { phase: '模型', time: '14天', tasks: '多形态顶级建模' },
+                    { phase: '贴图', time: '7天', tasks: '多套PBR贴图' },
+                    { phase: '特效', time: '10天', tasks: '全套特效定制' },
+                    { phase: '动画', time: '7天', tasks: '全套专属动画' },
+                    { phase: '音效', time: '5天', tasks: '全套专属音效语音' },
+                    { phase: 'UI', time: '3天', tasks: '专属UI资源' },
+                    { phase: '交互', time: '3天', tasks: '专属交互设计' },
+                    { phase: '总计', time: '56天', tasks: '约224工时' }
+                ],
+                '默认': [
+                    { phase: '概念', time: '2天', tasks: '基础概念设计' },
+                    { phase: '模型', time: '4天', tasks: '模型制作优化' },
+                    { phase: '贴图', time: '2天', tasks: '基础贴图绘制' },
+                    { phase: '总计', time: '8天', tasks: '约32工时' }
+                ]
+            };
+
+            const breakdown = breakdownByRarity[rarity] || breakdownByRarity['默认'];
+            
+            return breakdown.map((item, index) => `
+                <div class="quick-breakdown-item ${item.phase === '总计' ? 'total' : ''}">
+                    <div class="breakdown-phase">${item.phase}</div>
+                    <div class="breakdown-time">${item.time}</div>
+                    <div class="breakdown-tasks">${item.tasks}</div>
+                </div>
+            `).join('');
         }
 
         // 根据稀有度生成美术任务清单
@@ -2431,6 +2918,60 @@
                 pickerYear++;
                 renderMonthGrid();
             });
+            
+            // 日期快速定位
+            document.getElementById('quickJumpBtn').addEventListener('click', () => {
+                const dateInput = document.getElementById('quickJumpDate').value;
+                if (dateInput) {
+                    const parts = dateInput.split('-');
+                    currentMonth.setFullYear(parseInt(parts[0]));
+                    currentMonth.setMonth(parseInt(parts[1]) - 1);
+                    hideMonthPicker();
+                    renderCalendar();
+                    renderMonthSuggestions();
+                    showToast(`已跳转到 ${dateInput}`, 'success');
+                } else {
+                    showToast('请选择日期', 'warning');
+                }
+            });
+            
+            // 日期详情弹窗关闭
+            document.getElementById('closeDateDetail').addEventListener('click', hideDateDetail);
+            document.getElementById('dateDetailOverlay').addEventListener('click', (e) => {
+                if (e.target.id === 'dateDetailOverlay') hideDateDetail();
+            });
+        }
+
+        function showDateDetail(dateStr, events) {
+            const overlay = document.getElementById('dateDetailOverlay');
+            const title = document.getElementById('dateDetailTitle');
+            const content = document.getElementById('dateDetailContent');
+            
+            title.textContent = `📅 ${dateStr}`;
+            
+            if (events.length === 0) {
+                content.innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: var(--text-muted);">
+                        <div style="font-size: 2rem; margin-bottom: 12px;">📋</div>
+                        <div>该日期暂无运营节点</div>
+                        <div style="font-size: 0.75rem; margin-top: 8px;">点击日历中的日期可添加运营计划</div>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = events.map(e => `
+                    <div class="date-event-item">
+                        <div class="event-name">${e.icon || '📌'} ${e.name}</div>
+                        <div class="event-desc">${e.desc || ''}</div>
+                        ${e.type ? `<span style="display: inline-block; padding: 2px 8px; background: var(--primary); border-radius: 10px; font-size: 0.7rem; margin-top: 6px;">${e.type}</span>` : ''}
+                    </div>
+                `).join('');
+            }
+            
+            overlay.classList.add('show');
+        }
+
+        function hideDateDetail() {
+            document.getElementById('dateDetailOverlay').classList.remove('show');
         }
 
         function showMonthPicker() {
@@ -2475,20 +3016,30 @@
         function renderMonthSuggestions() {
             const container = document.getElementById('monthSuggestions');
             const month = currentMonth.getMonth() + 1;
+            const year = currentMonth.getFullYear();
             const suggestions = MONTH_SUGGESTIONS[month] || [];
 
             let html = `
-                <div class="month-suggestions-title">💡 ${currentMonth.getFullYear()}年${month}月运营节点建议</div>
+                <div class="month-suggestions-title">💡 ${year}年${month}月运营节点建议</div>
                 <div class="suggestion-list">
             `;
 
             suggestions.forEach(s => {
+                const typeColor = {
+                    '节日活动': 'var(--success)',
+                    '版本更新': 'var(--primary)',
+                    'IP联动': 'var(--secondary)',
+                    '大型活动': 'var(--warning)',
+                    '限时活动': 'var(--accent)',
+                    '电商联动': 'var(--danger)'
+                };
                 html += `
-                    <div class="suggestion-item">
+                    <div class="suggestion-item" onclick="addToCalendar('${s.name}', '${year}-${String(month).padStart(2, '0')}-01')">
                         <div class="icon">${s.icon}</div>
                         <div class="content">
                             <div class="name">${s.name}</div>
                             <div class="desc">${s.desc}</div>
+                            <span class="suggestion-type" style="background: ${typeColor[s.type] || 'var(--text-muted)'}">${s.type}</span>
                         </div>
                     </div>
                 `;
@@ -2496,6 +3047,11 @@
 
             html += '</div>';
             container.innerHTML = html;
+        }
+
+        function addToCalendar(eventName, dateSuggestion) {
+            document.getElementById('skinSearchInput') && (document.getElementById('skinSearchInput').value = eventName);
+            showToast(`已复制活动名称: ${eventName}`, 'success');
         }
 
         function renderCalendar() {
@@ -2521,7 +3077,7 @@
                 const events = CALENDAR_EVENTS.filter(e => e.date === dateStr);
                 const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
 
-                html += `<div class="calendar-day ${isToday ? 'today' : ''}">
+                html += `<div class="calendar-day ${isToday ? 'today' : ''}" onclick="showDateDetail('${dateStr}', ${JSON.stringify(events).replace(/"/g, '&quot;')})">
                     <div class="day-num">${day}</div>
                     ${events.map(e => `<span class="event-dot" style="background: ${e.color};"></span>`).join('')}
                     <div class="events">${events.map(e => e.name.substring(0, 4)).join(' ')}</div>
@@ -2553,55 +3109,204 @@
             const template = OPERATION_TEMPLATES[currentTemplateIndex];
             
             let html = `
-                <div class="template-actions">
-                    ${OPERATION_TEMPLATES.map((t, i) => `
-                        <button class="btn ${i === currentTemplateIndex ? 'btn-primary' : 'btn-secondary'}" style="padding: 6px 12px; font-size: 0.75rem;" onclick="switchTemplate(${i})">${t.icon} ${t.name}</button>
-                    `).join('')}
-                    <button class="download-btn" style="margin-left: auto;" onclick="downloadTemplateTable()">⬇️ 下载CSV</button>
+                <!-- 飞书多维表格风格工具栏 -->
+                <div class="feishu-toolbar">
+                    <div class="toolbar-left">
+                        <div class="view-tabs">
+                            <button class="view-tab active" data-view="table" onclick="switchView('table')">
+                                <span>📋</span> 表格
+                            </button>
+                            <button class="view-tab" data-view="kanban" onclick="switchView('kanban')">
+                                <span>📊</span> 看板
+                            </button>
+                            <button class="view-tab" data-view="calendar" onclick="switchView('calendar')">
+                                <span>📅</span> 日历
+                            </button>
+                        </div>
+                    </div>
+                    <div class="toolbar-right">
+                        <button class="toolbar-btn" onclick="addTemplateRow()">
+                            <span>➕</span> 添加记录
+                        </button>
+                        <button class="toolbar-btn" onclick="downloadTemplateTable()">
+                            <span>⬇️</span> 导出
+                        </button>
+                    </div>
                 </div>
-                <table class="template-table" id="operationTemplateTable">
-                    <thead>
-                        <tr>
-                            ${template.columns.map(c => `<th>${c}</th>`).join('')}
-                        </tr>
-                    </thead>
-                    <tbody id="templateTableBody">
-                        ${renderTemplateRows(template.columns)}
-                        ${renderTemplateRows(template.columns)}
-                    </tbody>
-                </table>
-                <button class="add-row-btn" onclick="addTemplateRow()">+ 添加一行</button>
+                
+                <!-- 模板切换标签 -->
+                <div class="template-tabs">
+                    ${OPERATION_TEMPLATES.map((t, i) => `
+                        <button class="template-tab ${i === currentTemplateIndex ? 'active' : ''}" onclick="switchTemplate(${i})">
+                            ${t.icon} ${t.name}
+                        </button>
+                    `).join('')}
+                </div>
+                
+                <!-- 多维表格 -->
+                <div class="feishu-table-container" id="feishuTableContainer">
+                    ${renderFeishuTable(template)}
+                </div>
             `;
             
             container.innerHTML = html;
         }
 
-        function renderTemplateRows(columns) {
-            const rowHtml = '<tr>';
-            columns.forEach((col, i) => {
-                if (col.includes('日期') || col.includes('时间')) {
-                    rowHtml += `<td><input type="date" style="color: var(--text);"></td>`;
-                } else if (col.includes('类型')) {
-                    rowHtml += `<td><select class="status-select"><option>节日活动</option><option>版本更新</option><option>IP联动</option><option>赛事活动</option></select></td>`;
-                } else if (col.includes('状态')) {
-                    rowHtml += `<td><select class="status-select"><option>规划中</option><option>进行中</option><option>已完成</option><option>已延期</option></select></td>`;
-                } else {
-                    rowHtml += `<td><input type="text" placeholder="填写..."></td>`;
-                }
-            });
-            rowHtml += '</tr>';
-            return rowHtml;
+        function renderFeishuTable(template) {
+            return `
+                <div class="feishu-table-wrapper">
+                    <table class="feishu-table" id="operationTemplateTable">
+                        <thead>
+                            <tr class="feishu-header-row">
+                                <th class="feishu-header-cell row-num-cell">#</th>
+                                ${template.columns.map(col => `
+                                    <th class="feishu-header-cell" data-col="${col.id}" style="min-width: ${col.width}px">
+                                        <div class="header-content">
+                                            <span class="field-icon">${getFieldIcon(col.type)}</span>
+                                            <span class="field-name">${col.name}</span>
+                                        </div>
+                                    </th>
+                                `).join('')}
+                            </tr>
+                        </thead>
+                        <tbody id="templateTableBody">
+                            ${renderFeishuRows(template, 3)}
+                        </tbody>
+                    </table>
+                </div>
+            `;
         }
 
-        function addTemplateRow() {
-            const tbody = document.getElementById('templateTableBody');
-            const template = OPERATION_TEMPLATES[currentTemplateIndex];
-            tbody.insertAdjacentHTML('beforeend', renderTemplateRows(template.columns));
+        function getFieldIcon(type) {
+            const icons = {
+                'text': '📝',
+                'number': '🔢',
+                'single_select': '🏷️',
+                'multi_select': '🔖',
+                'date': '📅',
+                'progress': '📊',
+                'person': '👤',
+                'attachment': '📎',
+                'url': '🔗',
+                'kanban_status': '📍'
+            };
+            return icons[type] || '📝';
+        }
+
+        function renderFeishuRows(template, count = 1) {
+            let rows = '';
+            for (let i = 0; i < count; i++) {
+                rows += `<tr class="feishu-row" data-row="${i}">
+                    <td class="feishu-cell row-num-cell">${i + 1}</td>
+                    ${template.columns.map(col => renderFeishuCell(col)).join('')}
+                </tr>`;
+            }
+            return rows;
+        }
+
+        function renderFeishuCell(col) {
+            switch(col.type) {
+                case 'date':
+                    return `<td class="feishu-cell" data-col="${col.id}"><input type="date" class="feishu-input date-input" placeholder="选择日期"></td>`;
+                case 'single_select':
+                    return `<td class="feishu-cell" data-col="${col.id}">
+                        <select class="feishu-select">
+                            <option value="">选择...</option>
+                            ${col.options?.map(opt => `<option value="${opt}">${opt}</option>`).join('') || ''}
+                        </select>
+                    </td>`;
+                case 'multi_select':
+                    return `<td class="feishu-cell multi-select-cell" data-col="${col.id}">
+                        <div class="multi-select-wrapper" onclick="toggleMultiSelect(this)">
+                            <div class="multi-select-tags"></div>
+                            <span class="multi-select-placeholder">选择...</span>
+                        </div>
+                        <div class="multi-select-dropdown">
+                            ${(col.options || []).map(opt => `
+                                <div class="multi-select-option" onclick="toggleMultiSelectOption(this, '${opt}')">
+                                    <span class="option-checkbox">☐</span>
+                                    <span class="option-text">${opt}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </td>`;
+                case 'number':
+                    return `<td class="feishu-cell" data-col="${col.id}"><input type="number" class="feishu-input number-input" placeholder="0"></td>`;
+                case 'progress':
+                    return `<td class="feishu-cell" data-col="${col.id}">
+                        <div class="progress-cell">
+                            <div class="progress-bar-bg">
+                                <div class="progress-bar-fill" style="width: 0%"></div>
+                            </div>
+                            <input type="number" class="progress-input" min="0" max="100" value="0" onchange="updateProgress(this)">
+                            <span class="progress-percent">%</span>
+                        </div>
+                    </td>`;
+                default:
+                    return `<td class="feishu-cell" data-col="${col.id}"><input type="text" class="feishu-input" placeholder="输入..."></td>`;
+            }
+        }
+
+        function updateProgress(input) {
+            const value = Math.min(100, Math.max(0, parseInt(input.value) || 0));
+            const cell = input.closest('.progress-cell');
+            const bar = cell.querySelector('.progress-bar-fill');
+            bar.style.width = value + '%';
+            input.value = value;
+        }
+
+        function toggleMultiSelect(wrapper) {
+            const dropdown = wrapper.nextElementSibling;
+            dropdown.classList.toggle('show');
+        }
+
+        function toggleMultiSelectOption(option, value) {
+            const checkbox = option.querySelector('.option-checkbox');
+            const isSelected = checkbox.textContent === '☑';
+            checkbox.textContent = isSelected ? '☐' : '☑';
+            option.classList.toggle('selected', !isSelected);
+            
+            // 更新显示的标签
+            const cell = option.closest('.feishu-cell');
+            const tagsContainer = cell.querySelector('.multi-select-tags');
+            const placeholder = cell.querySelector('.multi-select-placeholder');
+            const selected = cell.querySelectorAll('.multi-select-option.selected');
+            
+            tagsContainer.innerHTML = '';
+            selected.forEach(sel => {
+                const text = sel.querySelector('.option-text').textContent;
+                tagsContainer.innerHTML += `<span class="multi-tag">${text}</span>`;
+            });
+            placeholder.style.display = selected.length > 0 ? 'none' : 'inline';
+        }
+
+        function switchView(view) {
+            document.querySelectorAll('.view-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelector(`.view-tab[data-view="${view}"]`).classList.add('active');
+            // 可以在这里扩展不同视图的渲染逻辑
         }
 
         function switchTemplate(index) {
             currentTemplateIndex = index;
             renderTemplateTable();
+        }
+
+        function addTemplateRow() {
+            const tbody = document.getElementById('templateTableBody');
+            const template = OPERATION_TEMPLATES[currentTemplateIndex];
+            const rowCount = tbody.querySelectorAll('.feishu-row').length;
+            const newRow = document.createElement('tr');
+            newRow.className = 'feishu-row';
+            newRow.dataset.row = rowCount;
+            newRow.innerHTML = `
+                <td class="feishu-cell row-num-cell">${rowCount + 1}</td>
+                ${template.columns.map(col => renderFeishuCell(col)).join('')}
+            `;
+            tbody.appendChild(newRow);
+            
+            // 滚动到新行
+            newRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            newRow.style.animation = 'highlightRow 1s ease';
         }
 
         function downloadTemplateTable() {
