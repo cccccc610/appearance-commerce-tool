@@ -1,0 +1,1917 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>游戏外观商业化分析平台</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --primary-light: #a5b4fc;
+            --secondary: #8b5cf6;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: #334155;
+            --text: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --border: #475569;
+            --gradient-1: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #06b6d4 100%);
+            --gradient-2: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            --shadow-lg: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            --shadow-glow: 0 0 40px rgba(99, 102, 241, 0.3);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* 动态背景 */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(ellipse at 20% 20%, rgba(99, 102, 241, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.05) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+        .header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+        .header .badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+        .header .badge {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        /* Main Layout */
+        .main-layout {
+            display: grid;
+            grid-template-columns: 380px 1fr;
+            gap: 24px;
+            min-height: calc(100vh - 200px);
+        }
+
+        @media (max-width: 1200px) {
+            .main-layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid var(--border);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar-section {
+            margin-bottom: 28px;
+        }
+        .sidebar-section:last-child {
+            margin-bottom: 0;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .section-label::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        /* Category Cards */
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+        .category-card {
+            background: var(--bg-card);
+            border: 2px solid transparent;
+            border-radius: 12px;
+            padding: 16px 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .category-card:hover {
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        .category-card.selected {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.1) 100%);
+            box-shadow: var(--shadow-glow);
+        }
+        .category-card .icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+        .category-card .name {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        /* Appearance Tags */
+        .appearance-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .appearance-tag {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .appearance-tag:hover {
+            border-color: var(--primary-light);
+        }
+        .appearance-tag.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .appearance-tag .emoji {
+            font-size: 1rem;
+        }
+
+        /* Competitor Select */
+        .competitor-search {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: var(--text);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+        .competitor-search:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .competitor-list {
+            max-height: 300px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+        .competitor-list::-webkit-scrollbar {
+            width: 6px;
+        }
+        .competitor-list::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 3px;
+        }
+        .competitor-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--bg-card);
+            border: 1px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .competitor-item:hover {
+            border-color: var(--border);
+        }
+        .competitor-item.selected {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+        }
+        .competitor-item .check {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+        .competitor-item.selected .check {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .competitor-item .name {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+        .competitor-item .category {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            background: var(--bg);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        /* Selected Count */
+        .selected-count {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .selected-count .text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .selected-count .count {
+            background: rgba(255,255,255,0.2);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-weight: 700;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn {
+            flex: 1;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-primary {
+            background: var(--gradient-1);
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-glow);
+        }
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+        .btn-secondary:hover {
+            border-color: var(--primary-light);
+        }
+
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            display: flex;
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            padding: 6px;
+            border: 1px solid var(--border);
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 12px;
+            transition: all 0.3s;
+        }
+        .tab-btn:hover {
+            color: var(--text);
+        }
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Analysis Card */
+        .analysis-card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        .card-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-body {
+            padding: 24px;
+        }
+
+        /* Competitor Analysis Card */
+        .competitor-card {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            margin-bottom: 16px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .competitor-card:hover {
+            border-color: var(--primary-light);
+        }
+        .competitor-card-header {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15) 0%, rgba(139, 92, 246, 0.1) 100%);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+        }
+        .competitor-card-header:hover {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25) 0%, rgba(139, 92, 246, 0.15) 100%);
+        }
+        .competitor-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .competitor-avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        .competitor-meta h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .competitor-meta .tags {
+            display: flex;
+            gap: 6px;
+        }
+        .competitor-meta .tag {
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+        }
+        .competitor-meta .tag.highlight {
+            background: var(--success);
+            color: white;
+        }
+        .expand-icon {
+            color: var(--text-muted);
+            transition: transform 0.3s;
+        }
+        .competitor-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+        .competitor-card-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+        }
+        .competitor-card.expanded .competitor-card-body {
+            max-height: 2000px;
+        }
+        .competitor-card-content {
+            padding: 20px;
+        }
+
+        /* Info Grid */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .info-item {
+            background: var(--bg-card);
+            padding: 12px 16px;
+            border-radius: 10px;
+        }
+        .info-item .label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .info-item .value {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        /* Highlight List */
+        .highlight-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .highlight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 12px;
+            background: var(--bg-card);
+            border-radius: 10px;
+        }
+        .highlight-item .icon {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin-top: 2px;
+        }
+        .highlight-item .text {
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        /* Case Cards */
+        .case-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .case-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 16px;
+            border-left: 3px solid var(--primary);
+        }
+        .case-card .name {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+        .case-card .meta {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+        .case-card .type {
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            background: var(--bg);
+            border-radius: 10px;
+            color: var(--text-secondary);
+        }
+        .case-card .price {
+            font-size: 0.75rem;
+            padding: 3px 10px;
+            background: var(--primary);
+            border-radius: 10px;
+            color: white;
+        }
+        .case-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Insight List */
+        .insight-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .insight-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            font-size: 0.85rem;
+        }
+        .insight-item .dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent);
+            border-radius: 50%;
+            margin-top: 8px;
+            flex-shrink: 0;
+        }
+
+        /* Compare Table */
+        .compare-table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        .compare-table th {
+            background: var(--bg-card);
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.85rem;
+            border-bottom: 1px solid var(--border);
+            white-space: nowrap;
+        }
+        .compare-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.85rem;
+            vertical-align: top;
+        }
+        .compare-table tr:last-child td {
+            border-bottom: none;
+        }
+        .compare-table tr:hover td {
+            background: rgba(99, 102, 241, 0.05);
+        }
+        .compare-table .game-name {
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .compare-table .game-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--gradient-1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+        }
+
+        /* Charts */
+        .chart-container {
+            background: var(--bg-secondary);
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+
+        /* Risk Checklist */
+        .risk-section {
+            margin-bottom: 20px;
+        }
+        .risk-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        .risk-header.critical { background: rgba(239, 68, 68, 0.15); }
+        .risk-header.high { background: rgba(249, 115, 22, 0.15); }
+        .risk-header.medium { background: rgba(245, 158, 11, 0.15); }
+        .risk-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .risk-badge {
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .risk-badge.critical { background: var(--danger); color: white; }
+        .risk-badge.high { background: #f97316; color: white; }
+        .risk-badge.medium { background: var(--warning); color: white; }
+
+        .checklist {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .checklist-item:hover {
+            background: var(--border);
+        }
+        .checklist-item.checked {
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .checklist-item.checked .check-box {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        .checklist-item.checked .check-text {
+            text-decoration: line-through;
+            color: var(--text-muted);
+        }
+        .check-box {
+            width: 22px;
+            height: 22px;
+            border: 2px solid var(--border);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+        .check-text {
+            flex: 1;
+            font-size: 0.9rem;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+        }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .progress-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .progress-value {
+            font-weight: 700;
+            font-size: 0.9rem;
+        }
+        .progress-bar {
+            height: 8px;
+            background: var(--bg);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-1);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        /* Export Panel */
+        .export-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+        }
+        .export-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .export-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+        }
+        .export-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 12px;
+        }
+        .export-card .title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .export-card .desc {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+        .empty-state .icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+        .empty-state .title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+        .empty-state .desc {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* Summary Stats */
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .stat-card .label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-top: 4px;
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--success);
+            color: white;
+            padding: 16px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+        }
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .info-grid, .case-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .export-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .category-grid { grid-template-columns: repeat(3, 1fr); }
+            .info-grid, .highlight-grid, .case-cards {
+                grid-template-columns: 1fr;
+            }
+            .summary-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>🎮 游戏外观商业化分析平台</h1>
+            <p class="subtitle">竞品分析 · 内容规划 · 风险检查 · 一键导出</p>
+            <div class="badge-row">
+                <span class="badge">18+ 热门竞品数据</span>
+                <span class="badge">可视化对比分析</span>
+                <span class="badge">一键导出报告</span>
+            </div>
+        </header>
+
+        <!-- Main Layout -->
+        <div class="main-layout">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <!-- 品类选择 -->
+                <div class="sidebar-section">
+                    <div class="section-label">选择游戏品类</div>
+                    <div class="category-grid">
+                        <div class="category-card" data-category="moba">
+                            <div class="icon">⚔️</div>
+                            <div class="name">MOBA</div>
+                        </div>
+                        <div class="category-card" data-category="fps">
+                            <div class="icon">🔫</div>
+                            <div class="name">FPS</div>
+                        </div>
+                        <div class="category-card" data-category="simulation">
+                            <div class="icon">🏠</div>
+                            <div class="name">模拟经营</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 外观类型 -->
+                <div class="sidebar-section">
+                    <div class="section-label">选择外观类型</div>
+                    <div class="appearance-tags" id="appearanceTags">
+                        <div class="appearance-tag" data-appearance="skin"><span class="emoji">👤</span>皮肤</div>
+                        <div class="appearance-tag" data-appearance="weapon_skin"><span class="emoji">🔫</span>武器</div>
+                        <div class="appearance-tag" data-appearance="vfx"><span class="emoji">💫</span>特效</div>
+                        <div class="appearance-tag" data-appearance="decoration"><span class="emoji">✨</span>装饰</div>
+                        <div class="appearance-tag" data-appearance="mount"><span class="emoji">🐴</span>坐骑</div>
+                        <div class="appearance-tag" data-appearance="home_decor"><span class="emoji">🏠</span>家园</div>
+                    </div>
+                </div>
+
+                <!-- 竞品选择 -->
+                <div class="sidebar-section">
+                    <div class="section-label">选择参考竞品</div>
+                    <input type="text" class="competitor-search" placeholder="🔍 搜索竞品..." id="competitorSearch">
+                    <div class="selected-count">
+                        <span class="text">已选择竞品</span>
+                        <span class="count" id="selectedCount">0</span>
+                    </div>
+                    <div class="competitor-list" id="competitorList"></div>
+                </div>
+
+                <!-- 操作按钮 -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary" id="analyzeBtn">
+                        <span>📊</span> 开始分析
+                    </button>
+                    <button class="btn btn-secondary" id="resetBtn">
+                        <span>🔄</span> 重置
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Tabs -->
+                <div class="tabs-container">
+                    <button class="tab-btn active" data-tab="analysis">📈 竞品分析</button>
+                    <button class="tab-btn" data-tab="compare">⚖️ 对比分析</button>
+                    <button class="tab-btn" data-tab="charts">📊 数据图表</button>
+                    <button class="tab-btn" data-tab="risks">⚠️ 风险检查</button>
+                    <button class="tab-btn" data-tab="export">📤 导出报告</button>
+                </div>
+
+                <!-- Tab: 竞品分析 -->
+                <div class="tab-content active" id="tab-analysis">
+                    <div id="analysisContent">
+                        <div class="empty-state">
+                            <div class="icon">🎯</div>
+                            <div class="title">选择品类和竞品开始分析</div>
+                            <div class="desc">在左侧选择游戏品类、外观类型和参考竞品，点击"开始分析"查看详细商业化数据</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: 对比分析 -->
+                <div class="tab-content" id="tab-compare">
+                    <div id="compareContent">
+                        <div class="empty-state">
+                            <div class="icon">⚖️</div>
+                            <div class="title">选择多个竞品进行对比</div>
+                            <div class="desc">选择2个以上竞品，可查看横向对比表格</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: 数据图表 -->
+                <div class="tab-content" id="tab-charts">
+                    <div id="chartsContent">
+                        <div class="empty-state">
+                            <div class="icon">📊</div>
+                            <div class="title">选择竞品查看数据可视化</div>
+                            <div class="desc">分析后将展示价格分布、品类占比等图表</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: 风险检查 -->
+                <div class="tab-content" id="tab-risks">
+                    <div id="risksContent">
+                        <div class="empty-state">
+                            <div class="icon">⚠️</div>
+                            <div class="title">选择外观类型查看风险清单</div>
+                            <div class="desc">系统将根据外观类型推送对应的风险检查项</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tab: 导出报告 -->
+                <div class="tab-content" id="tab-export">
+                    <div class="analysis-card">
+                        <div class="card-header">
+                            <div class="card-title">📤 导出分析报告</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="export-panel">
+                                <div class="export-card" id="exportPDF">
+                                    <div class="icon">📄</div>
+                                    <div class="title">导出 PDF</div>
+                                    <div class="desc">生成完整PDF报告文档</div>
+                                </div>
+                                <div class="export-card" id="exportImage">
+                                    <div class="icon">🖼️</div>
+                                    <div class="title">导出图片</div>
+                                    <div class="desc">生成PNG格式分析图</div>
+                                </div>
+                                <div class="export-card" id="exportMarkdown">
+                                    <div class="icon">📝</div>
+                                    <div class="title">复制 Markdown</div>
+                                    <div class="desc">复制Markdown格式内容</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ==================== 数据定义 ====================
+        const COMPETITOR_DATA = {
+            "王者荣耀": {
+                category: "moba", icon: "⚔️",
+                overview: "全球收入最高的MOBA手游，皮肤商业化标杆",
+                model: { primary: "英雄皮肤直售 + 限定抽奖", secondary: "战令系统、星元系统、荣耀典藏", pricing: "6元-1688元，传说级888元" },
+                highlights: ["皮肤品质分层清晰（勇者/史诗/传说/荣耀典藏）", "IP联动频繁（圣斗士、SNK、国漫IP）", "星元系统提供皮肤内定制", "每周特惠、碎片商店形成价格锚点"],
+                cases: [
+                    { name: "李信·一念神魔", type: "传说", price: "1688点券", desc: "双形态切换，特效拉满" },
+                    { name: "瑶·遇见神鹿", type: "传说", price: "1688点券", desc: "敦煌文化联动" },
+                    { name: "花木兰·水晶猎龙者", type: "星元", price: "星元部件", desc: "星元系统标杆" }
+                ],
+                insights: ["史诗级皮肤性价比最高", "文化IP联动提升品牌价值", "星元系统延长生命周期", "限定皮肤FOMO心理驱动强"],
+                appearanceTypes: ["skin", "decoration", "vfx"]
+            },
+            "英雄联盟": {
+                category: "moba", icon: "⚔️",
+                overview: "PC MOBA皮肤系统开创者，拥有最成熟的皮肤生态",
+                model: { primary: "皮肤直售 + 至臻系统", secondary: "战利品箱、神话系统", pricing: "750-3250RP（约30-130元）" },
+                highlights: ["皮肤宇宙世界观（星之守护者、K/DA）", "至臻皮肤代币兑换增强粘性", "神话炫彩提供土豪消费出口", "电竞赛事皮肤品牌价值高"],
+                cases: [
+                    { name: "K/DA系列", type: "组合皮肤", price: "全套约500元", desc: "虚拟偶像团体出圈" },
+                    { name: "星之守护者", type: "皮肤宇宙", price: "系列皮肤", desc: "魔法少女主题长线运营" },
+                    { name: "True Damage", type: "组合皮肤", price: "单曲+皮肤", desc: "虚拟乐队概念" }
+                ],
+                insights: ["皮肤宇宙可独立运营", "音乐+皮肤提升溢价能力", "至臻系统平衡肝党和氪党", "赛事皮肤承载情感价值"],
+                appearanceTypes: ["skin", "decoration", "vfx"]
+            },
+            "DOTA2": {
+                category: "moba", icon: "⚔️",
+                overview: "饰品系统最自由的MOBA，Steam市场驱动经济",
+                model: { primary: "饰品箱开箱 + 社区市场", secondary: "本子系统、工作坊", pricing: "市场化定价，稀有饰品可达万元" },
+                highlights: ["饰品可交易可拆分形成二级市场", "TI本子众筹模式奖金池破亿", "社区创作饰品分成激励", "英雄饰品位细分"],
+                cases: [
+                    { name: "TI互动指南", type: "本子", price: "10-100美元", desc: "众筹赛事奖金" },
+                    { name: "弧光饰品", type: "特效", price: "市场定价", desc: "改变技能特效" },
+                    { name: "不朽饰品", type: "稀有", price: "市场定价", desc: "限定稀有" }
+                ],
+                insights: ["二级市场增加投资价值", "众筹绑定玩家情感", "社区创作降低成本", "细分饰品位增加深度"],
+                appearanceTypes: ["skin", "decoration", "vfx"]
+            },
+            "和平精英": {
+                category: "fps", icon: "🔫",
+                overview: "国内最大FPS手游，军武皮肤商业化成熟",
+                model: { primary: "军需箱抽奖", secondary: "通行证、限时直售", pricing: "单套军需约600-2000元" },
+                highlights: ["军需箱抽奖收入占比最高", "联动IP丰富（特斯拉、玛莎拉蒂）", "载具皮肤溢价能力强", "赛季手册稳定DAU"],
+                cases: [
+                    { name: "特斯拉皮肤", type: "载具", price: "约1500元", desc: "载具皮肤标杆" },
+                    { name: "玛莎拉蒂", type: "载具", price: "约800元", desc: "豪车联动" },
+                    { name: "高达联动", type: "套装", price: "军需抽取", desc: "IP跨界" }
+                ],
+                insights: ["载具皮肤是差异化收入", "豪车联动提升调性", "抽奖ARPU高但争议大", "IP联动需平衡成本和ROI"],
+                appearanceTypes: ["weapon_skin", "skin", "vfx"]
+            },
+            "CS2": {
+                category: "fps", icon: "🔫",
+                overview: "武器皮肤经济系统最成熟的FPS，二级市场驱动",
+                model: { primary: "武器箱开箱 + 市场交易", secondary: "纪念包、大行动", pricing: "市场化定价，稀有皮肤可达百万" },
+                highlights: ["皮肤可交易可投资形成经济系统", "磨损度系统影响外观和价格", "贴纸系统增加个性化", "赛事纪念包绑定电竞情感"],
+                cases: [
+                    { name: "龙狙", type: "AWP皮肤", price: "1万-100万+", desc: "最贵皮肤之一" },
+                    { name: "蝴蝶刀", type: "刀具", price: "2000-2万", desc: "切刀动画" },
+                    { name: "贴纸胶囊", type: "贴纸", price: "几元-上千", desc: "赛事限定" }
+                ],
+                insights: ["投资属性超越消费属性", "稀有度和磨损度决定价格", "赛事贴纸可投资升值", "刀手套是顶级消费出口"],
+                appearanceTypes: ["weapon_skin", "vfx"]
+            },
+            "VALORANT": {
+                category: "fps", icon: "🔫",
+                overview: "拳头FPS，皮肤系统强调视觉冲击和手感",
+                model: { primary: "皮肤商店轮换 + 捆绑包", secondary: "战斗通行证", pricing: "皮肤捆绑包约50-100美元" },
+                highlights: ["皮肤手感差异化（音效、换弹动画）", "商店轮换制造紧迫感", "至尊皮肤系列化", "皮肤分级明确定价清晰"],
+                cases: [
+                    { name: "极光系列", type: "捆绑包", price: "约80美元", desc: "全特效联动" },
+                    { name: "奇点系列", type: "捆绑包", price: "约70美元", desc: "科幻风格" },
+                    { name: "RGX系列", type: "捆绑包", price: "约60美元", desc: "透明枪身+特效" }
+                ],
+                insights: ["手感差异化是核心卖点", "捆绑包提高客单价", "轮换商店利用FOMO心理", "皮肤世界观增强品牌感"],
+                appearanceTypes: ["weapon_skin", "skin", "vfx"]
+            },
+            "Apex英雄": {
+                category: "fps", icon: "🔫",
+                overview: "英雄射击FPS，皮肤系统与传奇角色绑定",
+                model: { primary: "Apex币直售 + 传家宝活动", secondary: "战斗通行证", pricing: "传说皮肤1800Apex币（约18美元）" },
+                highlights: ["传家宝系统是顶级氪金出口", "皮肤与角色深度绑定", "活动轮换制造稀缺感", "传家宝碎片保底机制"],
+                cases: [
+                    { name: "传家宝", type: "近战武器", price: "约160美元保底", desc: "顶级稀有" },
+                    { name: "觉醒活动", type: "组合包", price: "活动定价", desc: "角色主题捆绑" },
+                    { name: "传奇皮肤", type: "角色皮肤", price: "1800币", desc: "传说品质" }
+                ],
+                insights: ["传家宝是最高价值单品", "角色绑定增加收集深度", "保底机制平衡公平性", "活动节奏控制收入波动"],
+                appearanceTypes: ["weapon_skin", "skin", "vfx"]
+            },
+            "原神": {
+                category: "simulation", icon: "🏠",
+                overview: "开放世界RPG，角色驱动商业化典范",
+                model: { primary: "角色抽卡 + 武器抽卡", secondary: "纪行（通行证）、皮肤直售", pricing: "角色保底约160-240元，皮肤68-198元" },
+                highlights: ["角色即内容，皮肤是增值服务", "皮肤定价克制主打好感度", "纪行皮肤增加付费点", "联动皮肤高溢价"],
+                cases: [
+                    { name: "甘雨·霓裾翩跹", type: "角色皮肤", price: "168元", desc: "海灯节限定" },
+                    { name: "芭芭拉·闪耀协奏", type: "免费皮肤", price: "活动获取", desc: "活跃奖励" },
+                    { name: "刻晴·霓裾翩跹", type: "联动皮肤", price: "198元", desc: "云堇戏曲联动" }
+                ],
+                insights: ["皮肤是角色经济补充", "定价克制提高好感度", "免费皮肤提高活跃度", "文化联动提升品牌价值"],
+                appearanceTypes: ["skin", "home_decor", "mount"]
+            },
+            "崩坏：星穹铁道": {
+                category: "simulation", icon: "🏠",
+                overview: "回合制RPG，沿袭原神商业模式",
+                model: { primary: "角色抽卡", secondary: "光锥抽卡、纪行皮肤", pricing: "与原神类似" },
+                highlights: ["继承原神商业框架", "皮肤仍处于早期阶段", "光锥系统增加武器外观价值", "角色设计质量高"],
+                cases: [
+                    { name: "三月七皮肤", type: "活动皮肤", price: "免费/活动", desc: "主线奖励" },
+                    { name: "景元皮肤", type: "角色皮肤", price: "待定", desc: "人气角色" }
+                ],
+                insights: ["角色价值高于皮肤", "光锥外观可做差异化", "未来皮肤潜力大"],
+                appearanceTypes: ["skin", "home_decor"]
+            },
+            "梦幻西游": {
+                category: "simulation", icon: "🏠",
+                overview: "经典MMO，外观经济系统成熟",
+                model: { primary: "锦衣系统（外观）", secondary: "祥瑞（坐骑）、特效、染色", pricing: "锦衣几十到几百元不等" },
+                highlights: ["锦衣系统分类详细收藏价值高", "限定锦衣稀缺性强二手市场活跃", "染色系统增加个性化", "祥瑞坐骑差异化收入"],
+                cases: [
+                    { name: "水云归锦衣", type: "限定锦衣", price: "二手溢价", desc: "稀缺收藏" },
+                    { name: "年年有余祥瑞", type: "年兽坐骑", price: "活动限定", desc: "节日限定" }
+                ],
+                insights: ["限定外观二级市场溢价", "染色延长外观生命周期", "祥瑞拓展收入来源", "老IP情怀支撑溢价"],
+                appearanceTypes: ["skin", "home_decor", "mount", "decoration"]
+            },
+            "魔兽世界": {
+                category: "simulation", icon: "🏠",
+                overview: "MMO鼻祖，外观收集生态成熟",
+                model: { primary: "商城坐骑/宠物 + 订阅制", secondary: "典藏版、幻化系统", pricing: "坐骑20-25美元，宠物10美元" },
+                highlights: ["坐骑宠物商城稳定收入", "幻化系统驱动副本farm", "典藏版绑定版本销售", "TCG卡牌兑换稀有外观"],
+                cases: [
+                    { name: "雷龙", type: "商城坐骑", price: "25美元", desc: "带拍卖行功能" },
+                    { name: "炼狱火坐骑", type: "典藏版", price: "典藏版绑定", desc: "预购奖励" }
+                ],
+                insights: ["功能性外观溢价更高", "幻化延长旧内容生命周期", "典藏版捆绑提高客单价", "订阅制是基础外观是增值"],
+                appearanceTypes: ["skin", "mount", "home_decor"]
+            },
+            "剑网3": {
+                category: "simulation", icon: "🏠",
+                overview: "国产武侠MMO，外观收入占比极高",
+                model: { primary: "外观商城（成衣/盒子）", secondary: "限时外观、染色、特效", pricing: "外观几十到几百元，盒子皮肤上百" },
+                highlights: ["外观收入占总收入主要部分", "盒子系统（盲盒）热度高", "染色系统个性化程度高", "同人生态驱动外观消费"],
+                cases: [
+                    { name: "盒子外观", type: "限时外观", price: "100-300元", desc: "限时稀缺" },
+                    { name: "成衣商城", type: "直购外观", price: "几十元", desc: "常驻可选" }
+                ],
+                insights: ["外观是核心收入来源", "限时制造稀缺性", "染色增加用户投入", "同人社区反哺消费"],
+                appearanceTypes: ["skin", "home_decor", "mount", "decoration"]
+            },
+            "最终幻想14": {
+                category: "simulation", icon: "🏠",
+                overview: "日式MMO，商城外观克制，游戏内收集为主",
+                model: { primary: "订阅制", secondary: "商城外观、坐骑、宠物", pricing: "商城外观几美元到十几美元" },
+                highlights: ["商城外观定价克制主打好感度", "游戏内外观获取途径丰富", "联动外观稀缺性高", "买房系统驱动家具消费"],
+                cases: [
+                    { name: "尼尔联动装备", type: "游戏内获取", price: "副本掉落", desc: "联动稀缺" },
+                    { name: "商城时装", type: "直购", price: "5-15美元", desc: "定价克制" }
+                ],
+                insights: ["克制商业化赢得口碑", "游戏内外观增加长期目标", "家具系统是隐形消费点", "联动内容稀缺性强"],
+                appearanceTypes: ["skin", "home_decor", "mount"]
+            },
+            "永劫无间": {
+                category: "fps", icon: "⚔️",
+                overview: "武侠吃鸡，皮肤系统成熟",
+                model: { primary: "皮肤直售 + 抽奖", secondary: "通行证、赛季皮肤", pricing: "皮肤几十到几百元" },
+                highlights: ["武侠风格外观差异化", "武器皮肤与角色皮肤并重", "赛季皮肤绑定排位", "IP联动丰富"],
+                cases: [
+                    { name: "尼尔联动皮肤", type: "IP联动", price: "捆绑包", desc: "跨IP联动" },
+                    { name: "季莹莹皮肤", type: "角色皮肤", price: "直售", desc: "人气角色" }
+                ],
+                insights: ["武侠风格是核心差异化", "武器皮肤是特色品类", "IP联动需精准匹配用户"],
+                appearanceTypes: ["skin", "weapon_skin", "vfx"]
+            },
+            "蛋仔派对": {
+                category: "simulation", icon: "🎮",
+                overview: "休闲竞技，外观商业化成熟",
+                model: { primary: "外观直售 + 盲盒", secondary: "通行证、活动", pricing: "外观几十元为主" },
+                highlights: ["外观品类丰富", "盲盒模式热度高", "UGC内容反哺外观消费", "社交属性强"],
+                cases: [
+                    { name: "限定盲盒", type: "盲盒外观", price: "抽奖获取", desc: "稀缺驱动" },
+                    { name: "联动外观", type: "IP联动", price: "直售", desc: "热门IP" }
+                ],
+                insights: ["休闲游戏客单价低但DAU高", "盲盒适合轻量消费", "社交属性放大外观价值"],
+                appearanceTypes: ["skin", "decoration", "vfx"]
+            },
+            "明日方舟": {
+                category: "simulation", icon: "🎯",
+                overview: "塔防手游，皮肤系统克制",
+                model: { primary: "角色抽卡", secondary: "皮肤直售（源石）", pricing: "皮肤15-21源石（约90-126元）" },
+                highlights: ["皮肤定价统一无稀缺性炒作", "皮肤可免费源石获取", "皮肤高质量立绘动态化", "玩家好感度极高"],
+                cases: [
+                    { name: "浊心斯卡蒂皮肤", type: "角色皮肤", price: "18源石", desc: "人设反转" },
+                    { name: "限定皮肤", type: "活动皮肤", price: "活动获取", desc: "活跃奖励" }
+                ],
+                insights: ["克制商业化赢得口碑", "统一定价降低决策成本", "高质量是核心卖点"],
+                appearanceTypes: ["skin", "decoration", "vfx"]
+            },
+            "阴阳师": {
+                category: "simulation", icon: "👻",
+                overview: "日式回合制，皮肤系统成熟",
+                model: { primary: "皮肤直售 + 抽奖", secondary: "活动、典藏皮肤", pricing: "皮肤几十到上百元" },
+                highlights: ["典藏皮肤品质高价格高", "皮肤与式神深度绑定", "活动皮肤驱动活跃度", "IP联动丰富"],
+                cases: [
+                    { name: "典藏皮肤", type: "高品质皮肤", price: "上百元", desc: "顶级品质" },
+                    { name: "联动皮肤", type: "IP联动", price: "活动/直售", desc: "跨界联动" }
+                ],
+                insights: ["式神是核心皮肤是增值", "典藏皮肤提高天花板", "联动需匹配用户调性"],
+                appearanceTypes: ["skin", "decoration", "vfx"]
+            },
+            "第五人格": {
+                category: "simulation", icon: "🎭",
+                overview: "非对称竞技，皮肤驱动明显",
+                model: { primary: "皮肤抽奖", secondary: "推理径、活动", pricing: "皮肤几百元起" },
+                highlights: ["皮肤是主要付费点", "推理径系统增加目标感", "联动皮肤丰富", "哥特风格差异化"],
+                cases: [
+                    { name: "联动皮肤", type: "IP联动", price: "抽奖获取", desc: "恐怖IP联动" },
+                    { name: "限定金皮", type: "顶级皮肤", price: "抽奖", desc: "稀缺性" }
+                ],
+                insights: ["风格化皮肤是核心卖点", "恐怖暗黑IP联动匹配用户", "抽奖ARPU高"],
+                appearanceTypes: ["skin", "decoration", "vfx"]
+            },
+            "地下城与勇士": {
+                category: "simulation", icon: "⚔️",
+                overview: "经典动作格斗，时装系统成熟",
+                model: { primary: "时装商城 + 礼包", secondary: "天空套（稀有）、活动", pricing: "时装套装几百元" },
+                highlights: ["天空套是时装天花板", "时装属性加成曾是争议点", "礼包时装绑定节日销售", "联动时装丰富"],
+                cases: [
+                    { name: "天空套", type: "稀有时装", price: "合成获取", desc: "顶级稀缺" },
+                    { name: "春节礼包", type: "节日礼包", price: "礼包定价", desc: "年度峰值" }
+                ],
+                insights: ["天空套定义顶级时装", "礼包模式绑定节日消费", "属性加成需谨慎平衡"],
+                appearanceTypes: ["skin", "decoration", "vfx"]
+            }
+        };
+
+        // 外观类型风险检查
+        const APPEARANCE_RISKS = {
+            skin: {
+                critical: ["内容是否无敏感元素（政治、宗教、暴力等）", "IP授权是否完整合规"],
+                high: ["颜色是否影响游戏辨识度", "特效是否影响游戏性能", "是否与角色原有形象冲突"],
+                medium: ["定价策略是否合理", "上线时间是否有冲突"]
+            },
+            weapon_skin: {
+                critical: ["内容是否无敏感元素", "武器模型是否合规"],
+                high: ["颜色是否影响辨识度", "性能是否达标"],
+                medium: ["定价策略是否合理", "磨损度分级是否清晰"]
+            },
+            vfx: {
+                critical: ["特效是否包含敏感内容"],
+                high: ["性能是否达标（帧率≥30fps）", "粒子数是否超预算", "跨平台兼容性"],
+                medium: ["特效辨识度是否足够", "是否与技能指示器冲突"]
+            },
+            decoration: {
+                critical: ["内容是否合规"],
+                high: ["是否影响角色辨识度", "性能影响"],
+                medium: ["获取方式是否合理"]
+            },
+            mount: {
+                critical: ["内容是否合规"],
+                high: ["是否影响游戏平衡", "性能影响"],
+                medium: ["获取难度是否合理"]
+            },
+            home_decor: {
+                critical: ["内容是否无敏感元素"],
+                high: ["模型面数是否超限", "内存占用是否合理"],
+                medium: ["主题是否与游戏世界观一致", "定价是否合理"]
+            }
+        };
+
+        // ==================== 状态管理 ====================
+        let selectedCategory = null;
+        let selectedAppearance = null;
+        let selectedCompetitors = new Set();
+        let analysisData = null;
+
+        // ==================== DOM 元素 ====================
+        const categoryCards = document.querySelectorAll('.category-card');
+        const appearanceTags = document.querySelectorAll('.appearance-tag');
+        const competitorSearch = document.getElementById('competitorSearch');
+        const competitorList = document.getElementById('competitorList');
+        const selectedCountEl = document.getElementById('selectedCount');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const tabBtns = document.querySelectorAll('.tab-btn');
+
+        // ==================== 初始化 ====================
+        document.addEventListener('DOMContentLoaded', () => {
+            initCategorySelection();
+            initAppearanceSelection();
+            initCompetitorSelection();
+            initTabs();
+            initButtons();
+            initExport();
+        });
+
+        // ==================== 品类选择 ====================
+        function initCategorySelection() {
+            categoryCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    categoryCards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedCategory = card.dataset.category;
+                    filterCompetitors();
+                });
+            });
+        }
+
+        // ==================== 外观选择 ====================
+        function initAppearanceSelection() {
+            appearanceTags.forEach(tag => {
+                tag.addEventListener('click', () => {
+                    appearanceTags.forEach(t => t.classList.remove('selected'));
+                    tag.classList.add('selected');
+                    selectedAppearance = tag.dataset.appearance;
+                });
+            });
+        }
+
+        // ==================== 竞品选择 ====================
+        function initCompetitorSelection() {
+            renderCompetitorList(Object.keys(COMPETITOR_DATA));
+            
+            competitorSearch.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                const allGames = Object.keys(COMPETITOR_DATA);
+                const filtered = allGames.filter(name => 
+                    name.toLowerCase().includes(query) || 
+                    COMPETITOR_DATA[name].category.toLowerCase().includes(query)
+                );
+                renderCompetitorList(filtered);
+            });
+        }
+
+        function renderCompetitorList(games) {
+            competitorList.innerHTML = games.map(name => {
+                const data = COMPETITOR_DATA[name];
+                const isSelected = selectedCompetitors.has(name);
+                return `
+                    <div class="competitor-item ${isSelected ? 'selected' : ''}" data-name="${name}">
+                        <div class="check">${isSelected ? '✓' : ''}</div>
+                        <span class="name">${name}</span>
+                        <span class="category">${getCategoryLabel(data.category)}</span>
+                    </div>
+                `;
+            }).join('');
+
+            competitorList.querySelectorAll('.competitor-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    const name = item.dataset.name;
+                    if (selectedCompetitors.has(name)) {
+                        selectedCompetitors.delete(name);
+                    } else {
+                        selectedCompetitors.add(name);
+                    }
+                    item.classList.toggle('selected');
+                    item.querySelector('.check').textContent = selectedCompetitors.has(name) ? '✓' : '';
+                    selectedCountEl.textContent = selectedCompetitors.size;
+                });
+            });
+        }
+
+        function filterCompetitors() {
+            if (!selectedCategory) {
+                renderCompetitorList(Object.keys(COMPETITOR_DATA));
+                return;
+            }
+            const filtered = Object.keys(COMPETITOR_DATA).filter(name => 
+                COMPETITOR_DATA[name].category === selectedCategory
+            );
+            renderCompetitorList(filtered);
+        }
+
+        function getCategoryLabel(cat) {
+            const labels = { moba: 'MOBA', fps: 'FPS', simulation: '模拟经营' };
+            return labels[cat] || cat;
+        }
+
+        // ==================== Tab 切换 ====================
+        function initTabs() {
+            tabBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    tabBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(`tab-${btn.dataset.tab}`).classList.add('active');
+                });
+            });
+        }
+
+        // ==================== 按钮事件 ====================
+        function initButtons() {
+            analyzeBtn.addEventListener('click', () => {
+                if (selectedCompetitors.size === 0) {
+                    showToast('请先选择竞品进行分析', 'warning');
+                    return;
+                }
+                runAnalysis();
+            });
+
+            resetBtn.addEventListener('click', () => {
+                selectedCategory = null;
+                selectedAppearance = null;
+                selectedCompetitors.clear();
+                analysisData = null;
+                
+                categoryCards.forEach(c => c.classList.remove('selected'));
+                appearanceTags.forEach(t => t.classList.remove('selected'));
+                selectedCountEl.textContent = '0';
+                competitorSearch.value = '';
+                renderCompetitorList(Object.keys(COMPETITOR_DATA));
+                
+                // 重置内容
+                document.getElementById('analysisContent').innerHTML = getEmptyState('🎯', '选择品类和竞品开始分析');
+                document.getElementById('compareContent').innerHTML = getEmptyState('⚖️', '选择多个竞品进行对比');
+                document.getElementById('chartsContent').innerHTML = getEmptyState('📊', '选择竞品查看数据可视化');
+                document.getElementById('risksContent').innerHTML = getEmptyState('⚠️', '选择外观类型查看风险清单');
+                
+                showToast('已重置所有选择', 'success');
+            });
+        }
+
+        function getEmptyState(icon, title) {
+            return `
+                <div class="empty-state">
+                    <div class="icon">${icon}</div>
+                    <div class="title">${title}</div>
+                    <div class="desc">在左侧选择游戏品类、外观类型和参考竞品，点击"开始分析"</div>
+                </div>
+            `;
+        }
+
+        // ==================== 分析逻辑 ====================
+        function runAnalysis() {
+            analysisData = {
+                competitors: Array.from(selectedCompetitors).map(name => ({
+                    name,
+                    ...COMPETITOR_DATA[name]
+                })),
+                category: selectedCategory,
+                appearance: selectedAppearance
+            };
+
+            renderAnalysisTab();
+            renderCompareTab();
+            renderChartsTab();
+            renderRisksTab();
+            
+            showToast('分析完成，点击各标签查看结果', 'success');
+        }
+
+        // ==================== 竞品分析 Tab ====================
+        function renderAnalysisTab() {
+            const container = document.getElementById('analysisContent');
+            
+            let html = `
+                <div class="summary-stats">
+                    <div class="stat-card">
+                        <div class="value">${analysisData.competitors.length}</div>
+                        <div class="label">分析竞品数</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">${analysisData.category ? getCategoryLabel(analysisData.category) : '全部'}</div>
+                        <div class="label">品类</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">${analysisData.appearance || '全部'}</div>
+                        <div class="label">外观类型</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="value">${analysisData.competitors.reduce((sum, c) => sum + (c.cases?.length || 0), 0)}</div>
+                        <div class="label">案例总数</div>
+                    </div>
+                </div>
+            `;
+
+            analysisData.competitors.forEach(comp => {
+                const hasAppearance = !analysisData.appearance || 
+                    (comp.appearanceTypes && comp.appearanceTypes.includes(analysisData.appearance));
+                
+                html += `
+                    <div class="competitor-card" data-name="${comp.name}">
+                        <div class="competitor-card-header">
+                            <div class="competitor-info">
+                                <div class="competitor-avatar">${comp.icon}</div>
+                                <div class="competitor-meta">
+                                    <h4>${comp.name}</h4>
+                                    <div class="tags">
+                                        <span class="tag">${getCategoryLabel(comp.category)}</span>
+                                        ${hasAppearance ? '<span class="tag highlight">✓ 含此外观</span>' : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="expand-icon">▼</div>
+                        </div>
+                        <div class="competitor-card-body">
+                            <div class="competitor-card-content">
+                                <p style="color: var(--text-secondary); margin-bottom: 16px; font-size: 0.9rem;">${comp.overview}</p>
+                                
+                                <div class="info-grid">
+                                    <div class="info-item">
+                                        <div class="label">主要模式</div>
+                                        <div class="value">${comp.model.primary}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="label">辅助模式</div>
+                                        <div class="value">${comp.model.secondary}</div>
+                                    </div>
+                                    <div class="info-item">
+                                        <div class="label">价格区间</div>
+                                        <div class="value">${comp.model.pricing}</div>
+                                    </div>
+                                </div>
+                                
+                                <h5 style="font-size: 0.9rem; margin-bottom: 12px; color: var(--text-secondary);">✨ 核心亮点</h5>
+                                <div class="highlight-grid">
+                                    ${comp.highlights.map(h => `
+                                        <div class="highlight-item">
+                                            <div class="icon">▸</div>
+                                            <div class="text">${h}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                
+                                <h5 style="font-size: 0.9rem; margin-bottom: 12px; color: var(--text-secondary);">📊 成功案例</h5>
+                                <div class="case-cards">
+                                    ${comp.cases.map(c => `
+                                        <div class="case-card">
+                                            <div class="name">${c.name}</div>
+                                            <div class="meta">
+                                                <span class="type">${c.type}</span>
+                                                <span class="price">${c.price}</span>
+                                            </div>
+                                            <div class="desc">${c.desc}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                
+                                <h5 style="font-size: 0.9rem; margin-bottom: 12px; color: var(--text-secondary);">💡 关键洞察</h5>
+                                <div class="insight-list">
+                                    ${comp.insights.map(i => `
+                                        <div class="insight-item">
+                                            <div class="dot"></div>
+                                            <div>${i}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+
+            // 绑定展开/收起事件
+            container.querySelectorAll('.competitor-card-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    header.parentElement.classList.toggle('expanded');
+                });
+            });
+        }
+
+        // ==================== 对比分析 Tab ====================
+        function renderCompareTab() {
+            const container = document.getElementById('compareContent');
+            
+            if (analysisData.competitors.length < 2) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="icon">⚖️</div>
+                        <div class="title">请选择2个以上竞品进行对比</div>
+                        <div class="desc">当前已选择 ${analysisData.competitors.length} 个竞品</div>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = `
+                <div class="analysis-card">
+                    <div class="card-header">
+                        <div class="card-title">⚖️ 竞品横向对比</div>
+                    </div>
+                    <div class="card-body" style="padding: 0;">
+                        <div class="compare-table-wrapper">
+                            <table class="compare-table">
+                                <thead>
+                                    <tr>
+                                        <th>游戏</th>
+                                        <th>主要模式</th>
+                                        <th>价格区间</th>
+                                        <th>核心亮点</th>
+                                        <th>案例数</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${analysisData.competitors.map(comp => `
+                                        <tr>
+                                            <td>
+                                                <div class="game-name">
+                                                    <div class="game-icon">${comp.icon}</div>
+                                                    ${comp.name}
+                                                </div>
+                                            </td>
+                                            <td>${comp.model.primary}</td>
+                                            <td>${comp.model.pricing}</td>
+                                            <td>${comp.highlights[0]}</td>
+                                            <td>${comp.cases.length} 个</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // ==================== 数据图表 Tab ====================
+        function renderChartsTab() {
+            const container = document.getElementById('chartsContent');
+            
+            container.innerHTML = `
+                <div class="chart-container">
+                    <div class="chart-title">📊 品类分布</div>
+                    <div class="chart-wrapper">
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">💰 商业模式统计</div>
+                    <div class="chart-wrapper">
+                        <canvas id="modelChart"></canvas>
+                    </div>
+                </div>
+            `;
+
+            // 品类分布饼图
+            const categoryData = {};
+            analysisData.competitors.forEach(comp => {
+                const cat = getCategoryLabel(comp.category);
+                categoryData[cat] = (categoryData[cat] || 0) + 1;
+            });
+
+            new Chart(document.getElementById('categoryChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categoryData),
+                    datasets: [{
+                        data: Object.values(categoryData),
+                        backgroundColor: ['#6366f1', '#8b5cf6', '#06b6d4', '#10b981'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: { color: '#94a3b8', padding: 20 }
+                        }
+                    }
+                }
+            });
+
+            // 商业模式统计
+            const modelData = { '直售': 0, '抽奖': 0, '抽卡': 0, '开箱': 0, '通行证': 0 };
+            analysisData.competitors.forEach(comp => {
+                const primary = comp.model.primary.toLowerCase();
+                if (primary.includes('直售')) modelData['直售']++;
+                if (primary.includes('抽奖')) modelData['抽奖']++;
+                if (primary.includes('抽卡')) modelData['抽卡']++;
+                if (primary.includes('开箱')) modelData['开箱']++;
+                if (primary.includes('通行证')) modelData['通行证']++;
+            });
+
+            new Chart(document.getElementById('modelChart'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(modelData),
+                    datasets: [{
+                        label: '竞品数量',
+                        data: Object.values(modelData),
+                        backgroundColor: '#6366f1',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#94a3b8', stepSize: 1 },
+                            grid: { color: '#334155' }
+                        },
+                        x: {
+                            ticks: { color: '#94a3b8' },
+                            grid: { display: false }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+        }
+
+        // ==================== 风险检查 Tab ====================
+        function renderRisksTab() {
+            const container = document.getElementById('risksContent');
+            const risks = APPEARANCE_RISKS[selectedAppearance] || APPEARANCE_RISKS.skin;
+            
+            const totalRisks = (risks.critical?.length || 0) + 
+                              (risks.high?.length || 0) + 
+                              (risks.medium?.length || 0);
+            
+            let html = `
+                <div class="progress-container">
+                    <div class="progress-header">
+                        <span class="progress-label">检查进度</span>
+                        <span class="progress-value"><span id="checkedCount">0</span> / ${totalRisks}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+                    </div>
+                </div>
+            `;
+
+            const riskLevels = [
+                { key: 'critical', label: '严重风险', color: 'critical' },
+                { key: 'high', label: '高风险', color: 'high' },
+                { key: 'medium', label: '中等风险', color: 'medium' }
+            ];
+
+            riskLevels.forEach(level => {
+                if (risks[level.key] && risks[level.key].length > 0) {
+                    html += `
+                        <div class="risk-section">
+                            <div class="risk-header ${level.color}">
+                                <span>${level.key === 'critical' ? '🔴' : level.key === 'high' ? '🟠' : '🟡'}</span>
+                                <span class="risk-title">${level.label}</span>
+                                <span class="risk-badge ${level.color}">${risks[level.key].length} 项</span>
+                            </div>
+                            <div class="checklist">
+                                ${risks[level.key].map((item, i) => `
+                                    <div class="checklist-item" data-id="${level.key}-${i}">
+                                        <div class="check-box"></div>
+                                        <span class="check-text">${item}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+
+            // 绑定检查事件
+            let checkedCount = 0;
+            container.querySelectorAll('.checklist-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    item.classList.toggle('checked');
+                    const checkbox = item.querySelector('.check-box');
+                    checkbox.textContent = item.classList.contains('checked') ? '✓' : '';
+                    
+                    checkedCount = container.querySelectorAll('.checklist-item.checked').length;
+                    document.getElementById('checkedCount').textContent = checkedCount;
+                    document.getElementById('progressFill').style.width = `${(checkedCount / totalRisks) * 100}%`;
+                });
+            });
+        }
+
+        // ==================== 导出功能 ====================
+        function initExport() {
+            document.getElementById('exportPDF').addEventListener('click', () => exportReport('pdf'));
+            document.getElementById('exportImage').addEventListener('click', () => exportReport('image'));
+            document.getElementById('exportMarkdown').addEventListener('click', () => exportReport('markdown'));
+        }
+
+        function exportReport(type) {
+            if (!analysisData) {
+                showToast('请先进行分析再导出报告', 'warning');
+                return;
+            }
+
+            if (type === 'markdown') {
+                const markdown = generateMarkdown();
+                navigator.clipboard.writeText(markdown).then(() => {
+                    showToast('Markdown 已复制到剪贴板', 'success');
+                });
+            } else if (type === 'pdf') {
+                showToast('PDF 导出功能开发中...', 'success');
+                // 实际项目中可使用 html2pdf.js 等库
+            } else if (type === 'image') {
+                showToast('图片导出功能开发中...', 'success');
+                // 实际项目中可使用 html2canvas 等库
+            }
+        }
+
+        function generateMarkdown() {
+            let md = `# 游戏外观商业化分析报告\n\n`;
+            md += `**分析时间**: ${new Date().toLocaleString()}\n\n`;
+            md += `---\n\n`;
+            
+            analysisData.competitors.forEach(comp => {
+                md += `## ${comp.name}\n\n`;
+                md += `**概述**: ${comp.overview}\n\n`;
+                md += `### 商业模式\n`;
+                md += `- **主要模式**: ${comp.model.primary}\n`;
+                md += `- **辅助模式**: ${comp.model.secondary}\n`;
+                md += `- **价格区间**: ${comp.model.pricing}\n\n`;
+                md += `### 核心亮点\n`;
+                comp.highlights.forEach(h => md += `- ${h}\n`);
+                md += `\n### 成功案例\n`;
+                comp.cases.forEach(c => {
+                    md += `- **${c.name}** (${c.type}, ${c.price}): ${c.desc}\n`;
+                });
+                md += `\n### 关键洞察\n`;
+                comp.insights.forEach(i => md += `- ${i}\n`);
+                md += `\n---\n\n`;
+            });
+            
+            return md;
+        }
+
+        // ==================== Toast 提示 ====================
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.innerHTML = `<span>${type === 'success' ? '✓' : '⚠️'}</span> ${message}`;
+            toast.style.background = type === 'success' ? 'var(--success)' : 'var(--warning)';
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+    </script>
+</body>
+</html>
