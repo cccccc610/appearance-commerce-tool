@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v3.1</title>
+    <title>游戏外观商业化分析平台 v3.2</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -135,15 +135,19 @@
         /* Pricing Table - 横向可复制表格 */
         .pricing-table-container { overflow-x: auto; margin-top: 12px; }
         .pricing-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        .pricing-table th, .pricing-table td { padding: 10px 12px; border: 1px solid var(--border); text-align: left; white-space: nowrap; }
+        .pricing-table th, .pricing-table td { padding: 10px 12px; border: 1px solid var(--border); text-align: left; }
         .pricing-table th { background: var(--bg-card); font-weight: 600; color: var(--accent); position: sticky; top: 0; }
-        .pricing-table td { background: var(--bg-secondary); }
+        .pricing-table td { background: var(--bg-secondary); vertical-align: top; }
         .pricing-table tr:hover td { background: var(--bg-card); }
-        .pricing-table .tier-name { font-weight: 600; color: var(--text); }
-        .pricing-table .price { color: var(--accent); }
-        .pricing-table .tasks { max-width: 400px; white-space: normal; }
-        .copy-table-btn { margin-bottom: 10px; padding: 6px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .pricing-table .tier-name { font-weight: 600; color: var(--text); background: var(--bg-card); }
+        .pricing-table .price { color: var(--accent); background: var(--bg-card); }
+        .pricing-table .task-cell { min-width: 150px; }
+        .pricing-table .task-item { padding: 6px 0; border-bottom: 1px dashed var(--border); }
+        .pricing-table .task-item:last-child { border-bottom: none; }
+        .copy-table-btn { margin-bottom: 10px; padding: 6px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
         .copy-table-btn:hover { border-color: var(--primary); color: var(--text); }
+        .download-btn { margin-bottom: 10px; margin-left: 8px; padding: 6px 12px; background: var(--success); border: none; border-radius: 6px; color: white; font-size: 0.75rem; cursor: pointer; display: inline-flex; align-items: center; gap: 4px; }
+        .download-btn:hover { opacity: 0.9; }
 
         /* Creative Tools */
         .creative-tools-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
@@ -212,7 +216,7 @@
         .event-item .event-type { font-size: 0.65rem; padding: 2px 8px; border-radius: 6px; background: var(--bg); }
 
         /* 多维表格模板 */
-        .template-table-container { margin-top: 16px; overflow-x: auto; }
+        .template-table-container { overflow-x: auto; }
         .template-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
         .template-table th, .template-table td { padding: 8px 10px; border: 1px solid var(--border); text-align: left; }
         .template-table th { background: var(--bg-card); font-weight: 600; color: var(--accent); }
@@ -220,8 +224,9 @@
         .template-table input { width: 100%; background: transparent; border: none; color: var(--text); font-size: 0.75rem; }
         .template-table input:focus { outline: none; background: var(--bg-card); }
         .template-table .status-select { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; color: var(--text); font-size: 0.7rem; }
-        .template-table .add-row-btn { margin-top: 8px; padding: 6px 12px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
-        .template-table .add-row-btn:hover { border-color: var(--primary); color: var(--text); }
+        .template-actions { display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap; align-items: center; }
+        .add-row-btn { margin-top: 8px; padding: 6px 12px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
+        .add-row-btn:hover { border-color: var(--primary); color: var(--text); }
 
         /* 美术拆解可编辑表格 */
         .breakdown-table-container { overflow-x: auto; }
@@ -230,11 +235,11 @@
         .breakdown-table th { background: var(--bg-card); font-weight: 600; color: var(--accent); white-space: nowrap; }
         .breakdown-table td { background: var(--bg-secondary); vertical-align: top; }
         .breakdown-table .category-cell { background: var(--bg-card); font-weight: 600; white-space: nowrap; }
-        .breakdown-table .task-cell { min-width: 200px; }
-        .breakdown-table .edit-cell { min-width: 250px; }
+        .breakdown-table .task-cell { min-width: 120px; }
+        .breakdown-table .task-item { padding: 4px 0; }
         .breakdown-table input, .breakdown-table textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 6px 8px; color: var(--text); font-size: 0.75rem; resize: vertical; }
         .breakdown-table input:focus, .breakdown-table textarea:focus { outline: none; border-color: var(--primary); }
-        .breakdown-table textarea { min-height: 60px; }
+        .breakdown-table textarea { min-height: 50px; }
 
         /* 外观类型选择器(美术拆解) */
         .appearance-type-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
@@ -498,6 +503,7 @@
 
     <script>
         // ==================== 竞品数据（含分层定价和美术任务）====================
+        // tasks 改为数组格式，每个任务独立
         const COMPETITOR_DATA = {
             "王者荣耀": {
                 category: "moba", icon: "⚔️", rank: 1,
@@ -506,16 +512,16 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "伴生/勇者", price: "288-60点券", tasks: "基础模型换色、简单特效调整、无专属语音" },
-                            { name: "史诗", price: "888点券", tasks: "全新模型、技能特效重制、专属语音包、回城特效" },
-                            { name: "传说", price: "1688点券", tasks: "高质量模型、全套特效重制、专属语音+音效、回城+出生特效、头像框" },
-                            { name: "荣耀典藏", price: "积分夺宝", tasks: "顶级品质模型、双形态设计、全特效定制、专属动画、专属标识" }
+                            { name: "伴生/勇者", price: "288-60点券", tasks: ["基础模型换色", "简单特效调整", "无专属语音"] },
+                            { name: "史诗", price: "888点券", tasks: ["全新模型", "技能特效重制", "专属语音包", "回城特效"] },
+                            { name: "传说", price: "1688点券", tasks: ["高质量模型", "全套特效重制", "专属语音+音效", "回城+出生特效", "头像框"] },
+                            { name: "荣耀典藏", price: "积分夺宝", tasks: ["顶级品质模型", "双形态设计", "全特效定制", "专属动画", "专属标识"] }
                         ]
                     },
                     decoration: {
                         tiers: [
-                            { name: "普通", price: "60-180点券", tasks: "基础装饰模型、简单粒子效果" },
-                            { name: "限定", price: "300-500点券", tasks: "主题装饰设计、专属特效、动态效果" }
+                            { name: "普通", price: "60-180点券", tasks: ["基础装饰模型", "简单粒子效果"] },
+                            { name: "限定", price: "300-500点券", tasks: ["主题装饰设计", "专属特效", "动态效果"] }
                         ]
                     }
                 },
@@ -528,11 +534,11 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "基础", price: "750 RP", tasks: "模型换色、无特效" },
-                            { name: "史诗", price: "1350 RP", tasks: "新模型、新纹理、新粒子效果" },
-                            { name: "传说", price: "1820 RP", tasks: "全新模型+动画、全套特效、新语音、独特音效" },
-                            { name: "终极", price: "3250 RP", tasks: "多形态设计、全套定制内容、专属交互、独特音效语音" },
-                            { name: "至臻", price: "代币兑换", tasks: "传说级品质+、专属边框、稀有标识" }
+                            { name: "基础", price: "750 RP", tasks: ["模型换色", "无特效"] },
+                            { name: "史诗", price: "1350 RP", tasks: ["新模型", "新纹理", "新粒子效果"] },
+                            { name: "传说", price: "1820 RP", tasks: ["全新模型+动画", "全套特效", "新语音", "独特音效"] },
+                            { name: "终极", price: "3250 RP", tasks: ["多形态设计", "全套定制内容", "专属交互", "独特音效语音"] },
+                            { name: "至臻", price: "代币兑换", tasks: ["传说级品质+", "专属边框", "稀有标识"] }
                         ]
                     }
                 },
@@ -545,14 +551,14 @@
                 pricing: {
                     board: {
                         tiers: [
-                            { name: "普通棋盘", price: "4500点券", tasks: "棋盘贴图设计、基础环境光效、2-3种地形变化" },
-                            { name: "史诗棋盘", price: "7900点券", tasks: "全3D棋盘建模、动态环境效果、专属音效、交互反馈" },
-                            { name: "传说棋盘", price: "11500点券", tasks: "高质量场景设计、完整动画系统、专属BGM、粒子特效、主题角色" }
+                            { name: "普通棋盘", price: "4500点券", tasks: ["棋盘贴图设计", "基础环境光效", "2-3种地形变化"] },
+                            { name: "史诗棋盘", price: "7900点券", tasks: ["全3D棋盘建模", "动态环境效果", "专属音效", "交互反馈"] },
+                            { name: "传说棋盘", price: "11500点券", tasks: ["高质量场景设计", "完整动画系统", "专属BGM", "粒子特效", "主题角色"] }
                         ]
                     },
                     skin: {
                         tiers: [
-                            { name: "小小英雄", price: "2300-4500点券", tasks: "角色模型设计、专属动画、升级形态" }
+                            { name: "小小英雄", price: "2300-4500点券", tasks: ["角色模型设计", "专属动画", "升级形态"] }
                         ]
                     }
                 },
@@ -565,15 +571,15 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "活动皮肤", price: "免费/活动", tasks: "模型调整、配色更换、简单特效" },
-                            { name: "商城皮肤", price: "1680原石", tasks: "新模型设计、技能特效、专属动画、立绘更新" },
-                            { name: "联动皮肤", price: "1980原石", tasks: "主题设计、全套特效、专属剧情、联动元素" }
+                            { name: "活动皮肤", price: "免费/活动", tasks: ["模型调整", "配色更换", "简单特效"] },
+                            { name: "商城皮肤", price: "1680原石", tasks: ["新模型设计", "技能特效", "专属动画", "立绘更新"] },
+                            { name: "联动皮肤", price: "1980原石", tasks: ["主题设计", "全套特效", "专属剧情", "联动元素"] }
                         ]
                     },
                     home_decor: {
                         tiers: [
-                            { name: "普通家具", price: "洞天宝钱", tasks: "基础模型、简单动画" },
-                            { name: "限定家具", price: "创世结晶", tasks: "主题设计、交互功能、专属特效" }
+                            { name: "普通家具", price: "洞天宝钱", tasks: ["基础模型", "简单动画"] },
+                            { name: "限定家具", price: "创世结晶", tasks: ["主题设计", "交互功能", "专属特效"] }
                         ]
                     }
                 },
@@ -586,15 +592,15 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "普通枪皮", price: "军需抽取", tasks: "枪械换色、基础贴图" },
-                            { name: "稀有枪皮", price: "军需抽取", tasks: "新模型细节、专属检视动画、击杀特效" },
-                            { name: "传说枪皮", price: "军需抽取", tasks: "完整建模、全套动画、专属音效、升级特效" }
+                            { name: "普通枪皮", price: "军需抽取", tasks: ["枪械换色", "基础贴图"] },
+                            { name: "稀有枪皮", price: "军需抽取", tasks: ["新模型细节", "专属检视动画", "击杀特效"] },
+                            { name: "传说枪皮", price: "军需抽取", tasks: ["完整建模", "全套动画", "专属音效", "升级特效"] }
                         ]
                     },
                     mount: {
                         tiers: [
-                            { name: "普通载具", price: "军需抽取", tasks: "载具换色、简单贴图" },
-                            { name: "联动载具", price: "1500元+", tasks: "完整建模、专属音效、联动元素、特效" }
+                            { name: "普通载具", price: "军需抽取", tasks: ["载具换色", "简单贴图"] },
+                            { name: "联动载具", price: "1500元+", tasks: ["完整建模", "专属音效", "联动元素", "特效"] }
                         ]
                     }
                 },
@@ -607,13 +613,13 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "消费级", price: "几元", tasks: "基础换色、简单纹理" },
-                            { name: "工业级", price: "十几元", tasks: "基础纹理设计" },
-                            { name: "军规级", price: "几十元", tasks: "主题纹理、磨损度设计" },
-                            { name: "受限", price: "百元内", tasks: "完整主题设计、多磨损度" },
-                            { name: "保密", price: "几百元", tasks: "高品质设计、特殊纹理" },
-                            { name: "隐秘", price: "上千元", tasks: "顶级设计、稀有纹理、收藏价值" },
-                            { name: "特殊/刀", price: "数千元+", tasks: "独特设计、动画系统、极高收藏价值" }
+                            { name: "消费级", price: "几元", tasks: ["基础换色", "简单纹理"] },
+                            { name: "工业级", price: "十几元", tasks: ["基础纹理设计"] },
+                            { name: "军规级", price: "几十元", tasks: ["主题纹理", "磨损度设计"] },
+                            { name: "受限", price: "百元内", tasks: ["完整主题设计", "多磨损度"] },
+                            { name: "保密", price: "几百元", tasks: ["高品质设计", "特殊纹理"] },
+                            { name: "隐秘", price: "上千元", tasks: ["顶级设计", "稀有纹理", "收藏价值"] },
+                            { name: "特殊/刀", price: "数千元+", tasks: ["独特设计", "动画系统", "极高收藏价值"] }
                         ]
                     }
                 },
@@ -626,10 +632,10 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "精选", price: "875 VP", tasks: "换色贴图、无特效" },
-                            { name: "豪华", price: "1275 VP", tasks: "新模型细节、新音效" },
-                            { name: "至尊", price: "1775 VP", tasks: "全新模型、全套特效、专属动画、终结特效" },
-                            { name: "至尊2.0", price: "2175 VP", tasks: "传说级+、演变系统、专属特效、可升级" }
+                            { name: "精选", price: "875 VP", tasks: ["换色贴图", "无特效"] },
+                            { name: "豪华", price: "1275 VP", tasks: ["新模型细节", "新音效"] },
+                            { name: "至尊", price: "1775 VP", tasks: ["全新模型", "全套特效", "专属动画", "终结特效"] },
+                            { name: "至尊2.0", price: "2175 VP", tasks: ["传说级+", "演变系统", "专属特效", "可升级"] }
                         ]
                     }
                 },
@@ -642,15 +648,15 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通", price: "直购/活动", tasks: "基础换色、简单调整" },
-                            { name: "稀有", price: "金块购买", tasks: "新模型设计、专属特效、主题元素" },
-                            { name: "传说", price: "限定活动", tasks: "顶级设计、全套特效、专属动画、联动元素" }
+                            { name: "普通", price: "直购/活动", tasks: ["基础换色", "简单调整"] },
+                            { name: "稀有", price: "金块购买", tasks: ["新模型设计", "专属特效", "主题元素"] },
+                            { name: "传说", price: "限定活动", tasks: ["顶级设计", "全套特效", "专属动画", "联动元素"] }
                         ]
                     },
                     weapon_skin: {
                         tiers: [
-                            { name: "普通武器", price: "直购", tasks: "武器换色、简单纹理" },
-                            { name: "传说武器", price: "限定活动", tasks: "完整建模、专属特效、专属音效" }
+                            { name: "普通武器", price: "直购", tasks: ["武器换色", "简单纹理"] },
+                            { name: "传说武器", price: "限定活动", tasks: ["完整建模", "专属特效", "专属音效"] }
                         ]
                     }
                 },
@@ -663,8 +669,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "源石皮肤", price: "15-21源石", tasks: "新立绘、动态效果、技能特效、基建形象" },
-                            { name: "活动皮肤", price: "免费/活动", tasks: "新立绘、基础特效" }
+                            { name: "源石皮肤", price: "15-21源石", tasks: ["新立绘", "动态效果", "技能特效", "基建形象"] },
+                            { name: "活动皮肤", price: "免费/活动", tasks: ["新立绘", "基础特效"] }
                         ]
                     }
                 },
@@ -677,8 +683,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通皮肤", price: "皮肤券/勾玉", tasks: "新立绘、建模调整、基础特效" },
-                            { name: "典藏皮肤", price: "128-198元", tasks: "顶级立绘、完整建模、全套特效、专属动画、专属音效" }
+                            { name: "普通皮肤", price: "皮肤券/勾玉", tasks: ["新立绘", "建模调整", "基础特效"] },
+                            { name: "典藏皮肤", price: "128-198元", tasks: ["顶级立绘", "完整建模", "全套特效", "专属动画", "专属音效"] }
                         ]
                     }
                 },
@@ -691,9 +697,9 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "蓝皮", price: "碎片兑换", tasks: "模型换色、简单调整" },
-                            { name: "紫皮", price: "推理径/抽奖", tasks: "新模型设计、专属特效、主题元素" },
-                            { name: "金皮", price: "抽奖", tasks: "顶级设计、全套特效、专属动画、专属音效" }
+                            { name: "蓝皮", price: "碎片兑换", tasks: ["模型换色", "简单调整"] },
+                            { name: "紫皮", price: "推理径/抽奖", tasks: ["新模型设计", "专属特效", "主题元素"] },
+                            { name: "金皮", price: "抽奖", tasks: ["顶级设计", "全套特效", "专属动画", "专属音效"] }
                         ]
                     }
                 },
@@ -706,27 +712,13 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "成衣", price: "几十元", tasks: "基础服装设计、染色系统" },
-                            { name: "盒子外观", price: "100-300元", tasks: "主题设计、全套建模、专属特效、限时稀缺" },
-                            { name: "限量外观", price: "活动限定", tasks: "顶级设计、稀有标识、收藏价值" }
+                            { name: "成衣", price: "几十元", tasks: ["基础服装设计", "染色系统"] },
+                            { name: "盒子外观", price: "100-300元", tasks: ["主题设计", "全套建模", "专属特效", "限时稀缺"] },
+                            { name: "限量外观", price: "活动限定", tasks: ["顶级设计", "稀有标识", "收藏价值"] }
                         ]
                     }
                 },
                 model: { primary: "外观商城", pricing: "几十到几百元" }
-            },
-            "梦幻西游": {
-                category: "simulation", icon: "🏠", rank: 6,
-                overview: "经典MMO，外观经济成熟",
-                appearanceTypes: ["skin", "home_decor", "mount", "decoration"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "普通锦衣", price: "几十元", tasks: "服装设计、基础染色" },
-                            { name: "限定锦衣", price: "百元+", tasks: "主题设计、专属特效、二手市场价值" }
-                        ]
-                    }
-                },
-                model: { primary: "锦衣系统", pricing: "几十到几百元" }
             },
             "DOTA2": {
                 category: "moba", icon: "⚔️", rank: 4,
@@ -735,27 +727,14 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通饰品", price: "几元", tasks: "单品设计、基础模型" },
-                            { name: "稀有套装", price: "几十元", tasks: "整套设计、多部位、专属特效" },
-                            { name: "不朽/神话", price: "百元+", tasks: "顶级设计、专属特效、独特动画、稀有标识" },
-                            { name: "弧光/至宝", price: "数百元+", tasks: "顶级品质、改变技能特效、专属动画、极高收藏价值" }
+                            { name: "普通饰品", price: "几元", tasks: ["单品设计", "基础模型"] },
+                            { name: "稀有套装", price: "几十元", tasks: ["整套设计", "多部位", "专属特效"] },
+                            { name: "不朽/神话", price: "百元+", tasks: ["顶级设计", "专属特效", "独特动画", "稀有标识"] },
+                            { name: "弧光/至宝", price: "数百元+", tasks: ["顶级品质", "改变技能特效", "专属动画", "极高收藏价值"] }
                         ]
                     }
                 },
                 model: { primary: "饰品箱开箱+市场交易", pricing: "市场化定价" }
-            },
-            "崩坏：星穹铁道": {
-                category: "simulation", icon: "🏠", rank: 2,
-                overview: "回合制RPG，沿袭原神模式",
-                appearanceTypes: ["skin", "home_decor"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "活动皮肤", price: "免费", tasks: "基础调整、简单特效" }
-                        ]
-                    }
-                },
-                model: { primary: "角色抽卡", pricing: "待定" }
             },
             "蛋仔派对": {
                 category: "casual", icon: "🎮", rank: 5,
@@ -764,8 +743,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通外观", price: "几十元", tasks: "角色换装、基础动画" },
-                            { name: "盲盒外观", price: "抽奖", tasks: "主题设计、专属动画、稀有度" }
+                            { name: "普通外观", price: "几十元", tasks: ["角色换装", "基础动画"] },
+                            { name: "盲盒外观", price: "抽奖", tasks: ["主题设计", "专属动画", "稀有度"] }
                         ]
                     }
                 },
@@ -778,8 +757,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通时装", price: "几十元", tasks: "服装设计、基础属性" },
-                            { name: "天空套", price: "合成获取", tasks: "顶级设计、套装属性、专属特效、稀有标识" }
+                            { name: "普通时装", price: "几十元", tasks: ["服装设计", "基础属性"] },
+                            { name: "天空套", price: "合成获取", tasks: ["顶级设计", "套装属性", "专属特效", "稀有标识"] }
                         ]
                     }
                 },
@@ -792,9 +771,9 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "伴生", price: "350点券", tasks: "基础换色、简单调整" },
-                            { name: "史诗", price: "790点券", tasks: "新模型、新特效" },
-                            { name: "传说", price: "990点券", tasks: "全套重制、专属语音、回城特效" }
+                            { name: "伴生", price: "350点券", tasks: ["基础换色", "简单调整"] },
+                            { name: "史诗", price: "790点券", tasks: ["新模型", "新特效"] },
+                            { name: "传说", price: "990点券", tasks: ["全套重制", "专属语音", "回城特效"] }
                         ]
                     }
                 },
@@ -807,8 +786,8 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "普通", price: "制造金属", tasks: "基础换色" },
-                            { name: "传说", price: "1800金币", tasks: "全套设计、专属动画、终结特效" }
+                            { name: "普通", price: "制造金属", tasks: ["基础换色"] },
+                            { name: "传说", price: "1800金币", tasks: ["全套设计", "专属动画", "终结特效"] }
                         ]
                     }
                 },
@@ -821,8 +800,8 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "普通武器", price: "GP购买", tasks: "基础模型" },
-                            { name: "英雄级", price: "300-500元", tasks: "顶级设计、专属属性、专属特效、专属音效" }
+                            { name: "普通武器", price: "GP购买", tasks: ["基础模型"] },
+                            { name: "英雄级", price: "300-500元", tasks: ["顶级设计", "专属属性", "专属特效", "专属音效"] }
                         ]
                     }
                 },
@@ -835,8 +814,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通", price: "几十元", tasks: "基础设计、简单特效" },
-                            { name: "传说", price: "168元", tasks: "顶级设计、全套特效、专属动画" }
+                            { name: "普通", price: "几十元", tasks: ["基础设计", "简单特效"] },
+                            { name: "传说", price: "168元", tasks: ["顶级设计", "全套特效", "专属动画"] }
                         ]
                     }
                 },
@@ -849,24 +828,11 @@
                 pricing: {
                     mount: {
                         tiers: [
-                            { name: "商城坐骑", price: "20-25美元", tasks: "完整建模、专属动画、部分功能" }
+                            { name: "商城坐骑", price: "20-25美元", tasks: ["完整建模", "专属动画", "部分功能"] }
                         ]
                     }
                 },
                 model: { primary: "商城坐骑/宠物+订阅制", pricing: "20-25美元" }
-            },
-            "最终幻想14": {
-                category: "simulation", icon: "🏠", rank: 8,
-                overview: "日式MMO",
-                appearanceTypes: ["skin", "home_decor", "mount"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "商城时装", price: "5-15美元", tasks: "服装设计、基础动画" }
-                        ]
-                    }
-                },
-                model: { primary: "订阅制", pricing: "5-15美元" }
             },
             "崩坏3": {
                 category: "action", icon: "💫", rank: 7,
@@ -875,8 +841,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通皮肤", price: "几十元", tasks: "服装设计、基础特效" },
-                            { name: "礼服皮肤", price: "168元", tasks: "顶级设计、全套特效、专属动画" }
+                            { name: "普通皮肤", price: "几十元", tasks: ["服装设计", "基础特效"] },
+                            { name: "礼服皮肤", price: "168元", tasks: ["顶级设计", "全套特效", "专属动画"] }
                         ]
                     }
                 },
@@ -889,7 +855,7 @@
             all: ["王者荣耀", "英雄联盟", "原神", "和平精英", "CS2"],
             moba: ["王者荣耀", "英雄联盟", "DOTA2", "英雄联盟手游", "决战！平安京"],
             fps: ["和平精英", "CS2", "VALORANT", "Apex英雄", "穿越火线"],
-            simulation: ["原神", "崩坏：星穹铁道", "梦幻西游", "魔兽世界", "剑网3"],
+            simulation: ["原神", "梦幻西游", "魔兽世界", "剑网3"],
             rpg: ["永劫无间", "明日方舟", "阴阳师", "第五人格", "崩坏3"],
             card: ["金铲铲之战"],
             casual: ["蛋仔派对", "第五人格"]
@@ -996,54 +962,18 @@
 
         // 月度运营建议
         const MONTH_SUGGESTIONS = {
-            1: [
-                { icon: "🎉", name: "元旦活动", desc: "新年主题皮肤/装饰上线，开启年度庆典" },
-                { icon: "🧧", name: "春节预热", desc: "春节版本预热，生肖皮肤/活动提前宣传" }
-            ],
-            2: [
-                { icon: "🎊", name: "春节活动", desc: "年度最大活动，限定皮肤/福袋/红包系统" },
-                { icon: "💕", name: "情人节活动", desc: "情侣皮肤/CP活动/情人节限定" }
-            ],
-            3: [
-                { icon: "🌸", name: "春季版本", desc: "春季主题更新，樱花/踏青主题皮肤" },
-                { icon: "👸", name: "女神节活动", desc: "女性向皮肤/福利活动" }
-            ],
-            4: [
-                { icon: "🌧️", name: "清明节活动", desc: "传统文化主题，限定外观" },
-                { icon: "📖", name: "读书日活动", desc: "知识主题皮肤/公益活动" }
-            ],
-            5: [
-                { icon: "👷", name: "劳动节活动", desc: "五一假期活动，限定皮肤上线" },
-                { icon: "❤️", name: "520活动", desc: "表白主题皮肤/情侣互动活动" }
-            ],
-            6: [
-                { icon: "👶", name: "儿童节活动", desc: "童心主题皮肤/趣味活动" },
-                { icon: "🛒", name: "618电商联动", desc: "与电商平台联动，皮肤促销" }
-            ],
-            7: [
-                { icon: "🏖️", name: "暑期档开启", desc: "暑期大型活动，学生向皮肤" },
-                { icon: "🎆", name: "周年庆预热", desc: "周年庆活动预热宣传" }
-            ],
-            8: [
-                { icon: "🎂", name: "周年庆活动", desc: "年度重点活动，限定皮肤/福利" },
-                { icon: "🎋", name: "七夕活动", desc: "中国情人节，情侣皮肤/活动" }
-            ],
-            9: [
-                { icon: "🌕", name: "中秋节活动", desc: "月饼/月亮主题皮肤，团圆活动" },
-                { icon: "🏫", name: "开学季活动", desc: "校园主题皮肤，学生福利" }
-            ],
-            10: [
-                { icon: "🇨🇳", name: "国庆节活动", desc: "国庆长假活动，国风主题皮肤" },
-                { icon: "🎃", name: "万圣节活动", desc: "恐怖/搞怪主题皮肤，南瓜元素" }
-            ],
-            11: [
-                { icon: "🛍️", name: "双十一活动", desc: "电商联动，皮肤促销/限定" },
-                { icon: "🙏", name: "感恩节活动", desc: "感恩主题，福利回馈活动" }
-            ],
-            12: [
-                { icon: "❄️", name: "冬季/圣诞节活动", desc: "冰雪主题皮肤，圣诞限定" },
-                { icon: "🎊", name: "跨年活动", desc: "年度收官活动，跨年福利" }
-            ]
+            1: [{ icon: "🎉", name: "元旦活动", desc: "新年主题皮肤/装饰上线" }, { icon: "🧧", name: "春节预热", desc: "春节版本预热宣传" }],
+            2: [{ icon: "🎊", name: "春节活动", desc: "年度最大活动，限定皮肤/福袋" }, { icon: "💕", name: "情人节活动", desc: "情侣皮肤/CP活动" }],
+            3: [{ icon: "🌸", name: "春季版本", desc: "春季主题更新" }, { icon: "👸", name: "女神节活动", desc: "女性向皮肤/福利" }],
+            4: [{ icon: "🌧️", name: "清明节活动", desc: "传统文化主题限定外观" }, { icon: "📖", name: "读书日活动", desc: "知识主题皮肤" }],
+            5: [{ icon: "👷", name: "劳动节活动", desc: "五一假期活动" }, { icon: "❤️", name: "520活动", desc: "表白主题皮肤" }],
+            6: [{ icon: "👶", name: "儿童节活动", desc: "童心主题皮肤" }, { icon: "🛒", name: "618电商联动", desc: "电商平台联动促销" }],
+            7: [{ icon: "🏖️", name: "暑期档开启", desc: "暑期大型活动" }, { icon: "🎆", name: "周年庆预热", desc: "周年庆活动预热" }],
+            8: [{ icon: "🎂", name: "周年庆活动", desc: "年度重点活动" }, { icon: "🎋", name: "七夕活动", desc: "情侣皮肤/活动" }],
+            9: [{ icon: "🌕", name: "中秋节活动", desc: "月饼/月亮主题皮肤" }, { icon: "🏫", name: "开学季活动", desc: "校园主题皮肤" }],
+            10: [{ icon: "🇨🇳", name: "国庆节活动", desc: "国庆长假活动" }, { icon: "🎃", name: "万圣节活动", desc: "恐怖/搞怪主题" }],
+            11: [{ icon: "🛍️", name: "双十一活动", desc: "电商联动促销" }, { icon: "🙏", name: "感恩节活动", desc: "感恩主题福利" }],
+            12: [{ icon: "❄️", name: "冬季/圣诞节活动", desc: "冰雪主题皮肤" }, { icon: "🎊", name: "跨年活动", desc: "年度收官活动" }]
         };
 
         // 运营日历事件
@@ -1127,6 +1057,7 @@
         let analysisData = null;
         let breakdownType = 'skin';
         let pickerYear = currentMonth.getFullYear();
+        let currentTemplateIndex = 0;
 
         // ==================== 初始化 ====================
         document.addEventListener('DOMContentLoaded', () => {
@@ -1358,23 +1289,33 @@
                 if (pricingData && hasAppearance) {
                     html += `
                         <button class="copy-table-btn" onclick="copyPricingTable('${comp.name}')">📋 复制表格</button>
+                        <button class="download-btn" onclick="downloadPricingTable('${comp.name}')">⬇️ 下载CSV</button>
                         <div class="pricing-table-container">
                             <table class="pricing-table" id="pricing-table-${comp.name.replace(/\s/g, '-')}">
                                 <thead>
                                     <tr>
                                         <th>品质层级</th>
                                         <th>定价</th>
-                                        <th>美术任务清单</th>
+                                        <th>美术任务</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    ${pricingData.tiers.map(tier => `
-                                        <tr>
-                                            <td class="tier-name">${tier.name}</td>
-                                            <td class="price">${tier.price}</td>
-                                            <td class="tasks">${tier.tasks}</td>
-                                        </tr>
-                                    `).join('')}
+                    `;
+
+                    // 每个任务独立成行
+                    pricingData.tiers.forEach(tier => {
+                        tier.tasks.forEach((task, taskIndex) => {
+                            html += `
+                                <tr>
+                                    ${taskIndex === 0 ? `<td class="tier-name" rowspan="${tier.tasks.length}">${tier.name}</td>` : ''}
+                                    ${taskIndex === 0 ? `<td class="price" rowspan="${tier.tasks.length}">${tier.price}</td>` : ''}
+                                    <td class="task-cell">${task}</td>
+                                </tr>
+                            `;
+                        });
+                    });
+
+                    html += `
                                 </tbody>
                             </table>
                         </div>
@@ -1392,11 +1333,18 @@
             if (!table) return;
             
             let text = `${gameName} - ${selectedAppearance === 'skin' ? '皮肤' : selectedAppearance}分层定价\n\n`;
-            text += '品质层级\t定价\t美术任务清单\n';
+            text += '品质层级\t定价\t美术任务\n';
             
             table.querySelectorAll('tbody tr').forEach(row => {
                 const cells = row.querySelectorAll('td');
-                text += `${cells[0].textContent}\t${cells[1].textContent}\t${cells[2].textContent}\n`;
+                if (cells.length >= 3) {
+                    const tier = cells[0]?.textContent || '';
+                    const price = cells[1]?.textContent || '';
+                    const task = cells[2]?.textContent || '';
+                    text += `${tier}\t${price}\t${task}\n`;
+                } else if (cells.length === 1) {
+                    text += `\t\t${cells[0].textContent}\n`;
+                }
             });
 
             navigator.clipboard.writeText(text).then(() => {
@@ -1404,6 +1352,34 @@
             }).catch(() => {
                 showToast('复制失败，请手动选择复制', 'warning');
             });
+        }
+
+        function downloadPricingTable(gameName) {
+            const table = document.getElementById(`pricing-table-${gameName.replace(/\s/g, '-')}`);
+            if (!table) return;
+            
+            let csv = '\uFEFF'; // BOM for Excel
+            csv += '品质层级,定价,美术任务\n';
+            
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 3) {
+                    const tier = cells[0]?.textContent?.replace(/,/g, '，') || '';
+                    const price = cells[1]?.textContent?.replace(/,/g, '，') || '';
+                    const task = cells[2]?.textContent?.replace(/,/g, '，') || '';
+                    csv += `"${tier}","${price}","${task}"\n`;
+                } else if (cells.length === 1) {
+                    const task = cells[0]?.textContent?.replace(/,/g, '，') || '';
+                    csv += `,"","${task}"\n`;
+                }
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${gameName}_${selectedAppearance}_定价表.csv`;
+            link.click();
+            showToast('CSV文件已下载！', 'success');
         }
 
         function renderRisksTab() {
@@ -1442,7 +1418,6 @@
         function initCreativeTab() {
             renderCreativeTools();
             
-            // 外观类型选择器
             document.querySelectorAll('.appearance-type-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.appearance-type-btn').forEach(b => b.classList.remove('active'));
@@ -1487,14 +1462,17 @@
                 <div style="background: var(--bg-card); border-radius: 10px; padding: 16px; margin-top: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
                         <h4 style="font-size: 0.9rem;">📋 "${skinName}" 美术制作拆解</h4>
-                        <button class="copy-table-btn" onclick="copyBreakdownTable()">📋 复制表格</button>
+                        <div>
+                            <button class="copy-table-btn" onclick="copyBreakdownTable()">📋 复制</button>
+                            <button class="download-btn" onclick="downloadBreakdownTable('${skinName}')">⬇️ 下载CSV</button>
+                        </div>
                     </div>
                     <div class="breakdown-table-container">
                         <table class="breakdown-table" id="breakdownTable">
                             <thead>
                                 <tr>
                                     <th>制作阶段</th>
-                                    <th>任务清单</th>
+                                    <th>美术任务</th>
                                     <th>预估工期</th>
                                     <th>实际内容填写</th>
                                     <th>备注</th>
@@ -1503,16 +1481,19 @@
                             <tbody>
             `;
 
+            // 每个任务独立成行
             template.forEach(cat => {
-                html += `
-                    <tr>
-                        <td class="category-cell">${cat.name}</td>
-                        <td class="task-cell">${cat.tasks.join('、')}</td>
-                        <td>${cat.time}</td>
-                        <td class="edit-cell"><textarea placeholder="根据实际情况填写具体内容..."></textarea></td>
-                        <td class="edit-cell"><input type="text" placeholder="备注..."></td>
-                    </tr>
-                `;
+                cat.tasks.forEach((task, taskIndex) => {
+                    html += `
+                        <tr>
+                            ${taskIndex === 0 ? `<td class="category-cell" rowspan="${cat.tasks.length}">${cat.category}</td>` : ''}
+                            <td class="task-cell">${task}</td>
+                            ${taskIndex === 0 ? `<td rowspan="${cat.tasks.length}">${cat.time}</td>` : ''}
+                            <td><textarea placeholder="填写内容..." data-category="${cat.category}" data-task="${task}"></textarea></td>
+                            <td><input type="text" placeholder="备注..." data-category="${cat.category}" data-task="${task}"></td>
+                        </tr>
+                    `;
+                });
             });
 
             const totalDays = template.reduce((sum, cat) => {
@@ -1539,21 +1520,50 @@
             if (!table) return;
             
             let text = '美术制作拆解表\n\n';
-            text += '制作阶段\t任务清单\t预估工期\t实际内容\t备注\n';
+            text += '制作阶段\t美术任务\t预估工期\t实际内容\t备注\n';
             
+            let currentCategory = '';
             table.querySelectorAll('tbody tr').forEach(row => {
                 const cells = row.querySelectorAll('td');
-                const stage = cells[0].textContent;
-                const tasks = cells[1].textContent;
-                const time = cells[2].textContent;
-                const content = cells[3].querySelector('textarea')?.value || '';
-                const note = cells[4].querySelector('input')?.value || '';
-                text += `${stage}\t${tasks}\t${time}\t${content}\t${note}\n`;
+                const category = cells[0]?.textContent || currentCategory;
+                if (cells[0]) currentCategory = category;
+                const task = cells[1]?.textContent || '';
+                const time = cells[2]?.textContent || '';
+                const content = cells[3]?.querySelector('textarea')?.value || '';
+                const note = cells[4]?.querySelector('input')?.value || '';
+                text += `${category}\t${task}\t${time}\t${content}\t${note}\n`;
             });
 
             navigator.clipboard.writeText(text).then(() => {
                 showToast('拆解表格已复制！', 'success');
             });
+        }
+
+        function downloadBreakdownTable(skinName) {
+            const table = document.getElementById('breakdownTable');
+            if (!table) return;
+            
+            let csv = '\uFEFF';
+            csv += '制作阶段,美术任务,预估工期,实际内容,备注\n';
+            
+            let currentCategory = '';
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const category = cells[0]?.textContent?.replace(/,/g, '，') || currentCategory;
+                if (cells[0]) currentCategory = category;
+                const task = cells[1]?.textContent?.replace(/,/g, '，') || '';
+                const time = cells[2]?.textContent?.replace(/,/g, '，') || '';
+                const content = (cells[3]?.querySelector('textarea')?.value || '').replace(/,/g, '，');
+                const note = (cells[4]?.querySelector('input')?.value || '').replace(/,/g, '，');
+                csv += `"${category}","${task}","${time}","${content}","${note}"\n`;
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${skinName}_美术拆解表.csv`;
+            link.click();
+            showToast('CSV文件已下载！', 'success');
         }
 
         // ==================== 运营日历 ====================
@@ -1717,13 +1727,14 @@
 
         function renderTemplateTable() {
             const container = document.getElementById('templateTableContainer');
-            const template = OPERATION_TEMPLATES[0]; // 默认节日活动规划
+            const template = OPERATION_TEMPLATES[currentTemplateIndex];
             
             let html = `
-                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                <div class="template-actions">
                     ${OPERATION_TEMPLATES.map((t, i) => `
-                        <button class="btn ${i === 0 ? 'btn-primary' : 'btn-secondary'}" style="padding: 6px 12px; font-size: 0.75rem;" onclick="switchTemplate(${i})">${t.icon} ${t.name}</button>
+                        <button class="btn ${i === currentTemplateIndex ? 'btn-primary' : 'btn-secondary'}" style="padding: 6px 12px; font-size: 0.75rem;" onclick="switchTemplate(${i})">${t.icon} ${t.name}</button>
                     `).join('')}
+                    <button class="download-btn" style="margin-left: auto;" onclick="downloadTemplateTable()">⬇️ 下载CSV</button>
                 </div>
                 <table class="template-table" id="operationTemplateTable">
                     <thead>
@@ -1743,39 +1754,63 @@
         }
 
         function renderTemplateRows(columns) {
-            return `<tr>
-                <td><input type="text" placeholder="填写内容..."></td>
-                <td><input type="date" style="color: var(--text);"></td>
-                <td><input type="date" style="color: var(--text);"></td>
-                <td><select class="status-select"><option>节日活动</option><option>版本更新</option><option>IP联动</option><option>赛事活动</option></select></td>
-                <td><input type="text" placeholder="皮肤名称..."></td>
-                <td><input type="text" placeholder="负责人..."></td>
-                <td><select class="status-select"><option>规划中</option><option>进行中</option><option>已完成</option><option>已延期</option></select></td>
-                <td><input type="text" placeholder="备注..."></td>
-            </tr>`;
+            const rowHtml = '<tr>';
+            columns.forEach((col, i) => {
+                if (col.includes('日期') || col.includes('时间')) {
+                    rowHtml += `<td><input type="date" style="color: var(--text);"></td>`;
+                } else if (col.includes('类型')) {
+                    rowHtml += `<td><select class="status-select"><option>节日活动</option><option>版本更新</option><option>IP联动</option><option>赛事活动</option></select></td>`;
+                } else if (col.includes('状态')) {
+                    rowHtml += `<td><select class="status-select"><option>规划中</option><option>进行中</option><option>已完成</option><option>已延期</option></select></td>`;
+                } else {
+                    rowHtml += `<td><input type="text" placeholder="填写..."></td>`;
+                }
+            });
+            rowHtml += '</tr>';
+            return rowHtml;
         }
 
         function addTemplateRow() {
             const tbody = document.getElementById('templateTableBody');
-            const template = OPERATION_TEMPLATES[0];
+            const template = OPERATION_TEMPLATES[currentTemplateIndex];
             tbody.insertAdjacentHTML('beforeend', renderTemplateRows(template.columns));
         }
 
         function switchTemplate(index) {
-            const template = OPERATION_TEMPLATES[index];
-            const container = document.getElementById('templateTableContainer');
+            currentTemplateIndex = index;
+            renderTemplateTable();
+        }
+
+        function downloadTemplateTable() {
+            const table = document.getElementById('operationTemplateTable');
+            if (!table) return;
             
-            // 更新按钮状态
-            container.querySelectorAll('.btn').forEach((btn, i) => {
-                btn.className = i === index ? 'btn btn-primary' : 'btn btn-secondary';
+            const template = OPERATION_TEMPLATES[currentTemplateIndex];
+            let csv = '\uFEFF';
+            csv += template.columns.join(',') + '\n';
+            
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const values = [];
+                row.querySelectorAll('td').forEach(td => {
+                    const input = td.querySelector('input');
+                    const select = td.querySelector('select');
+                    if (input) {
+                        values.push(`"${(input.value || '').replace(/"/g, '""')}"`);
+                    } else if (select) {
+                        values.push(`"${select.value}"`);
+                    } else {
+                        values.push('""');
+                    }
+                });
+                csv += values.join(',') + '\n';
             });
-            
-            // 更新表格
-            const thead = container.querySelector('thead tr');
-            thead.innerHTML = template.columns.map(c => `<th>${c}</th>`).join('');
-            
-            const tbody = document.getElementById('templateTableBody');
-            tbody.innerHTML = renderTemplateRows(template.columns) + renderTemplateRows(template.columns);
+
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${template.name}_${currentMonth.getFullYear()}${String(currentMonth.getMonth() + 1).padStart(2, '0')}.csv`;
+            link.click();
+            showToast('CSV文件已下载！', 'success');
         }
 
         // ==================== Toast ====================
