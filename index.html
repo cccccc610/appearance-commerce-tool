@@ -585,6 +585,27 @@
                 },
                 model: { primary: "角色抽卡+皮肤直售", pricing: "68-198元" }
             },
+            "鸣潮": {
+                category: "action", icon: "🌊", rank: 1,
+                overview: "库洛游戏开放世界动作RPG，声骸系统独特",
+                appearanceTypes: ["skin", "weapon_skin", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "活动皮肤", price: "免费/活动", tasks: ["模型调整", "配色更换", "简单特效"] },
+                            { name: "商城皮肤", price: "1680-1980星声", tasks: ["新模型设计", "技能特效", "专属动画", "待机动作"] },
+                            { name: "限定皮肤", price: "活动限定", tasks: ["主题设计", "全套特效", "专属剧情", "限定标识"] }
+                        ]
+                    },
+                    weapon_skin: {
+                        tiers: [
+                            { name: "活动武器皮", price: "免费", tasks: ["武器换色", "简单特效"] },
+                            { name: "限定武器皮", price: "活动获取", tasks: ["武器建模", "专属特效", "专属音效"] }
+                        ]
+                    }
+                },
+                model: { primary: "角色抽卡+皮肤直售", pricing: "68-128元" }
+            },
             "和平精英": {
                 category: "fps", icon: "🔫", rank: 1,
                 overview: "国内最大FPS手游",
@@ -852,11 +873,12 @@
 
         // 品类TOP游戏
         const TOP_GAMES = {
-            all: ["王者荣耀", "英雄联盟", "原神", "和平精英", "CS2"],
+            all: ["王者荣耀", "英雄联盟", "原神", "和平精英", "鸣潮"],
             moba: ["王者荣耀", "英雄联盟", "DOTA2", "英雄联盟手游", "决战！平安京"],
             fps: ["和平精英", "CS2", "VALORANT", "Apex英雄", "穿越火线"],
-            simulation: ["原神", "梦幻西游", "魔兽世界", "剑网3"],
+            simulation: ["原神", "鸣潮", "梦幻西游", "魔兽世界", "剑网3"],
             rpg: ["永劫无间", "明日方舟", "阴阳师", "第五人格", "崩坏3"],
+            action: ["鸣潮", "永劫无间", "崩坏3", "地下城与勇士"],
             card: ["金铲铲之战"],
             casual: ["蛋仔派对", "第五人格"]
         };
@@ -867,6 +889,7 @@
                 { name: "王者荣耀", publisher: "腾讯游戏", trend: "stable", revenue: "¥2.1亿" },
                 { name: "和平精英", publisher: "腾讯游戏", trend: "up", revenue: "¥1.8亿" },
                 { name: "原神", publisher: "米哈游", trend: "up", revenue: "¥1.2亿" },
+                { name: "鸣潮", publisher: "库洛游戏", trend: "up", revenue: "¥9800万" },
                 { name: "金铲铲之战", publisher: "腾讯游戏", trend: "down", revenue: "¥8500万" },
                 { name: "英雄联盟手游", publisher: "腾讯游戏", trend: "stable", revenue: "¥7200万" },
                 { name: "梦幻西游", publisher: "网易游戏", trend: "stable", revenue: "¥6800万" },
@@ -877,13 +900,13 @@
                 { name: "第五人格", publisher: "网易游戏", trend: "stable", revenue: "¥3200万" },
                 { name: "明日方舟", publisher: "鹰角网络", trend: "up", revenue: "¥2800万" },
                 { name: "剑网3", publisher: "西山居", trend: "stable", revenue: "¥2500万" },
-                { name: "穿越火线", publisher: "腾讯游戏", trend: "down", revenue: "¥2200万" },
-                { name: "地下城与勇士", publisher: "腾讯游戏", trend: "stable", revenue: "¥2000万" }
+                { name: "穿越火线", publisher: "腾讯游戏", trend: "down", revenue: "¥2200万" }
             ],
             android: [
                 { name: "王者荣耀", publisher: "腾讯游戏", trend: "stable", revenue: "¥2.5亿" },
                 { name: "和平精英", publisher: "腾讯游戏", trend: "up", revenue: "¥2.1亿" },
                 { name: "原神", publisher: "米哈游", trend: "up", revenue: "¥1.5亿" },
+                { name: "鸣潮", publisher: "库洛游戏", trend: "up", revenue: "¥1.1亿" },
                 { name: "金铲铲之战", publisher: "腾讯游戏", trend: "stable", revenue: "¥1.0亿" },
                 { name: "梦幻西游", publisher: "网易游戏", trend: "down", revenue: "¥8500万" },
                 { name: "蛋仔派对", publisher: "网易游戏", trend: "up", revenue: "¥7800万" },
@@ -894,8 +917,7 @@
                 { name: "明日方舟", publisher: "鹰角网络", trend: "up", revenue: "¥3800万" },
                 { name: "第五人格", publisher: "网易游戏", trend: "stable", revenue: "¥3500万" },
                 { name: "穿越火线", publisher: "腾讯游戏", trend: "down", revenue: "¥3200万" },
-                { name: "地下城与勇士", publisher: "腾讯游戏", trend: "stable", revenue: "¥3000万" },
-                { name: "剑网3", publisher: "西山居", trend: "stable", revenue: "¥2800万" }
+                { name: "地下城与勇士", publisher: "腾讯游戏", trend: "stable", revenue: "¥3000万" }
             ],
             steam: [
                 { name: "CS2", publisher: "Valve", trend: "up", revenue: "$45M" },
