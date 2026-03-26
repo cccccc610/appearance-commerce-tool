@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v3.0</title>
+    <title>游戏外观商业化分析平台 v3.1</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -132,17 +132,18 @@
         .ranking-item .trend.down { background: rgba(239, 68, 68, 0.15); color: var(--danger); }
         .ranking-item .trend.stable { background: var(--bg); color: var(--text-muted); }
 
-        /* Competitor Detail - Pricing Tiers */
-        .pricing-section { margin-top: 16px; }
-        .pricing-title { font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
-        .pricing-card { background: var(--bg-card); border-radius: 10px; padding: 14px; border-left: 3px solid var(--primary); transition: all 0.2s; }
-        .pricing-card:hover { transform: translateY(-2px); }
-        .pricing-card .tier-name { font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
-        .pricing-card .tier-price { font-size: 0.75rem; color: var(--accent); margin-bottom: 8px; }
-        .pricing-card .tier-tasks { font-size: 0.7rem; color: var(--text-secondary); }
-        .pricing-card .tier-tasks li { margin-bottom: 3px; display: flex; align-items: flex-start; gap: 4px; }
-        .pricing-card .tier-tasks li::before { content: '•'; color: var(--primary); }
+        /* Pricing Table - 横向可复制表格 */
+        .pricing-table-container { overflow-x: auto; margin-top: 12px; }
+        .pricing-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .pricing-table th, .pricing-table td { padding: 10px 12px; border: 1px solid var(--border); text-align: left; white-space: nowrap; }
+        .pricing-table th { background: var(--bg-card); font-weight: 600; color: var(--accent); position: sticky; top: 0; }
+        .pricing-table td { background: var(--bg-secondary); }
+        .pricing-table tr:hover td { background: var(--bg-card); }
+        .pricing-table .tier-name { font-weight: 600; color: var(--text); }
+        .pricing-table .price { color: var(--accent); }
+        .pricing-table .tasks { max-width: 400px; white-space: normal; }
+        .copy-table-btn { margin-bottom: 10px; padding: 6px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; gap: 4px; }
+        .copy-table-btn:hover { border-color: var(--primary); color: var(--text); }
 
         /* Creative Tools */
         .creative-tools-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
@@ -165,7 +166,23 @@
         .calendar-nav { display: flex; align-items: center; gap: 10px; }
         .calendar-nav button { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.8rem; }
         .calendar-nav button:hover { border-color: var(--primary); }
-        .calendar-month { font-size: 1rem; font-weight: 700; }
+        .calendar-month { font-size: 1rem; font-weight: 700; cursor: pointer; }
+        
+        /* 年月选择器弹窗 */
+        .month-picker-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; justify-content: center; align-items: center; z-index: 1000; }
+        .month-picker-overlay.show { display: flex; }
+        .month-picker-popup { background: var(--bg-secondary); border-radius: 16px; padding: 20px; border: 1px solid var(--border); min-width: 320px; }
+        .month-picker-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .month-picker-header h3 { font-size: 1rem; }
+        .month-picker-close { background: none; border: none; color: var(--text-muted); font-size: 1.2rem; cursor: pointer; }
+        .year-selector { display: flex; align-items: center; justify-content: center; gap: 16px; margin-bottom: 16px; }
+        .year-selector button { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); width: 36px; height: 36px; border-radius: 8px; cursor: pointer; font-size: 1rem; }
+        .year-selector span { font-size: 1.1rem; font-weight: 700; min-width: 60px; text-align: center; }
+        .month-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+        .month-item { padding: 10px; text-align: center; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .month-item:hover { border-color: var(--primary); }
+        .month-item.current { border-color: var(--accent); background: rgba(6, 182, 212, 0.15); }
+        .month-item.selected { background: var(--primary); border-color: var(--primary); color: white; }
 
         .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .calendar-weekday { text-align: center; font-size: 0.7rem; color: var(--text-muted); padding: 8px 0; font-weight: 600; }
@@ -177,6 +194,16 @@
         .calendar-day .event-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; margin-right: 2px; }
         .calendar-day .events { font-size: 0.65rem; color: var(--text-secondary); }
 
+        /* 运营节点建议 */
+        .month-suggestions { margin-top: 16px; padding: 16px; background: var(--bg-card); border-radius: 12px; border-left: 3px solid var(--accent); }
+        .month-suggestions-title { font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+        .suggestion-list { display: flex; flex-direction: column; gap: 8px; }
+        .suggestion-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: var(--bg); border-radius: 8px; }
+        .suggestion-item .icon { font-size: 1rem; }
+        .suggestion-item .content { flex: 1; }
+        .suggestion-item .name { font-size: 0.8rem; font-weight: 600; margin-bottom: 2px; }
+        .suggestion-item .desc { font-size: 0.7rem; color: var(--text-secondary); }
+
         .calendar-events { margin-top: 16px; }
         .calendar-events-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
         .event-item { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: var(--bg-card); border-radius: 8px; margin-bottom: 6px; border-left: 3px solid var(--primary); }
@@ -184,12 +211,36 @@
         .event-item .event-name { flex: 1; font-size: 0.85rem; }
         .event-item .event-type { font-size: 0.65rem; padding: 2px 8px; border-radius: 6px; background: var(--bg); }
 
-        .templates-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-top: 16px; }
-        .template-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.2s; }
-        .template-card:hover { border-color: var(--primary); }
-        .template-card .template-icon { font-size: 1.3rem; margin-bottom: 6px; }
-        .template-card .template-name { font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; }
-        .template-card .template-desc { font-size: 0.7rem; color: var(--text-secondary); }
+        /* 多维表格模板 */
+        .template-table-container { margin-top: 16px; overflow-x: auto; }
+        .template-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
+        .template-table th, .template-table td { padding: 8px 10px; border: 1px solid var(--border); text-align: left; }
+        .template-table th { background: var(--bg-card); font-weight: 600; color: var(--accent); }
+        .template-table td { background: var(--bg-secondary); }
+        .template-table input { width: 100%; background: transparent; border: none; color: var(--text); font-size: 0.75rem; }
+        .template-table input:focus { outline: none; background: var(--bg-card); }
+        .template-table .status-select { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 2px 6px; color: var(--text); font-size: 0.7rem; }
+        .template-table .add-row-btn { margin-top: 8px; padding: 6px 12px; background: var(--bg-card); border: 1px dashed var(--border); border-radius: 6px; color: var(--text-secondary); font-size: 0.75rem; cursor: pointer; }
+        .template-table .add-row-btn:hover { border-color: var(--primary); color: var(--text); }
+
+        /* 美术拆解可编辑表格 */
+        .breakdown-table-container { overflow-x: auto; }
+        .breakdown-table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+        .breakdown-table th, .breakdown-table td { padding: 10px 12px; border: 1px solid var(--border); text-align: left; }
+        .breakdown-table th { background: var(--bg-card); font-weight: 600; color: var(--accent); white-space: nowrap; }
+        .breakdown-table td { background: var(--bg-secondary); vertical-align: top; }
+        .breakdown-table .category-cell { background: var(--bg-card); font-weight: 600; white-space: nowrap; }
+        .breakdown-table .task-cell { min-width: 200px; }
+        .breakdown-table .edit-cell { min-width: 250px; }
+        .breakdown-table input, .breakdown-table textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 6px 8px; color: var(--text); font-size: 0.75rem; resize: vertical; }
+        .breakdown-table input:focus, .breakdown-table textarea:focus { outline: none; border-color: var(--primary); }
+        .breakdown-table textarea { min-height: 60px; }
+
+        /* 外观类型选择器(美术拆解) */
+        .appearance-type-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+        .appearance-type-btn { padding: 8px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 0.8rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
+        .appearance-type-btn:hover { border-color: var(--primary-light); }
+        .appearance-type-btn.active { background: var(--primary); border-color: var(--primary); color: white; }
 
         /* Empty State */
         .empty-state { text-align: center; padding: 40px 16px; }
@@ -204,7 +255,7 @@
         /* Responsive */
         @media (max-width: 768px) {
             .main-layout { grid-template-columns: 1fr; }
-            .pricing-grid { grid-template-columns: 1fr; }
+            .pricing-table { font-size: 0.7rem; }
             .tools-grid { grid-template-columns: repeat(2, 1fr); }
         }
     </style>
@@ -226,7 +277,7 @@
         <div class="main-layout">
             <aside class="sidebar">
                 <div class="sidebar-section">
-                    <div class="section-label">选择游戏品类 <span class="toggle">可折叠</span></div>
+                    <div class="section-label">选择游戏品类</div>
                     <div class="category-tabs">
                         <div class="category-tab active" data-category="all">全部</div>
                         <div class="category-tab" data-category="moba">MOBA</div>
@@ -364,8 +415,18 @@
                     <div class="card" style="margin-top: 12px;">
                         <div class="card-header"><div class="card-title">🔧 美术拆解工具</div></div>
                         <div class="card-body">
+                            <!-- 外观类型选择器 -->
+                            <div class="appearance-type-selector">
+                                <div class="appearance-type-btn active" data-type="skin"><span>👤</span>皮肤</div>
+                                <div class="appearance-type-btn" data-type="weapon_skin"><span>🔫</span>武器</div>
+                                <div class="appearance-type-btn" data-type="mount"><span>🐴</span>坐骑/载具</div>
+                                <div class="appearance-type-btn" data-type="decoration"><span>✨</span>装饰</div>
+                                <div class="appearance-type-btn" data-type="board"><span>♟️</span>棋盘</div>
+                                <div class="appearance-type-btn" data-type="vfx"><span>💫</span>特效</div>
+                            </div>
+                            
                             <div style="display: flex; gap: 10px; margin-bottom: 16px;">
-                                <input type="text" style="flex:1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem;" placeholder="输入皮肤名称拆解美术任务...（如：银焰骑士 沃里克）" id="breakdownInput">
+                                <input type="text" style="flex:1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem;" placeholder="输入外观名称拆解美术任务...（如：银焰骑士 沃里克）" id="breakdownInput">
                                 <button class="btn btn-primary" id="breakdownBtn">拆解</button>
                             </div>
                             <div id="breakdownResult"></div>
@@ -383,10 +444,14 @@
                                     <button id="prevMonth">◀</button>
                                     <span class="calendar-month" id="calendarMonth"></span>
                                     <button id="nextMonth">▶</button>
+                                    <button class="btn btn-secondary" style="margin-left: 10px; padding: 6px 10px;" id="quickSelectBtn">📅 快速定位</button>
                                 </div>
                                 <button class="btn btn-secondary" id="todayBtn">今天</button>
                             </div>
                             <div class="calendar-grid" id="calendarGrid"></div>
+                            
+                            <!-- 月度运营建议 -->
+                            <div class="month-suggestions" id="monthSuggestions"></div>
                             
                             <div class="calendar-events">
                                 <div class="calendar-events-title">📋 近期运营节点</div>
@@ -396,9 +461,9 @@
                     </div>
 
                     <div class="card" style="margin-top: 12px;">
-                        <div class="card-header"><div class="card-title">📝 运营模板</div></div>
+                        <div class="card-header"><div class="card-title">📝 运营规划表格</div></div>
                         <div class="card-body">
-                            <div class="templates-grid" id="templatesGrid"></div>
+                            <div class="template-table-container" id="templateTableContainer"></div>
                         </div>
                     </div>
                 </div>
@@ -412,6 +477,23 @@
             </main>
         </div>
     </div>
+    
+    <!-- 年月选择器弹窗 -->
+    <div class="month-picker-overlay" id="monthPickerOverlay">
+        <div class="month-picker-popup">
+            <div class="month-picker-header">
+                <h3>📅 选择年月</h3>
+                <button class="month-picker-close" id="closePicker">×</button>
+            </div>
+            <div class="year-selector">
+                <button id="prevYear">◀</button>
+                <span id="currentYear"></span>
+                <button id="nextYear">▶</button>
+            </div>
+            <div class="month-grid" id="monthGrid"></div>
+        </div>
+    </div>
+    
     <div class="toast" id="toast"></div>
 
     <script>
@@ -424,16 +506,16 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "伴生/勇者", price: "288-60点券", tasks: ["基础模型换色", "简单特效调整", "无专属语音"] },
-                            { name: "史诗", price: "888点券", tasks: ["全新模型", "技能特效重制", "专属语音包", "回城特效"] },
-                            { name: "传说", price: "1688点券", tasks: ["高质量模型", "全套特效重制", "专属语音+音效", "回城+出生特效", "头像框"] },
-                            { name: "荣耀典藏", price: "积分夺宝", tasks: ["顶级品质模型", "双形态设计", "全特效定制", "专属动画", "专属标识"] }
+                            { name: "伴生/勇者", price: "288-60点券", tasks: "基础模型换色、简单特效调整、无专属语音" },
+                            { name: "史诗", price: "888点券", tasks: "全新模型、技能特效重制、专属语音包、回城特效" },
+                            { name: "传说", price: "1688点券", tasks: "高质量模型、全套特效重制、专属语音+音效、回城+出生特效、头像框" },
+                            { name: "荣耀典藏", price: "积分夺宝", tasks: "顶级品质模型、双形态设计、全特效定制、专属动画、专属标识" }
                         ]
                     },
                     decoration: {
                         tiers: [
-                            { name: "普通", price: "60-180点券", tasks: ["基础装饰模型", "简单粒子效果"] },
-                            { name: "限定", price: "300-500点券", tasks: ["主题装饰设计", "专属特效", "动态效果"] }
+                            { name: "普通", price: "60-180点券", tasks: "基础装饰模型、简单粒子效果" },
+                            { name: "限定", price: "300-500点券", tasks: "主题装饰设计、专属特效、动态效果" }
                         ]
                     }
                 },
@@ -446,11 +528,11 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "基础", price: "750 RP", tasks: ["模型换色", "无特效"] },
-                            { name: "史诗", price: "1350 RP", tasks: ["新模型", "新纹理", "新粒子效果"] },
-                            { name: "传说", price: "1820 RP", tasks: ["全新模型+动画", "全套特效", "新语音", "独特音效"] },
-                            { name: "终极", price: "3250 RP", tasks: ["多形态设计", "全套定制内容", "专属交互", "独特音效语音"] },
-                            { name: "至臻", price: "代币兑换", tasks: ["传说级品质+", "专属边框", "稀有标识"] }
+                            { name: "基础", price: "750 RP", tasks: "模型换色、无特效" },
+                            { name: "史诗", price: "1350 RP", tasks: "新模型、新纹理、新粒子效果" },
+                            { name: "传说", price: "1820 RP", tasks: "全新模型+动画、全套特效、新语音、独特音效" },
+                            { name: "终极", price: "3250 RP", tasks: "多形态设计、全套定制内容、专属交互、独特音效语音" },
+                            { name: "至臻", price: "代币兑换", tasks: "传说级品质+、专属边框、稀有标识" }
                         ]
                     }
                 },
@@ -463,14 +545,14 @@
                 pricing: {
                     board: {
                         tiers: [
-                            { name: "普通棋盘", price: "4500点券", tasks: ["棋盘贴图设计", "基础环境光效", "2-3种地形变化"] },
-                            { name: "史诗棋盘", price: "7900点券", tasks: ["全3D棋盘建模", "动态环境效果", "专属音效", "交互反馈"] },
-                            { name: "传说棋盘", price: "11500点券", tasks: ["高质量场景设计", "完整动画系统", "专属BGM", "粒子特效", "主题角色"] }
+                            { name: "普通棋盘", price: "4500点券", tasks: "棋盘贴图设计、基础环境光效、2-3种地形变化" },
+                            { name: "史诗棋盘", price: "7900点券", tasks: "全3D棋盘建模、动态环境效果、专属音效、交互反馈" },
+                            { name: "传说棋盘", price: "11500点券", tasks: "高质量场景设计、完整动画系统、专属BGM、粒子特效、主题角色" }
                         ]
                     },
                     skin: {
                         tiers: [
-                            { name: "小小英雄", price: "2300-4500点券", tasks: ["角色模型设计", "专属动画", "升级形态"] }
+                            { name: "小小英雄", price: "2300-4500点券", tasks: "角色模型设计、专属动画、升级形态" }
                         ]
                     }
                 },
@@ -483,15 +565,15 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "活动皮肤", price: "免费/活动", tasks: ["模型调整", "配色更换", "简单特效"] },
-                            { name: "商城皮肤", price: "1680原石", tasks: ["新模型设计", "技能特效", "专属动画", "立绘更新"] },
-                            { name: "联动皮肤", price: "1980原石", tasks: ["主题设计", "全套特效", "专属剧情", "联动元素"] }
+                            { name: "活动皮肤", price: "免费/活动", tasks: "模型调整、配色更换、简单特效" },
+                            { name: "商城皮肤", price: "1680原石", tasks: "新模型设计、技能特效、专属动画、立绘更新" },
+                            { name: "联动皮肤", price: "1980原石", tasks: "主题设计、全套特效、专属剧情、联动元素" }
                         ]
                     },
                     home_decor: {
                         tiers: [
-                            { name: "普通家具", price: "洞天宝钱", tasks: ["基础模型", "简单动画"] },
-                            { name: "限定家具", price: "创世结晶", tasks: ["主题设计", "交互功能", "专属特效"] }
+                            { name: "普通家具", price: "洞天宝钱", tasks: "基础模型、简单动画" },
+                            { name: "限定家具", price: "创世结晶", tasks: "主题设计、交互功能、专属特效" }
                         ]
                     }
                 },
@@ -504,15 +586,15 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "普通枪皮", price: "军需抽取", tasks: ["枪械换色", "基础贴图"] },
-                            { name: "稀有枪皮", price: "军需抽取", tasks: ["新模型细节", "专属检视动画", "击杀特效"] },
-                            { name: "传说枪皮", price: "军需抽取", tasks: ["完整建模", "全套动画", "专属音效", "升级特效"] }
+                            { name: "普通枪皮", price: "军需抽取", tasks: "枪械换色、基础贴图" },
+                            { name: "稀有枪皮", price: "军需抽取", tasks: "新模型细节、专属检视动画、击杀特效" },
+                            { name: "传说枪皮", price: "军需抽取", tasks: "完整建模、全套动画、专属音效、升级特效" }
                         ]
                     },
                     mount: {
                         tiers: [
-                            { name: "普通载具", price: "军需抽取", tasks: ["载具换色", "简单贴图"] },
-                            { name: "联动载具", price: "1500元+", tasks: ["完整建模", "专属音效", "联动元素", "特效"] }
+                            { name: "普通载具", price: "军需抽取", tasks: "载具换色、简单贴图" },
+                            { name: "联动载具", price: "1500元+", tasks: "完整建模、专属音效、联动元素、特效" }
                         ]
                     }
                 },
@@ -525,13 +607,13 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "消费级", price: "几元", tasks: ["基础换色", "简单纹理"] },
-                            { name: "工业级", price: "十几元", tasks: ["基础纹理设计"] },
-                            { name: "军规级", price: "几十元", tasks: ["主题纹理", "磨损度设计"] },
-                            { name: "受限", price: "百元内", tasks: ["完整主题设计", "多磨损度"] },
-                            { name: "保密", price: "几百元", tasks: ["高品质设计", "特殊纹理"] },
-                            { name: "隐秘", price: "上千元", tasks: ["顶级设计", "稀有纹理", "收藏价值"] },
-                            { name: "特殊/刀", price: "数千元+", tasks: ["独特设计", "动画系统", "极高收藏价值"] }
+                            { name: "消费级", price: "几元", tasks: "基础换色、简单纹理" },
+                            { name: "工业级", price: "十几元", tasks: "基础纹理设计" },
+                            { name: "军规级", price: "几十元", tasks: "主题纹理、磨损度设计" },
+                            { name: "受限", price: "百元内", tasks: "完整主题设计、多磨损度" },
+                            { name: "保密", price: "几百元", tasks: "高品质设计、特殊纹理" },
+                            { name: "隐秘", price: "上千元", tasks: "顶级设计、稀有纹理、收藏价值" },
+                            { name: "特殊/刀", price: "数千元+", tasks: "独特设计、动画系统、极高收藏价值" }
                         ]
                     }
                 },
@@ -544,10 +626,10 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "精选", price: "875 VP", tasks: ["换色贴图", "无特效"] },
-                            { name: "豪华", price: "1275 VP", tasks: ["新模型细节", "新音效"] },
-                            { name: "至尊", price: "1775 VP", tasks: ["全新模型", "全套特效", "专属动画", "终结特效"] },
-                            { name: "至尊2.0", price: "2175 VP", tasks: ["传说级+", "演变系统", "专属特效", "可升级"] }
+                            { name: "精选", price: "875 VP", tasks: "换色贴图、无特效" },
+                            { name: "豪华", price: "1275 VP", tasks: "新模型细节、新音效" },
+                            { name: "至尊", price: "1775 VP", tasks: "全新模型、全套特效、专属动画、终结特效" },
+                            { name: "至尊2.0", price: "2175 VP", tasks: "传说级+、演变系统、专属特效、可升级" }
                         ]
                     }
                 },
@@ -560,15 +642,15 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通", price: "直购/活动", tasks: ["基础换色", "简单调整"] },
-                            { name: "稀有", price: "金块购买", tasks: ["新模型设计", "专属特效", "主题元素"] },
-                            { name: "传说", price: "限定活动", tasks: ["顶级设计", "全套特效", "专属动画", "联动元素"] }
+                            { name: "普通", price: "直购/活动", tasks: "基础换色、简单调整" },
+                            { name: "稀有", price: "金块购买", tasks: "新模型设计、专属特效、主题元素" },
+                            { name: "传说", price: "限定活动", tasks: "顶级设计、全套特效、专属动画、联动元素" }
                         ]
                     },
                     weapon_skin: {
                         tiers: [
-                            { name: "普通武器", price: "直购", tasks: ["武器换色", "简单纹理"] },
-                            { name: "传说武器", price: "限定活动", tasks: ["完整建模", "专属特效", "专属音效"] }
+                            { name: "普通武器", price: "直购", tasks: "武器换色、简单纹理" },
+                            { name: "传说武器", price: "限定活动", tasks: "完整建模、专属特效、专属音效" }
                         ]
                     }
                 },
@@ -581,8 +663,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "源石皮肤", price: "15-21源石", tasks: ["新立绘", "动态效果", "技能特效", "基建形象"] },
-                            { name: "活动皮肤", price: "免费/活动", tasks: ["新立绘", "基础特效"] }
+                            { name: "源石皮肤", price: "15-21源石", tasks: "新立绘、动态效果、技能特效、基建形象" },
+                            { name: "活动皮肤", price: "免费/活动", tasks: "新立绘、基础特效" }
                         ]
                     }
                 },
@@ -595,8 +677,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通皮肤", price: "皮肤券/勾玉", tasks: ["新立绘", "建模调整", "基础特效"] },
-                            { name: "典藏皮肤", price: "128-198元", tasks: ["顶级立绘", "完整建模", "全套特效", "专属动画", "专属音效"] }
+                            { name: "普通皮肤", price: "皮肤券/勾玉", tasks: "新立绘、建模调整、基础特效" },
+                            { name: "典藏皮肤", price: "128-198元", tasks: "顶级立绘、完整建模、全套特效、专属动画、专属音效" }
                         ]
                     }
                 },
@@ -609,9 +691,9 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "蓝皮", price: "碎片兑换", tasks: ["模型换色", "简单调整"] },
-                            { name: "紫皮", price: "推理径/抽奖", tasks: ["新模型设计", "专属特效", "主题元素"] },
-                            { name: "金皮", price: "抽奖", tasks: ["顶级设计", "全套特效", "专属动画", "专属音效"] }
+                            { name: "蓝皮", price: "碎片兑换", tasks: "模型换色、简单调整" },
+                            { name: "紫皮", price: "推理径/抽奖", tasks: "新模型设计、专属特效、主题元素" },
+                            { name: "金皮", price: "抽奖", tasks: "顶级设计、全套特效、专属动画、专属音效" }
                         ]
                     }
                 },
@@ -624,9 +706,9 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "成衣", price: "几十元", tasks: ["基础服装设计", "染色系统"] },
-                            { name: "盒子外观", price: "100-300元", tasks: ["主题设计", "全套建模", "专属特效", "限时稀缺"] },
-                            { name: "限量外观", price: "活动限定", tasks: ["顶级设计", "稀有标识", "收藏价值"] }
+                            { name: "成衣", price: "几十元", tasks: "基础服装设计、染色系统" },
+                            { name: "盒子外观", price: "100-300元", tasks: "主题设计、全套建模、专属特效、限时稀缺" },
+                            { name: "限量外观", price: "活动限定", tasks: "顶级设计、稀有标识、收藏价值" }
                         ]
                     }
                 },
@@ -639,8 +721,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通锦衣", price: "几十元", tasks: ["服装设计", "基础染色"] },
-                            { name: "限定锦衣", price: "百元+", tasks: ["主题设计", "专属特效", "二手市场价值"] }
+                            { name: "普通锦衣", price: "几十元", tasks: "服装设计、基础染色" },
+                            { name: "限定锦衣", price: "百元+", tasks: "主题设计、专属特效、二手市场价值" }
                         ]
                     }
                 },
@@ -653,10 +735,10 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通饰品", price: "几元", tasks: ["单品设计", "基础模型"] },
-                            { name: "稀有套装", price: "几十元", tasks: ["整套设计", "多部位", "专属特效"] },
-                            { name: "不朽/神话", price: "百元+", tasks: ["顶级设计", "专属特效", "独特动画", "稀有标识"] },
-                            { name: "弧光/至宝", price: "数百元+", tasks: ["顶级品质", "改变技能特效", "专属动画", "极高收藏价值"] }
+                            { name: "普通饰品", price: "几元", tasks: "单品设计、基础模型" },
+                            { name: "稀有套装", price: "几十元", tasks: "整套设计、多部位、专属特效" },
+                            { name: "不朽/神话", price: "百元+", tasks: "顶级设计、专属特效、独特动画、稀有标识" },
+                            { name: "弧光/至宝", price: "数百元+", tasks: "顶级品质、改变技能特效、专属动画、极高收藏价值" }
                         ]
                     }
                 },
@@ -669,7 +751,7 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "活动皮肤", price: "免费", tasks: ["基础调整", "简单特效"] }
+                            { name: "活动皮肤", price: "免费", tasks: "基础调整、简单特效" }
                         ]
                     }
                 },
@@ -682,8 +764,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通外观", price: "几十元", tasks: ["角色换装", "基础动画"] },
-                            { name: "盲盒外观", price: "抽奖", tasks: ["主题设计", "专属动画", "稀有度"] }
+                            { name: "普通外观", price: "几十元", tasks: "角色换装、基础动画" },
+                            { name: "盲盒外观", price: "抽奖", tasks: "主题设计、专属动画、稀有度" }
                         ]
                     }
                 },
@@ -696,8 +778,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通时装", price: "几十元", tasks: ["服装设计", "基础属性"] },
-                            { name: "天空套", price: "合成获取", tasks: ["顶级设计", "套装属性", "专属特效", "稀有标识"] }
+                            { name: "普通时装", price: "几十元", tasks: "服装设计、基础属性" },
+                            { name: "天空套", price: "合成获取", tasks: "顶级设计、套装属性、专属特效、稀有标识" }
                         ]
                     }
                 },
@@ -710,9 +792,9 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "伴生", price: "350点券", tasks: ["基础换色", "简单调整"] },
-                            { name: "史诗", price: "790点券", tasks: ["新模型", "新特效"] },
-                            { name: "传说", price: "990点券", tasks: ["全套重制", "专属语音", "回城特效"] }
+                            { name: "伴生", price: "350点券", tasks: "基础换色、简单调整" },
+                            { name: "史诗", price: "790点券", tasks: "新模型、新特效" },
+                            { name: "传说", price: "990点券", tasks: "全套重制、专属语音、回城特效" }
                         ]
                     }
                 },
@@ -725,8 +807,8 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "普通", price: "制造金属", tasks: ["基础换色"] },
-                            { name: "传说", price: "1800金币", tasks: ["全套设计", "专属动画", "终结特效"] }
+                            { name: "普通", price: "制造金属", tasks: "基础换色" },
+                            { name: "传说", price: "1800金币", tasks: "全套设计、专属动画、终结特效" }
                         ]
                     }
                 },
@@ -739,8 +821,8 @@
                 pricing: {
                     weapon_skin: {
                         tiers: [
-                            { name: "普通武器", price: "GP购买", tasks: ["基础模型"] },
-                            { name: "英雄级", price: "300-500元", tasks: ["顶级设计", "专属属性", "专属特效", "专属音效"] }
+                            { name: "普通武器", price: "GP购买", tasks: "基础模型" },
+                            { name: "英雄级", price: "300-500元", tasks: "顶级设计、专属属性、专属特效、专属音效" }
                         ]
                     }
                 },
@@ -753,8 +835,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通", price: "几十元", tasks: ["基础设计", "简单特效"] },
-                            { name: "传说", price: "168元", tasks: ["顶级设计", "全套特效", "专属动画"] }
+                            { name: "普通", price: "几十元", tasks: "基础设计、简单特效" },
+                            { name: "传说", price: "168元", tasks: "顶级设计、全套特效、专属动画" }
                         ]
                     }
                 },
@@ -767,7 +849,7 @@
                 pricing: {
                     mount: {
                         tiers: [
-                            { name: "商城坐骑", price: "20-25美元", tasks: ["完整建模", "专属动画", "部分功能"] }
+                            { name: "商城坐骑", price: "20-25美元", tasks: "完整建模、专属动画、部分功能" }
                         ]
                     }
                 },
@@ -780,7 +862,7 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "商城时装", price: "5-15美元", tasks: ["服装设计", "基础动画"] }
+                            { name: "商城时装", price: "5-15美元", tasks: "服装设计、基础动画" }
                         ]
                     }
                 },
@@ -793,8 +875,8 @@
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "普通皮肤", price: "几十元", tasks: ["服装设计", "基础特效"] },
-                            { name: "礼服皮肤", price: "168元", tasks: ["顶级设计", "全套特效", "专属动画"] }
+                            { name: "普通皮肤", price: "几十元", tasks: "服装设计、基础特效" },
+                            { name: "礼服皮肤", price: "168元", tasks: "顶级设计、全套特效、专属动画" }
                         ]
                     }
                 },
@@ -813,7 +895,7 @@
             casual: ["蛋仔派对", "第五人格"]
         };
 
-        // 实时榜单数据（模拟七麦数据）
+        // 实时榜单数据
         const RANKING_DATA = {
             ios: [
                 { name: "王者荣耀", publisher: "腾讯游戏", trend: "stable", revenue: "¥2.1亿" },
@@ -912,15 +994,57 @@
             ]
         };
 
-        // 运营模板
-        const OPERATION_TEMPLATES = [
-            { icon: "🎉", name: "节日活动模板", desc: "春节/周年庆/节日限定活动规划" },
-            { icon: "🎁", name: "版本更新模板", desc: "新版本/新皮肤上线运营方案" },
-            { icon: "🏆", name: "赛事活动模板", desc: "电竞比赛/排行榜活动规划" },
-            { icon: "🤝", name: "IP联动模板", desc: "跨界合作/品牌联动方案" },
-            { icon: "💬", name: "社区运营模板", desc: "玩家社区/UGC活动规划" },
-            { icon: "📢", name: "宣发推广模板", desc: "新品上线/预热传播方案" }
-        ];
+        // 月度运营建议
+        const MONTH_SUGGESTIONS = {
+            1: [
+                { icon: "🎉", name: "元旦活动", desc: "新年主题皮肤/装饰上线，开启年度庆典" },
+                { icon: "🧧", name: "春节预热", desc: "春节版本预热，生肖皮肤/活动提前宣传" }
+            ],
+            2: [
+                { icon: "🎊", name: "春节活动", desc: "年度最大活动，限定皮肤/福袋/红包系统" },
+                { icon: "💕", name: "情人节活动", desc: "情侣皮肤/CP活动/情人节限定" }
+            ],
+            3: [
+                { icon: "🌸", name: "春季版本", desc: "春季主题更新，樱花/踏青主题皮肤" },
+                { icon: "👸", name: "女神节活动", desc: "女性向皮肤/福利活动" }
+            ],
+            4: [
+                { icon: "🌧️", name: "清明节活动", desc: "传统文化主题，限定外观" },
+                { icon: "📖", name: "读书日活动", desc: "知识主题皮肤/公益活动" }
+            ],
+            5: [
+                { icon: "👷", name: "劳动节活动", desc: "五一假期活动，限定皮肤上线" },
+                { icon: "❤️", name: "520活动", desc: "表白主题皮肤/情侣互动活动" }
+            ],
+            6: [
+                { icon: "👶", name: "儿童节活动", desc: "童心主题皮肤/趣味活动" },
+                { icon: "🛒", name: "618电商联动", desc: "与电商平台联动，皮肤促销" }
+            ],
+            7: [
+                { icon: "🏖️", name: "暑期档开启", desc: "暑期大型活动，学生向皮肤" },
+                { icon: "🎆", name: "周年庆预热", desc: "周年庆活动预热宣传" }
+            ],
+            8: [
+                { icon: "🎂", name: "周年庆活动", desc: "年度重点活动，限定皮肤/福利" },
+                { icon: "🎋", name: "七夕活动", desc: "中国情人节，情侣皮肤/活动" }
+            ],
+            9: [
+                { icon: "🌕", name: "中秋节活动", desc: "月饼/月亮主题皮肤，团圆活动" },
+                { icon: "🏫", name: "开学季活动", desc: "校园主题皮肤，学生福利" }
+            ],
+            10: [
+                { icon: "🇨🇳", name: "国庆节活动", desc: "国庆长假活动，国风主题皮肤" },
+                { icon: "🎃", name: "万圣节活动", desc: "恐怖/搞怪主题皮肤，南瓜元素" }
+            ],
+            11: [
+                { icon: "🛍️", name: "双十一活动", desc: "电商联动，皮肤促销/限定" },
+                { icon: "🙏", name: "感恩节活动", desc: "感恩主题，福利回馈活动" }
+            ],
+            12: [
+                { icon: "❄️", name: "冬季/圣诞节活动", desc: "冰雪主题皮肤，圣诞限定" },
+                { icon: "🎊", name: "跨年活动", desc: "年度收官活动，跨年福利" }
+            ]
+        };
 
         // 运营日历事件
         const CALENDAR_EVENTS = [
@@ -934,6 +1058,14 @@
             { date: "2026-06-18", name: "618电商联动", type: "IP联动", color: "#8b5cf6" }
         ];
 
+        // 运营规划表格模板
+        const OPERATION_TEMPLATES = [
+            { icon: "🎉", name: "节日活动规划", columns: ["活动名称", "开始日期", "结束日期", "活动类型", "皮肤/外观", "负责人", "状态", "备注"] },
+            { icon: "🎁", name: "版本更新规划", columns: ["版本号", "上线日期", "主要内容", "新皮肤数", "美术负责人", "测试状态", "备注"] },
+            { icon: "🏆", name: "赛事活动规划", columns: ["赛事名称", "举办时间", "奖励内容", "限定皮肤", "合作方", "状态", "备注"] },
+            { icon: "🤝", name: "IP联动规划", columns: ["联动IP", "合作形式", "上线时间", "皮肤数量", "商务负责人", "状态", "备注"] }
+        ];
+
         // 风险检查
         const APPEARANCE_RISKS = {
             skin: { critical: ["内容无敏感元素", "IP授权合规"], high: ["颜色不影响辨识度", "特效不影响性能", "与原形象协调"], medium: ["定价合理", "上线时间合适"] },
@@ -944,28 +1076,45 @@
             board: { critical: ["内容合规"], high: ["性能达标", "棋子辨识度"], medium: ["定价合理", "主题协调"] }
         };
 
-        // 美术拆解模板
+        // 美术拆解模板 - 多品类
         const BREAKDOWN_TEMPLATES = {
-            skin: { categories: [
-                { name: "📐 概念设计", tasks: ["主题风格定调", "色彩方案设计", "角色草图", "细节概念图", "三视图"], time: "3-5天" },
-                { name: "🧍 模型制作", tasks: ["高模雕刻", "拓扑低模", "UV展开", "模型优化"], time: "5-7天" },
-                { name: "🎨 贴图绘制", tasks: ["基础色贴图", "法线贴图", "粗糙度贴图", "自发光贴图"], time: "3-4天" },
-                { name: "✨ 特效设计", tasks: ["技能特效", "被动特效", "回城特效", "击杀特效"], time: "4-6天" },
-                { name: "🎬 动画调整", tasks: ["待机动画", "移动动画", "技能动画", "回城动画"], time: "3-5天" },
-                { name: "🔊 音效设计", tasks: ["技能音效", "被动音效", "语音调整", "环境音效"], time: "2-3天" }
-            ]},
-            weapon_skin: { categories: [
-                { name: "📐 概念设计", tasks: ["主题风格", "色彩方案", "概念草图", "细节设计"], time: "2-3天" },
-                { name: "🔫 模型调整", tasks: ["模型微调", "UV展开", "贴图绘制", "材质调整"], time: "3-4天" },
-                { name: "✨ 特效设计", tasks: ["开火特效", "弹道特效", "换弹特效", "检视动画"], time: "3-4天" },
-                { name: "🔊 音效设计", tasks: ["开火音效", "换弹音效", "特殊音效"], time: "1-2天" }
-            ]},
-            board: { categories: [
-                { name: "📐 概念设计", tasks: ["主题风格定调", "棋盘布局", "环境氛围", "细节元素"], time: "3-4天" },
-                { name: "🏗️ 场景搭建", tasks: ["地形建模", "环境装饰", "光照设计", "性能优化"], time: "5-7天" },
-                { name: "✨ 特效设计", tasks: ["环境粒子", "交互反馈", "胜负特效", "氛围光效"], time: "3-4天" },
-                { name: "🔊 音效设计", tasks: ["环境音效", "交互音效", "BGM", "胜负音效"], time: "2-3天" }
-            ]}
+            skin: [
+                { category: "📐 概念设计", tasks: ["主题风格定调", "色彩方案设计", "角色草图", "细节概念图", "三视图"], time: "3-5天" },
+                { category: "🧍 模型制作", tasks: ["高模雕刻", "拓扑低模", "UV展开", "模型优化"], time: "5-7天" },
+                { category: "🎨 贴图绘制", tasks: ["基础色贴图", "法线贴图", "粗糙度贴图", "自发光贴图"], time: "3-4天" },
+                { category: "✨ 特效设计", tasks: ["技能特效", "被动特效", "回城特效", "击杀特效"], time: "4-6天" },
+                { category: "🎬 动画调整", tasks: ["待机动画", "移动动画", "技能动画", "回城动画"], time: "3-5天" },
+                { category: "🔊 音效设计", tasks: ["技能音效", "被动音效", "语音调整", "环境音效"], time: "2-3天" }
+            ],
+            weapon_skin: [
+                { category: "📐 概念设计", tasks: ["主题风格", "色彩方案", "概念草图", "细节设计"], time: "2-3天" },
+                { category: "🔫 模型制作", tasks: ["模型微调", "UV展开", "贴图绘制", "材质调整"], time: "3-4天" },
+                { category: "✨ 特效设计", tasks: ["开火特效", "弹道特效", "换弹特效", "检视动画"], time: "3-4天" },
+                { category: "🔊 音效设计", tasks: ["开火音效", "换弹音效", "特殊音效"], time: "1-2天" }
+            ],
+            mount: [
+                { category: "📐 概念设计", tasks: ["载具主题", "外观造型", "配色方案", "细节设计"], time: "3-4天" },
+                { category: "🚗 模型制作", tasks: ["高模建模", "低模优化", "UV展开", "贴图绘制"], time: "5-7天" },
+                { category: "✨ 特效设计", tasks: ["引擎特效", "尾气特效", "行驶特效", "皮肤特效"], time: "3-4天" },
+                { category: "🔊 音效设计", tasks: ["引擎音效", "行驶音效", "喇叭音效"], time: "2-3天" }
+            ],
+            decoration: [
+                { category: "📐 概念设计", tasks: ["装饰主题", "造型设计", "配色方案", "交互设计"], time: "2-3天" },
+                { category: "🎁 模型制作", tasks: ["模型搭建", "UV展开", "贴图绘制", "材质调整"], time: "3-4天" },
+                { category: "✨ 特效设计", tasks: ["环境特效", "交互特效", "光效设计"], time: "2-3天" }
+            ],
+            board: [
+                { category: "📐 概念设计", tasks: ["棋盘主题", "布局设计", "环境氛围", "细节元素"], time: "3-4天" },
+                { category: "🏗️ 场景搭建", tasks: ["地形建模", "环境装饰", "光照设计", "性能优化"], time: "5-7天" },
+                { category: "✨ 特效设计", tasks: ["环境粒子", "交互反馈", "胜负特效", "氛围光效"], time: "3-4天" },
+                { category: "🔊 音效设计", tasks: ["环境音效", "交互音效", "BGM", "胜负音效"], time: "2-3天" }
+            ],
+            vfx: [
+                { category: "📐 概念设计", tasks: ["特效主题", "视觉风格", "颜色方案", "参考收集"], time: "1-2天" },
+                { category: "✨ 粒子制作", tasks: ["粒子系统", "材质制作", "动画曲线", "性能优化"], time: "3-5天" },
+                { category: "🎬 动画调整", tasks: ["时序调整", "节奏优化", "衔接处理"], time: "1-2天" },
+                { category: "🔊 音效匹配", tasks: ["音效选择", "时序同步", "音量调整"], time: "1天" }
+            ]
         };
 
         // ==================== 状态管理 ====================
@@ -976,6 +1125,8 @@
         let currentMonth = new Date();
         let topGamesVisible = true;
         let analysisData = null;
+        let breakdownType = 'skin';
+        let pickerYear = currentMonth.getFullYear();
 
         // ==================== 初始化 ====================
         document.addEventListener('DOMContentLoaded', () => {
@@ -988,6 +1139,7 @@
             initRankingTab();
             initCreativeTab();
             initCalendarTab();
+            initMonthPicker();
         });
 
         // ==================== 品类选择 ====================
@@ -1187,50 +1339,71 @@
 
         function renderAnalysisTab() {
             const container = document.getElementById('analysisContent');
-            let html = `<div class="card"><div class="card-body">`;
+            let html = '';
 
             analysisData.competitors.forEach(comp => {
                 const hasAppearance = comp.appearanceTypes?.includes(analysisData.appearance);
                 const pricingData = comp.pricing?.[analysisData.appearance];
 
                 html += `
-                    <div style="margin-bottom: 20px; padding: 16px; background: var(--bg-card); border-radius: 12px;">
-                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
-                            <div style="width: 40px; height: 40px; background: var(--gradient-1); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">${comp.icon}</div>
-                            <div>
-                                <h4 style="font-size: 0.95rem; font-weight: 700;">${comp.name}</h4>
-                                <span style="font-size: 0.7rem; color: var(--text-muted);">${getCategoryLabel(comp.category)} · ${comp.overview}</span>
-                            </div>
-                            ${hasAppearance ? '<span style="font-size: 0.65rem; padding: 2px 8px; background: var(--success); color: white; border-radius: 10px;">✓ 支持该外观</span>' : ''}
+                    <div class="card" style="margin-bottom: 16px;">
+                        <div class="card-header">
+                            <div class="card-title">${comp.icon} ${comp.name} <span style="font-size: 0.7rem; color: var(--text-muted); font-weight: normal;">${getCategoryLabel(comp.category)}</span></div>
+                            ${hasAppearance ? '<span style="font-size: 0.65rem; padding: 3px 8px; background: var(--success); color: white; border-radius: 10px;">✓ 支持该外观</span>' : '<span style="font-size: 0.65rem; padding: 3px 8px; background: var(--text-muted); color: white; border-radius: 10px;">暂无数据</span>'}
                         </div>
+                        <div class="card-body">
+                            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 12px;">${comp.overview}</p>
                 `;
 
                 if (pricingData && hasAppearance) {
                     html += `
-                        <div class="pricing-section">
-                            <div class="pricing-title">💰 ${analysisData.appearance === 'skin' ? '皮肤' : analysisData.appearance === 'board' ? '棋盘' : '外观'}分层定价与美术任务</div>
-                            <div class="pricing-grid">
-                                ${pricingData.tiers.map(tier => `
-                                    <div class="pricing-card">
-                                        <div class="tier-name">${tier.name}</div>
-                                        <div class="tier-price">${tier.price}</div>
-                                        <ul class="tier-tasks">
-                                            ${tier.tasks.map(t => `<li>${t}</li>`).join('')}
-                                        </ul>
-                                    </div>
-                                `).join('')}
-                            </div>
+                        <button class="copy-table-btn" onclick="copyPricingTable('${comp.name}')">📋 复制表格</button>
+                        <div class="pricing-table-container">
+                            <table class="pricing-table" id="pricing-table-${comp.name.replace(/\s/g, '-')}">
+                                <thead>
+                                    <tr>
+                                        <th>品质层级</th>
+                                        <th>定价</th>
+                                        <th>美术任务清单</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${pricingData.tiers.map(tier => `
+                                        <tr>
+                                            <td class="tier-name">${tier.name}</td>
+                                            <td class="price">${tier.price}</td>
+                                            <td class="tasks">${tier.tasks}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
                         </div>
                     `;
-                } else {
-                    html += `<p style="color: var(--text-muted); font-size: 0.8rem;">该竞品暂无此外观类型的定价数据</p>`;
                 }
 
-                html += `</div>`;
+                html += `</div></div>`;
             });
 
-            html += `</div></div>`;
             container.innerHTML = html;
+        }
+
+        function copyPricingTable(gameName) {
+            const table = document.getElementById(`pricing-table-${gameName.replace(/\s/g, '-')}`);
+            if (!table) return;
+            
+            let text = `${gameName} - ${selectedAppearance === 'skin' ? '皮肤' : selectedAppearance}分层定价\n\n`;
+            text += '品质层级\t定价\t美术任务清单\n';
+            
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                text += `${cells[0].textContent}\t${cells[1].textContent}\t${cells[2].textContent}\n`;
+            });
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('表格已复制到剪贴板！', 'success');
+            }).catch(() => {
+                showToast('复制失败，请手动选择复制', 'warning');
+            });
         }
 
         function renderRisksTab() {
@@ -1254,13 +1427,12 @@
             html += `</div></div>`;
             container.innerHTML = html;
 
-            let checked = 0;
             container.querySelectorAll('.checklist-item').forEach(item => {
                 item.addEventListener('click', () => {
                     item.classList.toggle('checked');
                     item.querySelector('div').style.background = item.classList.contains('checked') ? 'var(--success)' : '';
                     item.querySelector('div').textContent = item.classList.contains('checked') ? '✓' : '';
-                    checked = container.querySelectorAll('.checklist-item.checked').length;
+                    const checked = container.querySelectorAll('.checklist-item.checked').length;
                     document.getElementById('riskProgress').textContent = checked;
                 });
             });
@@ -1270,6 +1442,15 @@
         function initCreativeTab() {
             renderCreativeTools();
             
+            // 外观类型选择器
+            document.querySelectorAll('.appearance-type-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.appearance-type-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    breakdownType = btn.dataset.type;
+                });
+            });
+
             document.getElementById('creativeSearchBtn').addEventListener('click', () => {
                 const query = document.getElementById('creativeSearchInput').value.trim();
                 if (!query) { showToast('请输入关键词', 'warning'); return; }
@@ -1278,7 +1459,7 @@
 
             document.getElementById('breakdownBtn').addEventListener('click', () => {
                 const input = document.getElementById('breakdownInput').value.trim();
-                if (!input) { showToast('请输入皮肤名称', 'warning'); return; }
+                if (!input) { showToast('请输入外观名称', 'warning'); return; }
                 renderBreakdown(input);
             });
         }
@@ -1299,58 +1480,189 @@
         }
 
         function renderBreakdown(skinName) {
-            const template = BREAKDOWN_TEMPLATES[selectedAppearance] || BREAKDOWN_TEMPLATES.skin;
+            const template = BREAKDOWN_TEMPLATES[breakdownType];
             const container = document.getElementById('breakdownResult');
             
-            let html = `<div style="background: var(--bg-card); border-radius: 10px; padding: 16px; margin-top: 12px;">
-                <h4 style="font-size: 0.9rem; margin-bottom: 14px;">📋 "${skinName}" 美术制作拆解</h4>`;
-
-            template.categories.forEach(cat => {
-                html += `<div style="margin-bottom: 14px;">
-                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-bottom: 8px;">${cat.name} <span style="font-size: 0.7rem; color: var(--text-muted);">预计 ${cat.time}</span></div>
-                    <div style="display: flex; flex-direction: column; gap: 4px;">
-                        ${cat.tasks.map((task, i) => `<div class="breakdown-task" data-task="${cat.name}-${i}" style="display: flex; align-items: center; gap: 8px; padding: 8px 10px; background: var(--bg); border-radius: 6px; cursor: pointer;"><div style="width: 14px; height: 14px; border: 2px solid var(--border); border-radius: 3px;"></div><span style="font-size: 0.75rem;">${task}</span></div>`).join('')}
+            let html = `
+                <div style="background: var(--bg-card); border-radius: 10px; padding: 16px; margin-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
+                        <h4 style="font-size: 0.9rem;">📋 "${skinName}" 美术制作拆解</h4>
+                        <button class="copy-table-btn" onclick="copyBreakdownTable()">📋 复制表格</button>
                     </div>
-                </div>`;
+                    <div class="breakdown-table-container">
+                        <table class="breakdown-table" id="breakdownTable">
+                            <thead>
+                                <tr>
+                                    <th>制作阶段</th>
+                                    <th>任务清单</th>
+                                    <th>预估工期</th>
+                                    <th>实际内容填写</th>
+                                    <th>备注</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+            `;
+
+            template.forEach(cat => {
+                html += `
+                    <tr>
+                        <td class="category-cell">${cat.name}</td>
+                        <td class="task-cell">${cat.tasks.join('、')}</td>
+                        <td>${cat.time}</td>
+                        <td class="edit-cell"><textarea placeholder="根据实际情况填写具体内容..."></textarea></td>
+                        <td class="edit-cell"><input type="text" placeholder="备注..."></td>
+                    </tr>
+                `;
             });
 
-            const totalDays = Math.ceil(Math.random() * 5 + 18);
-            html += `<div style="padding: 12px; background: var(--bg); border-radius: 8px; margin-top: 12px;">
-                <p style="font-size: 0.8rem; color: var(--text-secondary);">📊 预估总工期：<strong>${totalDays} 个工作日</strong></p>
-            </div></div>`;
+            const totalDays = template.reduce((sum, cat) => {
+                const days = parseInt(cat.time.match(/\d+/)?.[0] || 0);
+                return sum + days;
+            }, 0);
+
+            html += `
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="padding: 12px; background: var(--bg); border-radius: 8px; margin-top: 12px;">
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">📊 预估总工期：<strong>${totalDays} 个工作日</strong></p>
+                    </div>
+                </div>
+            `;
 
             container.innerHTML = html;
+            showToast('拆解完成！', 'success');
+        }
 
-            container.querySelectorAll('.breakdown-task').forEach(task => {
-                task.addEventListener('click', () => {
-                    task.classList.toggle('completed');
-                    const checkbox = task.querySelector('div');
-                    checkbox.style.background = task.classList.contains('completed') ? 'var(--success)' : '';
-                    checkbox.textContent = task.classList.contains('completed') ? '✓' : '';
-                });
+        function copyBreakdownTable() {
+            const table = document.getElementById('breakdownTable');
+            if (!table) return;
+            
+            let text = '美术制作拆解表\n\n';
+            text += '制作阶段\t任务清单\t预估工期\t实际内容\t备注\n';
+            
+            table.querySelectorAll('tbody tr').forEach(row => {
+                const cells = row.querySelectorAll('td');
+                const stage = cells[0].textContent;
+                const tasks = cells[1].textContent;
+                const time = cells[2].textContent;
+                const content = cells[3].querySelector('textarea')?.value || '';
+                const note = cells[4].querySelector('input')?.value || '';
+                text += `${stage}\t${tasks}\t${time}\t${content}\t${note}\n`;
             });
 
-            showToast('拆解完成！', 'success');
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('拆解表格已复制！', 'success');
+            });
         }
 
         // ==================== 运营日历 ====================
         function initCalendarTab() {
             renderCalendar();
             renderEvents();
-            renderTemplates();
+            renderTemplateTable();
 
             document.getElementById('prevMonth').addEventListener('click', () => {
                 currentMonth.setMonth(currentMonth.getMonth() - 1);
                 renderCalendar();
+                renderMonthSuggestions();
             });
             document.getElementById('nextMonth').addEventListener('click', () => {
                 currentMonth.setMonth(currentMonth.getMonth() + 1);
                 renderCalendar();
+                renderMonthSuggestions();
             });
             document.getElementById('todayBtn').addEventListener('click', () => {
                 currentMonth = new Date();
                 renderCalendar();
+                renderMonthSuggestions();
             });
+            document.getElementById('quickSelectBtn').addEventListener('click', () => {
+                showMonthPicker();
+            });
+
+            renderMonthSuggestions();
+        }
+
+        // ==================== 年月选择器 ====================
+        function initMonthPicker() {
+            document.getElementById('closePicker').addEventListener('click', hideMonthPicker);
+            document.getElementById('monthPickerOverlay').addEventListener('click', (e) => {
+                if (e.target.id === 'monthPickerOverlay') hideMonthPicker();
+            });
+            document.getElementById('prevYear').addEventListener('click', () => {
+                pickerYear--;
+                renderMonthGrid();
+            });
+            document.getElementById('nextYear').addEventListener('click', () => {
+                pickerYear++;
+                renderMonthGrid();
+            });
+        }
+
+        function showMonthPicker() {
+            pickerYear = currentMonth.getFullYear();
+            renderMonthGrid();
+            document.getElementById('monthPickerOverlay').classList.add('show');
+        }
+
+        function hideMonthPicker() {
+            document.getElementById('monthPickerOverlay').classList.remove('show');
+        }
+
+        function renderMonthGrid() {
+            document.getElementById('currentYear').textContent = pickerYear;
+            const container = document.getElementById('monthGrid');
+            const currentYear = new Date().getFullYear();
+            const currentMonthNum = new Date().getMonth();
+            const selectedMonthNum = currentMonth.getMonth();
+            const selectedYear = currentMonth.getFullYear();
+
+            const months = ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月', '十一月', '十二月'];
+            
+            container.innerHTML = months.map((name, i) => {
+                let classes = 'month-item';
+                if (pickerYear === currentYear && i === currentMonthNum) classes += ' current';
+                if (pickerYear === selectedYear && i === selectedMonthNum) classes += ' selected';
+                
+                return `<div class="${classes}" data-month="${i}">${name}</div>`;
+            }).join('');
+
+            container.querySelectorAll('.month-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    currentMonth.setFullYear(pickerYear);
+                    currentMonth.setMonth(parseInt(item.dataset.month));
+                    hideMonthPicker();
+                    renderCalendar();
+                    renderMonthSuggestions();
+                });
+            });
+        }
+
+        function renderMonthSuggestions() {
+            const container = document.getElementById('monthSuggestions');
+            const month = currentMonth.getMonth() + 1;
+            const suggestions = MONTH_SUGGESTIONS[month] || [];
+
+            let html = `
+                <div class="month-suggestions-title">💡 ${currentMonth.getFullYear()}年${month}月运营节点建议</div>
+                <div class="suggestion-list">
+            `;
+
+            suggestions.forEach(s => {
+                html += `
+                    <div class="suggestion-item">
+                        <div class="icon">${s.icon}</div>
+                        <div class="content">
+                            <div class="name">${s.name}</div>
+                            <div class="desc">${s.desc}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
         }
 
         function renderCalendar() {
@@ -1403,15 +1715,67 @@
             `).join('');
         }
 
-        function renderTemplates() {
-            const container = document.getElementById('templatesGrid');
-            container.innerHTML = OPERATION_TEMPLATES.map(t => `
-                <div class="template-card">
-                    <div class="template-icon">${t.icon}</div>
-                    <div class="template-name">${t.name}</div>
-                    <div class="template-desc">${t.desc}</div>
+        function renderTemplateTable() {
+            const container = document.getElementById('templateTableContainer');
+            const template = OPERATION_TEMPLATES[0]; // 默认节日活动规划
+            
+            let html = `
+                <div style="display: flex; gap: 8px; margin-bottom: 12px;">
+                    ${OPERATION_TEMPLATES.map((t, i) => `
+                        <button class="btn ${i === 0 ? 'btn-primary' : 'btn-secondary'}" style="padding: 6px 12px; font-size: 0.75rem;" onclick="switchTemplate(${i})">${t.icon} ${t.name}</button>
+                    `).join('')}
                 </div>
-            `).join('');
+                <table class="template-table" id="operationTemplateTable">
+                    <thead>
+                        <tr>
+                            ${template.columns.map(c => `<th>${c}</th>`).join('')}
+                        </tr>
+                    </thead>
+                    <tbody id="templateTableBody">
+                        ${renderTemplateRows(template.columns)}
+                        ${renderTemplateRows(template.columns)}
+                    </tbody>
+                </table>
+                <button class="add-row-btn" onclick="addTemplateRow()">+ 添加一行</button>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        function renderTemplateRows(columns) {
+            return `<tr>
+                <td><input type="text" placeholder="填写内容..."></td>
+                <td><input type="date" style="color: var(--text);"></td>
+                <td><input type="date" style="color: var(--text);"></td>
+                <td><select class="status-select"><option>节日活动</option><option>版本更新</option><option>IP联动</option><option>赛事活动</option></select></td>
+                <td><input type="text" placeholder="皮肤名称..."></td>
+                <td><input type="text" placeholder="负责人..."></td>
+                <td><select class="status-select"><option>规划中</option><option>进行中</option><option>已完成</option><option>已延期</option></select></td>
+                <td><input type="text" placeholder="备注..."></td>
+            </tr>`;
+        }
+
+        function addTemplateRow() {
+            const tbody = document.getElementById('templateTableBody');
+            const template = OPERATION_TEMPLATES[0];
+            tbody.insertAdjacentHTML('beforeend', renderTemplateRows(template.columns));
+        }
+
+        function switchTemplate(index) {
+            const template = OPERATION_TEMPLATES[index];
+            const container = document.getElementById('templateTableContainer');
+            
+            // 更新按钮状态
+            container.querySelectorAll('.btn').forEach((btn, i) => {
+                btn.className = i === index ? 'btn btn-primary' : 'btn btn-secondary';
+            });
+            
+            // 更新表格
+            const thead = container.querySelector('thead tr');
+            thead.innerHTML = template.columns.map(c => `<th>${c}</th>`).join('');
+            
+            const tbody = document.getElementById('templateTableBody');
+            tbody.innerHTML = renderTemplateRows(template.columns) + renderTemplateRows(template.columns);
         }
 
         // ==================== Toast ====================
