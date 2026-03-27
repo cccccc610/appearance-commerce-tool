@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v4.0</title>
+    <title>游戏外观商业化分析平台 v4.1</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -1229,50 +1229,71 @@
             },
             "宝可梦大集结": {
                 category: "moba", icon: "⚡", rank: 4,
-                overview: "宝可梦IP MOBA，简化对战+外观商业化",
-                appearanceTypes: ["skin", "decoration", "vfx", "mount"],
+                overview: "宝可梦IP MOBA，5v5团队对战，外观系统包含服装、特效、对战服等",
+                appearanceTypes: ["skin", "costume", "decoration", "vfx", "mount"],
                 pricing: {
                     skin: {
                         tiers: [
-                            { name: "时尚风格", game: "350-840宝石", rmb: "¥35-84", tasks: ["角色换色", "服装变化"] },
-                            { name: "潮流风格", game: "1200-1600宝石", rmb: "¥120-160", tasks: ["全新模型", "专属特效", "回城动画"] },
-                            { name: "节日限定", game: "活动/抽奖", rmb: "¥50-300", tasks: ["主题设计", "专属特效", "限定标识"] }
+                            { name: "时尚风格", game: "350-580宝石", rmb: "¥35-58", tasks: ["角色换色", "服装变化", "基础特效微调"] },
+                            { name: "潮流风格", game: "840-1200宝石", rmb: "¥84-120", tasks: ["全新模型", "专属特效", "回城动画", "击杀特效"] },
+                            { name: "节日限定", game: "活动/抽奖", rmb: "¥50-300", tasks: ["主题设计", "专属特效", "限定标识", "联动元素"] },
+                            { name: "宝可梦中心联名", game: "联动活动", rmb: "¥100-500", tasks: ["实体联动", "专属外观", "限定徽章"] }
+                        ]
+                    },
+                    costume: {
+                        tiers: [
+                            { name: "对战服", game: "350-840宝石", rmb: "¥35-84", tasks: ["服装设计", "适配多角色", "主题风格"] },
+                            { name: "节日服装", game: "活动限定", rmb: "¥50-150", tasks: ["节日主题", "限时获取", "特殊动画"] }
                         ]
                     },
                     decoration: {
                         tiers: [
-                            { name: "对战服", game: "宝石购买", rmb: "¥30-60", tasks: ["服装设计", "适配多角色"] },
-                            { name: "头像框", game: "活动/宝石", rmb: "¥10-50", tasks: ["UI设计", "动态效果"] }
+                            { name: "头像框", game: "活动/宝石", rmb: "¥10-50", tasks: ["UI设计", "动态效果", "稀有度标识"] },
+                            { name: "登场特效", game: "840宝石", rmb: "¥84", tasks: ["登场动画", "特效设计", "音效"] },
+                            { name: "胜利姿势", game: "480-580宝石", rmb: "¥48-58", tasks: ["动作设计", "特效配合"] }
+                        ]
+                    },
+                    mount: {
+                        tiers: [
+                            { name: "滑板", game: "840-1200宝石", rmb: "¥84-120", tasks: ["滑板设计", "移动特效", "音效"] }
                         ]
                     }
                 },
-                model: { primary: "外观直售+通行证", pricing: "35-160元" },
+                model: { primary: "外观直售+通行证+联动", pricing: "35-500元" },
                 commercial: {
-                    model: "外观直售 + 赛季通行证 + 活动限定",
-                    channels: ["商城直售", "赛季通行证", "限时活动", "宝可梦中心联动"],
-                    cycle: "赛季更新，宝可梦外观按赛季投放",
-                    strategy: "IP价值+轻度竞技，外观驱动收藏欲"
+                    model: "外观直售 + 赛季通行证 + 活动限定 + 宝可梦中心联动",
+                    channels: ["商城直售", "赛季通行证", "限时活动", "宝可梦中心联动", "亿奥斯券兑换"],
+                    cycle: "赛季更新（约2个月），宝可梦外观持续投放，联动活动频繁",
+                    strategy: "IP价值+轻度竞技+收藏驱动，宝可梦粉丝经济，外观差异化"
                 },
                 payment: {
                     structure: "免费 + 内购",
-                    currencies: ["宝石", "亿奥斯币", "亿奥斯券"],
-                    monetization: "外观为主，付费率中等",
-                    tierCount: 3,
-                    priceRange: "¥35-300"
+                    currencies: ["宝石(付费)", "亿奥斯币(免费)", "亿奥斯券(活动)"],
+                    monetization: "外观为主，通行证为辅，付费率中等",
+                    tierCount: 4,
+                    priceRange: "¥35-500"
                 },
                 market: {
-                    scale: "月流水约1-2亿（国服）",
-                    users: "MAU约500万，宝可梦粉丝为主",
-                    growth: "稳定运营，IP影响力强",
-                    competitors: ["王者荣耀", "英雄联盟手游", "决战！平安京"]
+                    scale: "全球累计下载超1亿，国服月流水约1-2亿",
+                    users: "MAU约500万（国服），宝可梦粉丝+MOBA玩家",
+                    growth: "稳定运营，IP影响力强，持续更新",
+                    competitors: ["王者荣耀", "英雄联盟手游", "决战！平安京", "无尽对决"]
                 },
                 painPoints: [
-                    "宝可梦外观更新频率较低",
-                    "部分限定外观获取难度大",
-                    "国服与国际服差异大",
-                    "竞技性与外观平衡争议",
-                    "新手引导不足导致流失"
-                ]
+                    "部分宝可梦外观更新较慢",
+                    "限定外观返场规则不明确",
+                    "国服与国际服内容不同步",
+                    "部分潮流风格价格偏高",
+                    "新手玩家外观获取途径有限",
+                    "竞技玩家对外观需求较低"
+                ],
+                pokemon: {
+                    attackers: ["皮卡丘", "喷火龙", "耿鬼", "烈箭鹰", "闪焰王牌", "九尾(阿罗拉)", "仙子伊布", "狙射树枭", "魔墙人偶", "太阳伊布"],
+                    defenders: ["卡比兽", "呆壳兽", "岩石巨兽", "水箭龟", "象牙猪", "龙头地鼠"],
+                    speedsters: ["路卡利欧", "烈咬陆鲨", "杰拉奥拉", "武道熊师(一击流)", "武道熊师(连击流)", "阿罗拉雷丘", "索罗亚克"],
+                    supporters: ["胖丁", "吉利蛋", "沙奈朵", "太阳伊布", "白蓬蓬", "勾帕路翁"],
+                    all_rounders: ["怪力", "谜拟Q", "水君", "蜥蜴王", "烈焰猴", "藏饱栗鼠", "达摩狒狒(伽勒尔)", "劈斩司令"]
+                }
             },
             "第五人格": {
                 category: "casual", icon: "🎭", rank: 4,
@@ -2072,29 +2093,101 @@
                 }
             },
             "宝可梦大集结": {
-                "皮卡丘·时尚风格": {
+                "皮卡丘·队长风格": {
                     hero: "皮卡丘", price: "840宝石", rmb: "¥84",
-                    releaseDate: "2023-07-21", rarity: "时尚",
+                    releaseDate: "2021-07-21", rarity: "潮流风格",
                     obtain: "商城直售", videoUrl: "",
                     splashUrl: "",
                     modelUrl: "",
-                    description: "皮卡丘专属服装，可爱风格"
+                    description: "宝可梦队长主题，专属特效和回城动画"
                 },
-                "喷火龙·潮流风格": {
-                    hero: "喷火龙", price: "1200宝石", rmb: "¥120",
-                    releaseDate: "2023-08-15", rarity: "潮流",
-                    obtain: "商城直售", videoUrl: "",
-                    splashUrl: "",
-                    modelUrl: "",
-                    description: "喷火龙专属特效，火焰主题"
-                },
-                "路卡利欧·节日限定": {
-                    hero: "路卡利欧", price: "活动限定", rmb: "¥150",
-                    releaseDate: "2023-12-25", rarity: "限定",
+                "皮卡丘·节日风格": {
+                    hero: "皮卡丘", price: "活动限定", rmb: "¥50-150",
+                    releaseDate: "2023-12-25", rarity: "节日限定",
                     obtain: "活动获取", videoUrl: "",
                     splashUrl: "",
                     modelUrl: "",
-                    description: "圣诞节限定外观"
+                    description: "圣诞节限定，欢乐节日主题"
+                },
+                "喷火龙·火焰冠军": {
+                    hero: "喷火龙", price: "1200宝石", rmb: "¥120",
+                    releaseDate: "2022-03-15", rarity: "潮流风格",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "冠军主题，烈焰特效全覆盖"
+                },
+                "路卡利欧·格斗大师": {
+                    hero: "路卡利欧", price: "840宝石", rmb: "¥84",
+                    releaseDate: "2022-07-28", rarity: "潮流风格",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "格斗家主题，波动拳特效"
+                },
+                "耿鬼·万圣夜": {
+                    hero: "耿鬼", price: "活动限定", rmb: "¥100",
+                    releaseDate: "2022-10-31", rarity: "节日限定",
+                    obtain: "万圣节活动", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "万圣节限定，幽灵主题"
+                },
+                "谜拟Q·幽灵公主": {
+                    hero: "谜拟Q", price: "1200宝石", rmb: "¥120",
+                    releaseDate: "2023-02-14", rarity: "潮流风格",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "情人节限定，幽灵公主主题"
+                },
+                "卡比兽·美食家": {
+                    hero: "卡比兽", price: "580宝石", rmb: "¥58",
+                    releaseDate: "2022-05-01", rarity: "时尚风格",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "美食主题，可爱厨师装扮"
+                },
+                "杰拉奥拉·雷电战士": {
+                    hero: "杰拉奥拉", price: "1200宝石", rmb: "¥120",
+                    releaseDate: "2023-08-10", rarity: "潮流风格",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "雷电主题，高速移动特效"
+                },
+                "沙奈朵·冰雪女王": {
+                    hero: "沙奈朵", price: "840宝石", rmb: "¥84",
+                    releaseDate: "2023-01-20", rarity: "潮流风格",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "冰雪主题，优雅仙子风格"
+                },
+                "闪焰王牌·足球明星": {
+                    hero: "闪焰王牌", price: "1200宝石", rmb: "¥120",
+                    releaseDate: "2023-06-15", rarity: "潮流风格",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "足球主题，火焰足球特效"
+                },
+                "武道熊师·一击流大师": {
+                    hero: "武道熊师", price: "840宝石", rmb: "¥84",
+                    releaseDate: "2023-09-01", rarity: "潮流风格",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "空手道大师主题，一击必杀风格"
+                },
+                "胖丁·偶像歌手": {
+                    hero: "胖丁", price: "580宝石", rmb: "¥58",
+                    releaseDate: "2022-04-15", rarity: "时尚风格",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "偶像主题，可爱歌手装扮"
                 }
             },
             "第五人格": {
