@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v3.9</title>
+    <title>游戏外观商业化分析平台 v4.0</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -665,16 +665,29 @@
                             <div style="display: flex; gap: 10px; margin-bottom: 16px;">
                                 <select id="skinGameSelect" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem; min-width: 140px;">
                                     <option value="">选择游戏</option>
-                                    <option value="王者荣耀">王者荣耀</option>
-                                    <option value="英雄联盟">英雄联盟</option>
-                                    <option value="原神">原神</option>
-                                    <option value="和平精英">和平精英</option>
-                                    <option value="永劫无间">永劫无间</option>
-                                    <option value="崩坏：星穹铁道">崩坏：星穹铁道</option>
-                                    <option value="蛋仔派对">蛋仔派对</option>
-                                    <option value="金铲铲之战">金铲铲之战</option>
-                                    <option value="鸣潮">鸣潮</option>
-                                    <option value="绝区零">绝区零</option>
+                                    <optgroup label="📱 MOBA">
+                                        <option value="王者荣耀">王者荣耀</option>
+                                        <option value="英雄联盟">英雄联盟</option>
+                                        <option value="英雄联盟手游">英雄联盟手游</option>
+                                        <option value="宝可梦大集结">宝可梦大集结</option>
+                                    </optgroup>
+                                    <optgroup label="🎮 二次元/RPG">
+                                        <option value="原神">原神</option>
+                                        <option value="鸣潮">鸣潮</option>
+                                        <option value="绝区零">绝区零</option>
+                                        <option value="崩坏：星穹铁道">崩坏：星穹铁道</option>
+                                        <option value="永劫无间">永劫无间</option>
+                                    </optgroup>
+                                    <optgroup label="🔫 FPS/射击">
+                                        <option value="和平精英">和平精英</option>
+                                        <option value="无畏契约">无畏契约</option>
+                                        <option value="暗区突围">暗区突围</option>
+                                    </optgroup>
+                                    <optgroup label="🎲 休闲/其他">
+                                        <option value="蛋仔派对">蛋仔派对</option>
+                                        <option value="第五人格">第五人格</option>
+                                        <option value="金铲铲之战">金铲铲之战</option>
+                                    </optgroup>
                                 </select>
                                 <input type="text" style="flex:1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem;" placeholder="输入外观名称搜索...（如：银白之翼 亚瑟）" id="skinSearchInput">
                                 <button class="btn btn-primary" id="skinSearchBtn">搜索</button>
@@ -1213,20 +1226,236 @@
                     "免费棋盘选择少",
                     "部分玩家认为性价比低"
                 ]
+            },
+            "宝可梦大集结": {
+                category: "moba", icon: "⚡", rank: 4,
+                overview: "宝可梦IP MOBA，简化对战+外观商业化",
+                appearanceTypes: ["skin", "decoration", "vfx", "mount"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "时尚风格", game: "350-840宝石", rmb: "¥35-84", tasks: ["角色换色", "服装变化"] },
+                            { name: "潮流风格", game: "1200-1600宝石", rmb: "¥120-160", tasks: ["全新模型", "专属特效", "回城动画"] },
+                            { name: "节日限定", game: "活动/抽奖", rmb: "¥50-300", tasks: ["主题设计", "专属特效", "限定标识"] }
+                        ]
+                    },
+                    decoration: {
+                        tiers: [
+                            { name: "对战服", game: "宝石购买", rmb: "¥30-60", tasks: ["服装设计", "适配多角色"] },
+                            { name: "头像框", game: "活动/宝石", rmb: "¥10-50", tasks: ["UI设计", "动态效果"] }
+                        ]
+                    }
+                },
+                model: { primary: "外观直售+通行证", pricing: "35-160元" },
+                commercial: {
+                    model: "外观直售 + 赛季通行证 + 活动限定",
+                    channels: ["商城直售", "赛季通行证", "限时活动", "宝可梦中心联动"],
+                    cycle: "赛季更新，宝可梦外观按赛季投放",
+                    strategy: "IP价值+轻度竞技，外观驱动收藏欲"
+                },
+                payment: {
+                    structure: "免费 + 内购",
+                    currencies: ["宝石", "亿奥斯币", "亿奥斯券"],
+                    monetization: "外观为主，付费率中等",
+                    tierCount: 3,
+                    priceRange: "¥35-300"
+                },
+                market: {
+                    scale: "月流水约1-2亿（国服）",
+                    users: "MAU约500万，宝可梦粉丝为主",
+                    growth: "稳定运营，IP影响力强",
+                    competitors: ["王者荣耀", "英雄联盟手游", "决战！平安京"]
+                },
+                painPoints: [
+                    "宝可梦外观更新频率较低",
+                    "部分限定外观获取难度大",
+                    "国服与国际服差异大",
+                    "竞技性与外观平衡争议",
+                    "新手引导不足导致流失"
+                ]
+            },
+            "第五人格": {
+                category: "casual", icon: "🎭", rank: 4,
+                overview: "非对称竞技，角色外观商业化成熟",
+                appearanceTypes: ["skin", "costume", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "旧装/初始", game: "免费/线索", rmb: "免费", tasks: ["基础模型", "简单贴图"] },
+                            { name: "独特", game: "318-518回声", rmb: "¥32-52", tasks: ["模型调整", "基础特效"] },
+                            { name: "奇珍", game: "858-1288回声", rmb: "¥86-129", tasks: ["全新模型", "专属特效", "随身物品"] },
+                            { name: "稀世", game: "活动/抽奖", rmb: "¥100-1000", tasks: ["顶级设计", "全套特效", "限定标识"] },
+                            { name: "虚妄杰作", game: "抽奖", rmb: "¥500-3000+", tasks: ["双形态", "顶级特效", "专属动画"] }
+                        ]
+                    }
+                },
+                model: { primary: "外观直售+抽奖", pricing: "32-3000元" },
+                commercial: {
+                    model: "外观直售 + 抽奖 + 赛季通行证 + 联动活动",
+                    channels: ["商城直售", "精华抽奖", "赛季通行证", "联动活动"],
+                    cycle: "赛季更新，联动活动频繁",
+                    strategy: "IP联动驱动，收藏价值，哥特美学"
+                },
+                payment: {
+                    structure: "免费 + 内购",
+                    currencies: ["回声", "灵感", "碎片"],
+                    monetization: "外观为主，ARPU中等",
+                    tierCount: 5,
+                    priceRange: "¥32-3000+"
+                },
+                market: {
+                    scale: "月流水约2-3亿",
+                    users: "MAU约800万，女性用户占比高",
+                    growth: "稳定运营，联动频繁",
+                    competitors: ["黎明杀机", "猫鼠游戏", "Among Us"]
+                },
+                painPoints: [
+                    "虚妄杰作获取成本过高",
+                    "抽奖概率争议",
+                    "部分限定皮肤返场规则不明",
+                    "联动活动过于频繁",
+                    "角色平衡性与外观无关"
+                ]
+            },
+            "英雄联盟手游": {
+                category: "moba", icon: "⚔️", rank: 3,
+                overview: "端游移植MOBA，皮肤系统成熟",
+                appearanceTypes: ["skin", "decoration", "vfx", "mount"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "普通", game: "450点券", rmb: "¥45", tasks: ["模型换色", "简单特效"] },
+                            { name: "史诗", game: "790-990点券", rmb: "¥79-99", tasks: ["全新模型", "技能特效", "回城特效"] },
+                            { name: "传说", game: "1320-1450点券", rmb: "¥132-145", tasks: ["顶级模型", "全套特效", "专属语音", "击杀特效"] },
+                            { name: "终极", game: "1990点券", rmb: "¥199", tasks: ["多形态", "全套定制", "专属语音包", "专属交互"] }
+                        ]
+                    }
+                },
+                model: { primary: "皮肤直售", pricing: "45-199元" },
+                commercial: {
+                    model: "皮肤直售 + 通行证 + 活动限定",
+                    channels: ["商城直售", "赛季通行证", "限时活动"],
+                    cycle: "每周更新，赛季通行证",
+                    strategy: "端游IP+移动端优化，皮肤驱动收入"
+                },
+                payment: {
+                    structure: "免费 + 内购",
+                    currencies: ["点券", "橙色精萃", "蓝色精萃"],
+                    monetization: "皮肤为主，ARPU中等",
+                    tierCount: 4,
+                    priceRange: "¥45-199"
+                },
+                market: {
+                    scale: "月流水约1-1.5亿",
+                    users: "MAU约600万，LOL玩家为主",
+                    growth: "稳定运营，用户粘性强",
+                    competitors: ["王者荣耀", "决战！平安京", "宝可梦大集结"]
+                },
+                painPoints: [
+                    "皮肤更新频率低于端游",
+                    "部分端游限定皮肤未移植",
+                    "活动奖励相对保守",
+                    "排位体验影响付费意愿",
+                    "皮肤特效与端游有差距"
+                ]
+            },
+            "无畏契约": {
+                category: "fps", icon: "🎯", rank: 5,
+                overview: "战术射击，皮肤经济成熟",
+                appearanceTypes: ["weapon_skin", "decoration", "vfx"],
+                pricing: {
+                    weapon_skin: {
+                        tiers: [
+                            { name: "精选", game: "875 VP", rmb: "¥58", tasks: ["基础模型", "简单配色"] },
+                            { name: "豪华", game: "1275 VP", rmb: "¥85", tasks: ["全新模型", "开火音效"] },
+                            { name: "至尊", game: "1775 VP", rmb: "¥118", tasks: ["主题设计", "特效音效", "击杀特效", "换弹动画"] },
+                            { name: "终极", game: "2175-2675 VP", rmb: "¥145-178", tasks: ["全套特效", "变异形态", "专属动画", "击杀计数"] },
+                            { name: "限定/联名", game: "活动/抽奖", rmb: "¥100-500", tasks: ["独特主题", "全套定制", "限定标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "武器皮肤直售+通行证", pricing: "58-500元" },
+                commercial: {
+                    model: "皮肤直售 + 赛季通行证 + 夜市折扣",
+                    channels: ["商城直售", "赛季通行证", "夜市折扣", "活动限定"],
+                    cycle: "皮肤系列更新，夜市每赛季",
+                    strategy: "皮肤差异化+收藏价值，FPS皮肤标杆"
+                },
+                payment: {
+                    structure: "免费 + 内购",
+                    currencies: ["VP点券", "R点", "王国币"],
+                    monetization: "皮肤为主，ARPU较高",
+                    tierCount: 5,
+                    priceRange: "¥58-500"
+                },
+                market: {
+                    scale: "全球月流水超$50M，中国区增长快",
+                    users: "全球MAU超2000万",
+                    growth: "高速增长，电竞生态成熟",
+                    competitors: ["CS2", "守望先锋2", "Apex英雄"]
+                },
+                painPoints: [
+                    "终极皮肤价格偏高",
+                    "限定皮肤获取难度大",
+                    "部分皮肤特效过于花哨影响竞技",
+                    "夜市折扣随机性强",
+                    "国服与国际服不同步"
+                ]
+            },
+            "暗区突围": {
+                category: "fps", icon: "🔫", rank: 4,
+                overview: "硬核射击，皮肤系统逐步完善",
+                appearanceTypes: ["weapon_skin", "costume", "decoration"],
+                pricing: {
+                    weapon_skin: {
+                        tiers: [
+                            { name: "普通涂装", game: "柯恩币", rmb: "游戏币", tasks: ["基础涂装", "简单纹理"] },
+                            { name: "高级涂装", game: "点券", rmb: "¥30-80", tasks: ["主题涂装", "磨损效果"] },
+                            { name: "限定涂装", game: "活动/抽奖", rmb: "¥50-300", tasks: ["主题设计", "稀有标识", "专属音效"] }
+                        ]
+                    }
+                },
+                model: { primary: "皮肤直售+通行证", pricing: "30-300元" },
+                commercial: {
+                    model: "皮肤直售 + 赛季通行证 + 保险箱",
+                    channels: ["商城直售", "赛季通行证", "活动限定"],
+                    cycle: "赛季更新，皮肤定期投放",
+                    strategy: "硬核玩法+外观付费，保险箱为核心付费点"
+                },
+                payment: {
+                    structure: "免费 + 内购",
+                    currencies: ["点券", "柯恩币"],
+                    monetization: "保险箱+外观，ARPU中等",
+                    tierCount: 3,
+                    priceRange: "¥30-300"
+                },
+                market: {
+                    scale: "月流水约1-2亿",
+                    users: "MAU约500万，硬核玩家为主",
+                    growth: "快速增长，差异化竞争",
+                    competitors: ["和平精英", "逃离塔科夫", "萤火突击"]
+                },
+                painPoints: [
+                    "保险箱付费争议",
+                    "皮肤对外观辨识度影响",
+                    "硬核玩家对外观需求较低",
+                    "部分皮肤影响隐蔽性",
+                    "商业化与硬核玩法的平衡"
+                ]
             }
         };
 
         // 品类TOP游戏 - 覆盖全平台
         const TOP_GAMES = {
-            all: ["王者荣耀", "英雄联盟", "原神", "和平精英", "鸣潮", "绝区零", "永劫无间", "蛋仔派对", "金铲铲之战", "崩坏：星穹铁道"],
-            moba: ["王者荣耀", "英雄联盟", "DOTA2", "英雄联盟手游", "决战！平安京", "无尽对决", "虚荣"],
-            fps: ["和平精英", "CS2", "VALORANT", "Apex英雄", "穿越火线", "堡垒之夜", "绝地求生", "使命召唤手游", "守望先锋2", "彩虹六号"],
-            simulation: ["原神", "鸣潮", "绝区零", "梦幻西游", "魔兽世界", "剑网3", "逆水寒", "最终幻想14", "激战2", "天涯明月刀"],
-            rpg: ["永劫无间", "明日方舟", "阴阳师", "第五人格", "崩坏3", "碧蓝航线", "碧蓝档案", "Fate/Grand Order", "公主连结"],
-            action: ["鸣潮", "永劫无间", "崩坏3", "绝区零", "幻塔", "黑神话：悟空", "艾尔登法环", "怪物猎人：世界", "赛博朋克2077", "地下城与勇士"],
-            card: ["金铲铲之战", "炉石传说", "云顶之弈", "三国杀移动版"],
-            strategy: ["率土之滨", "万国觉醒", "文明6", "星际争霸2"],
-            casual: ["蛋仔派对", "第五人格", "QQ飞车手游", "跑跑卡丁车", "糖豆人", "光·遇", "动物森友会"]
+            all: ["王者荣耀", "英雄联盟", "原神", "和平精英", "鸣潮", "绝区零", "永劫无间", "蛋仔派对", "金铲铲之战", "崩坏：星穹铁道", "宝可梦大集结", "第五人格", "明日方舟", "阴阳师", "逆水寒手游", "英雄联盟手游", "DNF手游", "梦幻西游", "穿越火线", "QQ飞车手游"],
+            moba: ["王者荣耀", "英雄联盟", "DOTA2", "英雄联盟手游", "决战！平安京", "无尽对决", "虚荣", "宝可梦大集结", "漫威超级战争", "传说对决", "王者万象棋"],
+            fps: ["和平精英", "CS2", "VALORANT", "Apex英雄", "穿越火线", "堡垒之夜", "绝地求生", "使命召唤手游", "守望先锋2", "彩虹六号", "无畏契约", "暗区突围", "高能英雄", "三角洲行动"],
+            simulation: ["原神", "鸣潮", "绝区零", "梦幻西游", "魔兽世界", "剑网3", "逆水寒", "最终幻想14", "激战2", "天涯明月刀", "光·遇", "动物森友会", "星露谷物语", "模拟城市"],
+            rpg: ["永劫无间", "明日方舟", "阴阳师", "第五人格", "崩坏3", "碧蓝航线", "碧蓝档案", "Fate/Grand Order", "公主连结", "原神", "鸣潮", "绝区零", "崩坏：星穹铁道", "幻塔", "龙族幻想"],
+            action: ["鸣潮", "永劫无间", "崩坏3", "绝区零", "幻塔", "黑神话：悟空", "艾尔登法环", "怪物猎人：世界", "赛博朋克2077", "地下城与勇士", "鬼泣5", "只狼", "战神", "刺客信条"],
+            card: ["金铲铲之战", "炉石传说", "云顶之弈", "三国杀移动版", "游戏王大师决斗", "影之诗", "昆特牌", "百闻牌"],
+            strategy: ["率土之滨", "万国觉醒", "文明6", "星际争霸2", "三国志战略版", "部落冲突", "皇室战争", "帝国时代4", "全面战争"],
+            casual: ["蛋仔派对", "第五人格", "QQ飞车手游", "跑跑卡丁车", "糖豆人", "光·遇", "动物森友会", "元梦之星", "摩尔庄园", "奥比岛", "迷你世界", "我的世界", "Among Us"]
         };
 
         // 实时榜单数据 - 覆盖iOS/Android/Steam/主机多平台
@@ -1840,6 +2069,104 @@
                     splashUrl: "",
                     modelUrl: "",
                     description: "街头潮流主题"
+                }
+            },
+            "宝可梦大集结": {
+                "皮卡丘·时尚风格": {
+                    hero: "皮卡丘", price: "840宝石", rmb: "¥84",
+                    releaseDate: "2023-07-21", rarity: "时尚",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "皮卡丘专属服装，可爱风格"
+                },
+                "喷火龙·潮流风格": {
+                    hero: "喷火龙", price: "1200宝石", rmb: "¥120",
+                    releaseDate: "2023-08-15", rarity: "潮流",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "喷火龙专属特效，火焰主题"
+                },
+                "路卡利欧·节日限定": {
+                    hero: "路卡利欧", price: "活动限定", rmb: "¥150",
+                    releaseDate: "2023-12-25", rarity: "限定",
+                    obtain: "活动获取", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "圣诞节限定外观"
+                }
+            },
+            "第五人格": {
+                "杰克·盛宴伯爵": {
+                    hero: "杰克", price: "1288回声", rmb: "¥129",
+                    releaseDate: "2022-10-20", rarity: "奇珍",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "吸血鬼主题，哥特美学"
+                },
+                "红蝶·罗生门": {
+                    hero: "红蝶", price: "活动抽奖", rmb: "¥200-800",
+                    releaseDate: "2023-01-15", rarity: "稀世",
+                    obtain: "精华抽奖", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "日式恐怖主题，限定皮肤"
+                },
+                "园丁·幽灵公主": {
+                    hero: "园丁", price: "858回声", rmb: "¥86",
+                    releaseDate: "2022-06-30", rarity: "奇珍",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "森林精灵主题，清新风格"
+                }
+            },
+            "无畏契约": {
+                "掠夺印象·狂徒": {
+                    hero: "狂徒", price: "1775 VP", rmb: "¥118",
+                    releaseDate: "2023-09-15", rarity: "至尊",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "龙族主题，全套特效"
+                },
+                "紫金狂潮·幻象": {
+                    hero: "幻象", price: "2175 VP", rmb: "¥145",
+                    releaseDate: "2024-01-20", rarity: "终极",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "紫金主题，变形特效"
+                }
+            },
+            "英雄联盟手游": {
+                "源计划·亚索": {
+                    hero: "亚索", price: "990点券", rmb: "¥99",
+                    releaseDate: "2022-10-15", rarity: "史诗",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "赛博机甲主题，科幻风格"
+                },
+                "星之守护者·阿狸": {
+                    hero: "阿狸", price: "1320点券", rmb: "¥132",
+                    releaseDate: "2023-07-20", rarity: "传说",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "魔法少女主题，璀璨特效"
+                }
+            },
+            "暗区突围": {
+                "暗影猎手·AK74": {
+                    hero: "AK74", price: "点券", rmb: "¥68",
+                    releaseDate: "2023-11-15", rarity: "高级",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "暗影主题涂装"
                 }
             }
         };
