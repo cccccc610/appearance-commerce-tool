@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v3.8</title>
+    <title>游戏外观商业化分析平台 v3.9</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -191,10 +191,6 @@
         .month-item.current { border-color: var(--accent); background: rgba(6, 182, 212, 0.15); }
         .month-item.selected { background: var(--primary); border-color: var(--primary); color: white; }
 
-        /* Date Quick Jump */
-        .date-quick-jump { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
-        .date-quick-jump input[type="date"] { color-scheme: dark; }
-        
         /* Date Detail Popup */
         .date-detail-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); display: none; justify-content: center; align-items: center; z-index: 1001; }
         .date-detail-overlay.show { display: flex; }
@@ -342,6 +338,12 @@
         .search-link-chip.google:hover { background: #4285f4; color: white; }
         .search-link-chip.twitter { border-color: #1da1f2; }
         .search-link-chip.twitter:hover { background: #1da1f2; color: white; }
+        
+        /* 外观品类选择器（详情展示） */
+        .detail-type-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .detail-type-btn { padding: 8px 14px; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; color: var(--text-secondary); font-size: 0.8rem; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 4px; }
+        .detail-type-btn:hover { border-color: var(--primary-light); color: var(--text); }
+        .detail-type-btn.active { background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); border-color: transparent; color: white; }
 
         /* 美术拆解可编辑表格 */
         .breakdown-table-container { overflow-x: auto; }
@@ -647,17 +649,34 @@
                     <!-- 皮肤详情展示 -->
                     <div class="card" style="margin-top: 12px;">
                         <div class="card-header">
-                            <div class="card-title">🖼️ 皮肤详情展示</div>
-                            <span style="font-size: 0.7rem; color: var(--text-muted);">参考 lolskin.info 格式</span>
+                            <div class="card-title">🖼️ 外观详情展示</div>
+                            <span style="font-size: 0.7rem; color: var(--text-muted);">支持多品类外观查询</span>
                         </div>
                         <div class="card-body">
+                            <!-- 外观品类选择器 -->
+                            <div class="detail-type-selector" style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px;">
+                                <div class="detail-type-btn active" data-type="skin"><span>👤</span>皮肤</div>
+                                <div class="detail-type-btn" data-type="weapon_skin"><span>🔫</span>武器</div>
+                                <div class="detail-type-btn" data-type="costume"><span>👔</span>服饰</div>
+                                <div class="detail-type-btn" data-type="mount"><span>🐴</span>坐骑</div>
+                                <div class="detail-type-btn" data-type="decoration"><span>✨</span>装饰</div>
+                                <div class="detail-type-btn" data-type="board"><span>♟️</span>棋盘</div>
+                            </div>
                             <div style="display: flex; gap: 10px; margin-bottom: 16px;">
-                                <select id="skinGameSelect" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem;">
+                                <select id="skinGameSelect" style="background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem; min-width: 140px;">
                                     <option value="">选择游戏</option>
                                     <option value="王者荣耀">王者荣耀</option>
                                     <option value="英雄联盟">英雄联盟</option>
+                                    <option value="原神">原神</option>
+                                    <option value="和平精英">和平精英</option>
+                                    <option value="永劫无间">永劫无间</option>
+                                    <option value="崩坏：星穹铁道">崩坏：星穹铁道</option>
+                                    <option value="蛋仔派对">蛋仔派对</option>
+                                    <option value="金铲铲之战">金铲铲之战</option>
+                                    <option value="鸣潮">鸣潮</option>
+                                    <option value="绝区零">绝区零</option>
                                 </select>
-                                <input type="text" style="flex:1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem;" placeholder="输入皮肤名称搜索...（如：灵魂莲华 阿狸）" id="skinSearchInput">
+                                <input type="text" style="flex:1; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; color: var(--text); font-size: 0.85rem;" placeholder="输入外观名称搜索...（如：银白之翼 亚瑟）" id="skinSearchInput">
                                 <button class="btn btn-primary" id="skinSearchBtn">搜索</button>
                             </div>
                             <div id="skinDetailResult"></div>
@@ -722,14 +741,6 @@
                 <button id="nextYear">▶</button>
             </div>
             <div class="month-grid" id="monthGrid"></div>
-            <!-- 新增日期快速定位 -->
-            <div class="date-quick-jump">
-                <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 8px;">快速定位到具体日期</div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <input type="date" id="quickJumpDate" style="flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 8px; color: var(--text); font-size: 0.85rem;">
-                    <button class="btn btn-primary" style="padding: 8px 16px;" id="quickJumpBtn">跳转</button>
-                </div>
-            </div>
         </div>
     </div>
     
@@ -1651,6 +1662,22 @@
                     splashUrl: "https://pvp.qq.com/web201605/js/herodata/xiahoudun/3.jpg",
                     modelUrl: "",
                     description: "机甲主题，双形态设计"
+                },
+                "凤求凰 李白": {
+                    hero: "李白", price: "1788点券", rmb: "¥179",
+                    releaseDate: "2017-02-14", rarity: "传说",
+                    obtain: "限时返场", videoUrl: "",
+                    splashUrl: "https://pvp.qq.com/web201605/js/herodata/libai/3.jpg",
+                    modelUrl: "",
+                    description: "凤凰主题，唯美仙侠风格"
+                },
+                "电玩小子 鲁班七号": {
+                    hero: "鲁班七号", price: "2888点券", rmb: "¥289",
+                    releaseDate: "2016-08-02", rarity: "史诗",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "https://pvp.qq.com/web201605/js/herodata/lubanqihao/2.jpg",
+                    modelUrl: "",
+                    description: "像素电玩主题，趣味风格"
                 }
             },
             "英雄联盟": {
@@ -1669,6 +1696,150 @@
                     splashUrl: "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_8.jpg",
                     modelUrl: "https://ddragon.leagueoflegends.com/cdn/img/champion/loading/Ahri_8.jpg",
                     description: "K/DA女团主题，流行音乐风格"
+                },
+                "源计划 亚索": {
+                    hero: "亚索", price: "1350 RP", rmb: "¥68",
+                    releaseDate: "2016-06-29", rarity: "史诗",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Yasuo_5.jpg",
+                    modelUrl: "",
+                    description: "赛博机甲主题，科幻风格"
+                }
+            },
+            "原神": {
+                "甘雨·霓裾翩跹": {
+                    hero: "甘雨", price: "1680创世结晶", rmb: "¥168",
+                    releaseDate: "2024-01-01", rarity: "4星",
+                    obtain: "商城购买", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "新春主题服饰，优雅旗袍设计"
+                },
+                "刻晴·霓裾翩跹": {
+                    hero: "刻晴", price: "1680创世结晶", rmb: "¥168",
+                    releaseDate: "2022-01-05", rarity: "4星",
+                    obtain: "商城购买", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "新春主题服饰，古典与现代结合"
+                },
+                "芭芭拉·闪耀协奏": {
+                    hero: "芭芭拉", price: "1680创世结晶", rmb: "¥168",
+                    releaseDate: "2021-06-29", rarity: "4星",
+                    obtain: "商城购买", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "偶像演唱会主题，闪耀风格"
+                }
+            },
+            "和平精英": {
+                "梦幻火箭套装": {
+                    hero: "女角色", price: "军需抽奖", rmb: "¥500-2000",
+                    releaseDate: "2020-07-28", rarity: "粉色稀有",
+                    obtain: "军需抽奖", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "科幻火箭主题，含服装/头盔/背包/降落伞"
+                },
+                "金羽特工套装": {
+                    hero: "女角色", price: "军需抽奖", rmb: "¥800-3000",
+                    releaseDate: "2021-01-20", rarity: "粉色稀有",
+                    obtain: "军需抽奖", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "特工主题，金色羽毛元素"
+                },
+                "沙漠玫瑰套装": {
+                    hero: "女角色", price: "军需抽奖", rmb: "¥300-1500",
+                    releaseDate: "2022-03-15", rarity: "紫色稀有",
+                    obtain: "军需抽奖", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "沙漠风情主题，异域风格"
+                }
+            },
+            "永劫无间": {
+                "胡桃·白丝太刀": {
+                    hero: "胡桃", price: "1500金块", rmb: "¥150",
+                    releaseDate: "2021-08-12", rarity: "极品",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "经典皮肤，禅意设计"
+                },
+                "季沧海·炎神": {
+                    hero: "季沧海", price: "1800金块", rmb: "¥180",
+                    releaseDate: "2022-06-30", rarity: "极品",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "火焰主题，霸气设计"
+                }
+            },
+            "崩坏：星穹铁道": {
+                "开拓者·列车长": {
+                    hero: "开拓者", price: "免费", rmb: "¥0",
+                    releaseDate: "2023-04-26", rarity: "默认",
+                    obtain: "剧情获得", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "列车员制服主题"
+                }
+            },
+            "蛋仔派对": {
+                "潮流蛋仔系列": {
+                    hero: "蛋仔", price: "蛋币购买", rmb: "¥20-50",
+                    releaseDate: "2023-01-01", rarity: "普通",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "潮流服饰主题，可爱风格"
+                },
+                "机械蛋仔": {
+                    hero: "蛋仔", price: "抽奖", rmb: "¥50-200",
+                    releaseDate: "2023-06-15", rarity: "稀有",
+                    obtain: "盲盒抽奖", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "机甲主题，机械风格"
+                }
+            },
+            "金铲铲之战": {
+                "星之守护者棋盘": {
+                    hero: "棋盘", price: "7900点券", rmb: "¥790",
+                    releaseDate: "2022-07-14", rarity: "史诗",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "魔法少女主题棋盘，动态效果"
+                },
+                "小小英雄·河灵": {
+                    hero: "小小英雄", price: "4500点券", rmb: "¥450",
+                    releaseDate: "2022-01-01", rarity: "稀有",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "河流精灵主题，可爱风格"
+                }
+            },
+            "鸣潮": {
+                "漂泊者·晨曦": {
+                    hero: "漂泊者", price: "680鸣潮币", rmb: "¥68",
+                    releaseDate: "2024-05-23", rarity: "稀有",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "晨曦主题，清新风格"
+                }
+            },
+            "绝区零": {
+                "狡兔屋主题": {
+                    hero: "狡兔屋", price: "680菲林", rmb: "¥68",
+                    releaseDate: "2024-07-04", rarity: "稀有",
+                    obtain: "商城直售", videoUrl: "",
+                    splashUrl: "",
+                    modelUrl: "",
+                    description: "街头潮流主题"
                 }
             }
         };
@@ -2335,11 +2506,38 @@
         function initCreativeTab() {
             renderCreativeTools();
             
+            // 美术拆解工具 - 外观品类选择
             document.querySelectorAll('.appearance-type-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     document.querySelectorAll('.appearance-type-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     breakdownType = btn.dataset.type;
+                    
+                    // 同步详情展示的品类选择
+                    document.querySelectorAll('.detail-type-btn').forEach(b => {
+                        b.classList.toggle('active', b.dataset.type === breakdownType);
+                    });
+                });
+            });
+
+            // 外观详情展示 - 品类选择
+            document.querySelectorAll('.detail-type-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.detail-type-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    breakdownType = btn.dataset.type;
+                    
+                    // 同步拆解工具的品类选择
+                    document.querySelectorAll('.appearance-type-btn').forEach(b => {
+                        b.classList.toggle('active', b.dataset.type === breakdownType);
+                    });
+                    
+                    // 如果有搜索内容，自动重新渲染
+                    const skinName = document.getElementById('skinSearchInput').value.trim();
+                    const game = document.getElementById('skinGameSelect').value;
+                    if (skinName && game) {
+                        renderSkinDetail(game, skinName);
+                    }
                 });
             });
 
@@ -2355,13 +2553,28 @@
                 renderBreakdown(input);
             });
 
-            // 皮肤详情搜索功能
+            // 皮肤详情搜索功能 - 自动联动拆解工具
             document.getElementById('skinSearchBtn').addEventListener('click', () => {
                 const game = document.getElementById('skinGameSelect').value;
                 const skinName = document.getElementById('skinSearchInput').value.trim();
                 if (!game) { showToast('请选择游戏', 'warning'); return; }
-                if (!skinName) { showToast('请输入皮肤名称', 'warning'); return; }
+                if (!skinName) { showToast('请输入外观名称', 'warning'); return; }
                 renderSkinDetail(game, skinName);
+                
+                // 自动填充拆解工具
+                document.getElementById('breakdownInput').value = skinName;
+            });
+            
+            // 拆解工具输入时，自动尝试匹配详情
+            document.getElementById('breakdownInput').addEventListener('change', () => {
+                const input = document.getElementById('breakdownInput').value.trim();
+                if (input) {
+                    const matched = findMatchingSkin(input);
+                    if (matched) {
+                        document.getElementById('skinGameSelect').value = matched.game;
+                        document.getElementById('skinSearchInput').value = input;
+                    }
+                }
             });
         }
 
@@ -2378,6 +2591,13 @@
                     </a>
                 `).join('');
             });
+        }
+
+        // 快速搜索详情（用于推荐点击）
+        function quickSearchDetail(game, skinName) {
+            document.getElementById('skinGameSelect').value = game;
+            document.getElementById('skinSearchInput').value = skinName;
+            renderSkinDetail(game, skinName);
         }
 
         // 根据输入查找匹配的皮肤
@@ -2616,12 +2836,33 @@
             const container = document.getElementById('skinDetailResult');
             const gameData = SKIN_DETAIL_DATA[game];
             
+            // 获取外观品类名称
+            const typeNames = {
+                'skin': '皮肤',
+                'weapon_skin': '武器',
+                'costume': '服饰',
+                'mount': '坐骑',
+                'decoration': '装饰',
+                'board': '棋盘',
+                'vfx': '特效'
+            };
+            const currentTypeName = typeNames[breakdownType] || '外观';
+            
             if (!gameData) {
                 container.innerHTML = `
                     <div class="skin-detail-empty">
                         <div style="font-size: 2rem; margin-bottom: 12px;">🔍</div>
-                        <div style="color: var(--text-muted);">暂无"${game}"的皮肤数据</div>
-                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">当前支持：王者荣耀、英雄联盟</div>
+                        <div style="color: var(--text-muted);">暂无"${game}"的${currentTypeName}数据</div>
+                        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 8px;">当前支持：王者荣耀、英雄联盟、原神、和平精英、永劫无间、崩坏：星穹铁道、蛋仔派对、金铲铲之战、鸣潮、绝区零</div>
+                        <div style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 12px;">
+                            <strong>💡 试试这些热门外观：</strong>
+                        </div>
+                        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
+                            <span class="skin-chip" onclick="quickSearchDetail('王者荣耀', '凤求凰 李白')">凤求凰 李白</span>
+                            <span class="skin-chip" onclick="quickSearchDetail('英雄联盟', '灵魂莲华 阿狸')">灵魂莲华 阿狸</span>
+                            <span class="skin-chip" onclick="quickSearchDetail('原神', '甘雨·霓裾翩跹')">甘雨·霓裾翩跹</span>
+                            <span class="skin-chip" onclick="quickSearchDetail('和平精英', '梦幻火箭套装')">梦幻火箭套装</span>
+                        </div>
                     </div>
                 `;
                 return;
@@ -2635,18 +2876,22 @@
             );
 
             if (!matchedKey) {
-                // 显示该游戏所有可用皮肤
+                // 显示该游戏所有可用外观
                 container.innerHTML = `
                     <div class="skin-detail-empty">
                         <div style="font-size: 2rem; margin-bottom: 12px;">🔍</div>
                         <div style="color: var(--text-muted);">未找到"${skinName}"</div>
                         <div style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 12px;">
-                            <strong>可用的皮肤：</strong>
+                            <strong>${game} 可用的${currentTypeName}：</strong>
                         </div>
                         <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;">
                             ${skinKeys.map(key => `
                                 <span class="skin-chip" onclick="document.getElementById('skinSearchInput').value='${key}'; renderSkinDetail('${game}', '${key}');">${key}</span>
                             `).join('')}
+                        </div>
+                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">🌐 前往搜索：</div>
+                            ${generateSearchLinks(game, skinName, currentTypeName)}
                         </div>
                     </div>
                 `;
@@ -2674,7 +2919,7 @@
                             <div class="info-sub">${skin.rmb}</div>
                         </div>
                         <div class="skin-info-card">
-                            <div class="info-label">👤 英雄</div>
+                            <div class="info-label">👤 角色</div>
                             <div class="info-value">${skin.hero}</div>
                         </div>
                         <div class="skin-info-card">
@@ -2917,22 +3162,6 @@
             document.getElementById('nextYear').addEventListener('click', () => {
                 pickerYear++;
                 renderMonthGrid();
-            });
-            
-            // 日期快速定位
-            document.getElementById('quickJumpBtn').addEventListener('click', () => {
-                const dateInput = document.getElementById('quickJumpDate').value;
-                if (dateInput) {
-                    const parts = dateInput.split('-');
-                    currentMonth.setFullYear(parseInt(parts[0]));
-                    currentMonth.setMonth(parseInt(parts[1]) - 1);
-                    hideMonthPicker();
-                    renderCalendar();
-                    renderMonthSuggestions();
-                    showToast(`已跳转到 ${dateInput}`, 'success');
-                } else {
-                    showToast('请选择日期', 'warning');
-                }
             });
             
             // 日期详情弹窗关闭
