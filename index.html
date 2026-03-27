@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v4.1</title>
+    <title>游戏外观商业化分析平台 v4.2</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -3120,38 +3120,164 @@
             const matchedSkin = findMatchingSkin(skinName);
             const heroName = extractHeroName(skinName);
             
+            // 获取外观品类名称
+            const typeNames = {
+                'skin': '皮肤',
+                'weapon_skin': '武器',
+                'costume': '服饰',
+                'mount': '坐骑',
+                'decoration': '装饰',
+                'board': '棋盘',
+                'vfx': '特效'
+            };
+            const currentTypeName = typeNames[breakdownType] || '外观';
+
             let html = `
                 <div style="background: var(--bg-card); border-radius: 10px; padding: 16px; margin-top: 12px;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-                        <h4 style="font-size: 0.9rem;">📋 "${skinName}" 美术制作拆解</h4>
+                        <h4 style="font-size: 0.9rem;">🎨 "${skinName}" ${currentTypeName}详情与制作拆解</h4>
                         <div>
                             <button class="copy-table-btn" onclick="copyBreakdownTable()">📋 复制</button>
                             <button class="download-btn" onclick="downloadBreakdownTable('${skinName}')">⬇️ 下载CSV</button>
                         </div>
                     </div>
-                    
-                    ${matchedSkin ? `
-                        <div class="matched-skin-info" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
-                            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-                                <span style="font-size: 0.8rem; color: var(--accent);">🎯 已匹配到参考皮肤</span>
-                                <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 0.7rem;" onclick="renderSkinDetail('${matchedSkin.game}', '${matchedSkin.skinName}')">查看详情</button>
+            `;
+
+            // ==================== 第一部分：外观详情信息 ====================
+            if (matchedSkin) {
+                // 获取完整皮肤数据
+                const gameData = SKIN_DETAIL_DATA[matchedSkin.game];
+                const skinData = gameData ? gameData[matchedSkin.skinName] : null;
+                
+                html += `
+                    <!-- 外观详情卡片 -->
+                    <div class="skin-detail-card" style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px solid rgba(99, 102, 241, 0.2);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px;">
+                            <div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 4px;">${matchedSkin.skinName}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted);">🎯 已匹配到参考数据</div>
                             </div>
-                            <div style="font-size: 0.85rem; font-weight: 600;">${matchedSkin.skinName}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-secondary);">英雄: ${matchedSkin.hero} | 品质: ${matchedSkin.rarity} | 游戏: ${matchedSkin.game}</div>
+                            <span style="background: var(--primary); color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">${matchedSkin.rarity}</span>
                         </div>
-                    ` : `
-                        ${heroName ? `
-                            <div class="hero-search-suggestions" style="background: var(--bg); border-radius: 8px; padding: 12px; margin-bottom: 14px;">
-                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">💡 检测到英雄名"${heroName}"，相关皮肤推荐：</div>
-                                <div class="suggested-skins" style="display: flex; flex-wrap: wrap; gap: 6px;">
-                                    ${getSuggestedSkins(heroName).map(s => `
-                                        <span class="skin-suggestion-chip" onclick="document.getElementById('breakdownInput').value='${s.name}'; renderBreakdown('${s.name}');" style="background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">${s.name}</span>
-                                    `).join('')}
-                                </div>
+                        
+                        <!-- 详情信息网格 -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin-bottom: 12px;">
+                            <div style="background: var(--bg-card); border-radius: 8px; padding: 10px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">💰 价格</div>
+                                <div style="font-size: 0.9rem; font-weight: 600; color: var(--success);">${skinData?.price || '未知'}</div>
+                                <div style="font-size: 0.75rem; color: var(--text-secondary);">${skinData?.rmb || ''}</div>
+                            </div>
+                            <div style="background: var(--bg-card); border-radius: 8px; padding: 10px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">👤 角色</div>
+                                <div style="font-size: 0.9rem; font-weight: 600;">${matchedSkin.hero}</div>
+                            </div>
+                            <div style="background: var(--bg-card); border-radius: 8px; padding: 10px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">📅 发布日期</div>
+                                <div style="font-size: 0.9rem; font-weight: 600;">${skinData?.releaseDate || '未知'}</div>
+                            </div>
+                            <div style="background: var(--bg-card); border-radius: 8px; padding: 10px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">🛒 获取渠道</div>
+                                <div style="font-size: 0.9rem; font-weight: 600;">${skinData?.obtain || '未知'}</div>
+                            </div>
+                            <div style="background: var(--bg-card); border-radius: 8px; padding: 10px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">🎮 游戏</div>
+                                <div style="font-size: 0.9rem; font-weight: 600;">${matchedSkin.game}</div>
+                            </div>
+                            <div style="background: var(--bg-card); border-radius: 8px; padding: 10px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">⭐ 稀有度</div>
+                                <div style="font-size: 0.9rem; font-weight: 600;">${matchedSkin.rarity}</div>
+                            </div>
+                        </div>
+                        
+                        ${skinData?.description ? `
+                            <div style="background: var(--bg-card); border-radius: 8px; padding: 10px; margin-bottom: 12px;">
+                                <div style="font-size: 0.7rem; color: var(--text-muted); margin-bottom: 4px;">📝 描述</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary);">${skinData.description}</div>
                             </div>
                         ` : ''}
-                    `}
-                    
+                        
+                        <!-- 原画展示 -->
+                        ${skinData?.splashUrl ? `
+                            <div style="margin-bottom: 12px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">🎨 原画展示</div>
+                                <div style="border-radius: 8px; overflow: hidden; background: var(--bg);">
+                                    <img src="${skinData.splashUrl}" alt="${matchedSkin.skinName}" style="width: 100%; max-height: 300px; object-fit: contain;" onerror="this.parentElement.innerHTML='<div style=\\'padding: 20px; text-align: center; color: var(--text-muted);\\'>原画加载失败</div>'">
+                                </div>
+                            </div>
+                        ` : `
+                            <div style="margin-bottom: 12px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">🎨 原画展示</div>
+                                <div style="padding: 20px; text-align: center; background: var(--bg); border-radius: 8px; color: var(--text-muted);">
+                                    <span style="font-size: 2rem;">🖼️</span>
+                                    <div style="font-size: 0.8rem; margin-top: 8px;">暂无原画</div>
+                                    ${generateSearchLinks(matchedSkin.game, matchedSkin.skinName, '原画')}
+                                </div>
+                            </div>
+                        `}
+                        
+                        <!-- 视频展示 -->
+                        ${skinData?.videoUrl ? `
+                            <div style="margin-bottom: 12px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">🎬 视频展示</div>
+                                <a href="${skinData.videoUrl}" target="_blank" style="display: flex; align-items: center; gap: 8px; padding: 12px; background: var(--bg); border-radius: 8px; text-decoration: none; color: var(--text);">
+                                    <span style="font-size: 1.5rem;">▶️</span>
+                                    <span>观看展示视频</span>
+                                </a>
+                            </div>
+                        ` : `
+                            <div style="margin-bottom: 12px;">
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">🎬 视频展示</div>
+                                <div style="padding: 16px; text-align: center; background: var(--bg); border-radius: 8px; color: var(--text-muted);">
+                                    <span style="font-size: 1.5rem;">🎬</span>
+                                    <div style="font-size: 0.8rem; margin-top: 8px;">暂无视频</div>
+                                    ${generateSearchLinks(matchedSkin.game, matchedSkin.skinName, '视频')}
+                                </div>
+                            </div>
+                        `}
+                    </div>
+                `;
+            } else {
+                // 未匹配到数据时的提示
+                html += `
+                    <div style="background: var(--bg); border-radius: 12px; padding: 16px; margin-bottom: 16px; border: 1px dashed var(--border);">
+                        <div style="text-align: center;">
+                            <div style="font-size: 2rem; margin-bottom: 8px;">🔍</div>
+                            <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">未找到"${skinName}"的参考数据</div>
+                            ${heroName ? `
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-bottom: 8px;">💡 检测到角色名"${heroName}"，相关推荐：</div>
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
+                                    ${getSuggestedSkins(heroName).map(s => `
+                                        <span onclick="document.getElementById('breakdownInput').value='${s.name}'; renderBreakdown('${s.name}');" style="background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">${s.name}</span>
+                                    `).join('')}
+                                </div>
+                            ` : `
+                                <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
+                                    <span onclick="document.getElementById('breakdownInput').value='皮卡丘'; renderBreakdown('皮卡丘');" style="background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">皮卡丘·队长风格</span>
+                                    <span onclick="document.getElementById('breakdownInput').value='凤求凰 李白'; renderBreakdown('凤求凰 李白');" style="background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">凤求凰 李白</span>
+                                    <span onclick="document.getElementById('breakdownInput').value='灵魂莲华 阿狸'; renderBreakdown('灵魂莲华 阿狸');" style="background: var(--bg-card); border: 1px solid var(--border); padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; cursor: pointer;">灵魂莲华 阿狸</span>
+                                </div>
+                            `}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // ==================== 第二部分：快速工期预估 ====================
+            html += `
+                <div style="background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(6, 182, 212, 0.08) 100%); border-radius: 8px; padding: 12px; margin-bottom: 16px;">
+                    <div style="font-size: 0.8rem; font-weight: 600; color: var(--accent); margin-bottom: 8px;">⚡ 快速工期预估</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${generateQuickBreakdownCompact(matchedSkin?.rarity || '默认')}
+                    </div>
+                </div>
+            `;
+
+            // ==================== 第三部分：美术任务拆解表格 ====================
+            html += `
+                <div style="margin-top: 16px;">
+                    <div style="font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
+                        <span>📋</span> 美术制作任务清单
+                    </div>
                     <div class="breakdown-table-container">
                         <table class="breakdown-table" id="breakdownTable">
                             <thead>
@@ -3191,13 +3317,86 @@
                         </table>
                     </div>
                     <div style="padding: 12px; background: var(--bg); border-radius: 8px; margin-top: 12px;">
-                        <p style="font-size: 0.8rem; color: var(--text-secondary);">📊 预估总工期：<strong>${totalDays} 个工作日</strong></p>
+                        <p style="font-size: 0.8rem; color: var(--text-secondary);">📊 预估总工期：<strong style="color: var(--success);">${totalDays} 个工作日</strong>（约 ${Math.ceil(totalDays / 5)} 周）</p>
                     </div>
                 </div>
             `;
 
             container.innerHTML = html;
             showToast('拆解完成！', 'success');
+        }
+
+        // 紧凑型快速工期预估
+        function generateQuickBreakdownCompact(rarity) {
+            const breakdownByRarity = {
+                '伴生': [
+                    { phase: '概念', time: '1天', color: 'var(--primary)' },
+                    { phase: '模型', time: '2天', color: 'var(--secondary)' },
+                    { phase: '特效', time: '1天', color: 'var(--accent)' },
+                    { phase: '总计', time: '4天', color: 'var(--success)' }
+                ],
+                '勇者': [
+                    { phase: '概念', time: '2天', color: 'var(--primary)' },
+                    { phase: '模型', time: '3天', color: 'var(--secondary)' },
+                    { phase: '特效', time: '2天', color: 'var(--accent)' },
+                    { phase: '音效', time: '1天', color: 'var(--warning)' },
+                    { phase: '总计', time: '8天', color: 'var(--success)' }
+                ],
+                '史诗': [
+                    { phase: '概念', time: '3天', color: 'var(--primary)' },
+                    { phase: '模型', time: '5天', color: 'var(--secondary)' },
+                    { phase: '贴图', time: '3天', color: 'var(--accent)' },
+                    { phase: '特效', time: '4天', color: 'var(--warning)' },
+                    { phase: '总计', time: '20天', color: 'var(--success)' }
+                ],
+                '传说': [
+                    { phase: '概念', time: '4天', color: 'var(--primary)' },
+                    { phase: '模型', time: '7天', color: 'var(--secondary)' },
+                    { phase: '特效', time: '5天', color: 'var(--accent)' },
+                    { phase: '音效', time: '3天', color: 'var(--warning)' },
+                    { phase: '总计', time: '27天', color: 'var(--success)' }
+                ],
+                '潮流风格': [
+                    { phase: '概念', time: '3天', color: 'var(--primary)' },
+                    { phase: '模型', time: '5天', color: 'var(--secondary)' },
+                    { phase: '特效', time: '4天', color: 'var(--accent)' },
+                    { phase: '总计', time: '15天', color: 'var(--success)' }
+                ],
+                '时尚风格': [
+                    { phase: '概念', time: '2天', color: 'var(--primary)' },
+                    { phase: '模型', time: '3天', color: 'var(--secondary)' },
+                    { phase: '特效', time: '2天', color: 'var(--accent)' },
+                    { phase: '总计', time: '8天', color: 'var(--success)' }
+                ],
+                '奇珍': [
+                    { phase: '概念', time: '3天', color: 'var(--primary)' },
+                    { phase: '模型', time: '5天', color: 'var(--secondary)' },
+                    { phase: '特效', time: '4天', color: 'var(--accent)' },
+                    { phase: '总计', time: '15天', color: 'var(--success)' }
+                ],
+                '稀世': [
+                    { phase: '概念', time: '4天', color: 'var(--primary)' },
+                    { phase: '模型', time: '7天', color: 'var(--secondary)' },
+                    { phase: '特效', time: '5天', color: 'var(--accent)' },
+                    { phase: '总计', time: '20天', color: 'var(--success)' }
+                ],
+                '默认': [
+                    { phase: '概念', time: '2天', color: 'var(--primary)' },
+                    { phase: '模型', time: '4天', color: 'var(--secondary)' },
+                    { phase: '贴图', time: '2天', color: 'var(--accent)' },
+                    { phase: '总计', time: '8天', color: 'var(--success)' }
+                ]
+            };
+
+            const breakdown = breakdownByRarity[rarity] || breakdownByRarity['默认'];
+            
+            return breakdown.map(item => `
+                <div style="background: var(--bg-card); border-radius: 6px; padding: 8px 12px; display: flex; align-items: center; gap: 8px;">
+                    <div style="width: 8px; height: 8px; border-radius: 50%; background: ${item.color};"></div>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">${item.phase}</span>
+                    <span style="font-size: 0.85rem; font-weight: 600; color: ${item.color};">${item.time}</span>
+                </div>
+            `).join('');
         }
 
         function copyBreakdownTable() {
