@@ -774,697 +774,778 @@
         // ==================== 竞品数据（含分层定价和美术任务）====================
         // 涵盖手游、端游、主机平台，覆盖MOBA/FPS/RPG/动作/策略/休闲全品类
         // tasks 改为数组格式，每个任务独立
-        const COMPETITOR_DATA = {
-            // ==================== MOBA品类 ====================
+                const COMPETITOR_DATA = {
+            // ========== MOBA（多人在线战术竞技） ==========
             "王者荣耀": {
                 category: "moba", icon: "⚔️", rank: 1, platform: "mobile",
-                overview: "全球收入最高的MOBA手游，皮肤商业化标杆，月活超2亿",
-                appearanceTypes: ["skin", "decoration", "vfx", "mount"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "伴生/勇者", game: "288-600点券", rmb: "¥29-60", tasks: ["基础模型换色", "简单特效调整", "无专属语音"] },
-                            { name: "史诗", game: "888点券", rmb: "¥89", tasks: ["全新模型", "技能特效重制", "专属语音包", "回城特效"] },
-                            { name: "传说", game: "1688点券", rmb: "¥169", tasks: ["高质量模型", "全套特效重制", "专属语音+音效", "回城+出生特效", "头像框"] },
-                            { name: "荣耀典藏", game: "积分夺宝", rmb: "¥2000+", tasks: ["顶级品质模型", "双形态设计", "全特效定制", "专属动画", "专属标识"] }
-                        ]
-                    },
-                    decoration: {
-                        tiers: [
-                            { name: "普通", game: "60-180点券", rmb: "¥6-18", tasks: ["基础装饰模型", "简单粒子效果"] },
-                            { name: "限定", game: "300-500点券", rmb: "¥30-50", tasks: ["主题装饰设计", "专属特效", "动态效果"] }
-                        ]
-                    }
-                },
-                model: { primary: "皮肤直售+限定抽奖", pricing: "6-1688元" },
-                // ========== 对比分析扩展字段 ==========
-                commercial: {
-                    model: "皮肤直售为主 + 限定抽奖 + 荣耀典藏积分夺宝",
-                    channels: ["商城直售", "限时活动", "积分夺宝", "战令系统"],
-                    cycle: "新皮肤每周1-2款，节日/赛季大型活动集中投放",
-                    strategy: "高频更新+稀缺性营销，传说皮肤定价锚定高端市场"
-                },
-                payment: {
-                    structure: "免费 + 内购",
-                    currencies: ["点券(1元=10点券)", "积分", "战令币"],
-                    monetization: "皮肤收入占总收入60%+，ARPU值行业领先",
-                    tierCount: 4,
-                    priceRange: "¥29-2000+"
-                },
-                market: {
-                    scale: "月流水超20亿，皮肤收入占比60%+",
-                    users: "DAU超1亿，MAU超2亿",
-                    growth: "稳定增长，节日活动带动月度峰值",
-                    competitors: ["英雄联盟手游", "无尽对决(海外)"]
-                },
-                painPoints: [
-                    "低端皮肤同质化严重，玩家审美疲劳",
-                    "抽奖机制争议，概率透明度不足",
-                    "传说皮肤定价偏高，部分玩家流失",
-                    "皮肤特效过于花哨影响游戏公平性争议",
-                    "限定皮肤返场规则不明确"
-                ]
+                overview: "腾讯出品，点券制（1元=10点券）",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点券制（1元=10点券）", pricing: "普通: 免费/288点券（约29元）, 勇者: 588点券（约59元）, 史诗: 888点券（约89元）, 传说: 1688点券（约169元）" },
+                commercial: { model: "点券制（1元=10点券）", channels: ["英雄+皮肤捆绑促销", "战令系统（38/68元档位）", "碎片商店兑换"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 5, priceRange: "普通: 免费/288点券（约29元）, 勇者: 588点券（约59元）, 史诗: 888点券（约89元）, 传说: 1688点券（约169元）" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
             },
             "英雄联盟": {
-                category: "moba", icon: "⚔️", rank: 2,
-                overview: "PC MOBA皮肤系统开创者",
-                appearanceTypes: ["skin", "decoration", "vfx"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "基础", game: "750 RP", rmb: "¥38", tasks: ["模型换色", "无特效"] },
-                            { name: "史诗", game: "1350 RP", rmb: "¥68", tasks: ["新模型", "新纹理", "新粒子效果"] },
-                            { name: "传说", game: "1820 RP", rmb: "¥91", tasks: ["全新模型+动画", "全套特效", "新语音", "独特音效"] },
-                            { name: "终极", game: "3250 RP", rmb: "¥163", tasks: ["多形态设计", "全套定制内容", "专属交互", "独特音效语音"] },
-                            { name: "至臻", game: "代币兑换", rmb: "¥100+", tasks: ["传说级品质+", "专属边框", "稀有标识"] }
-                        ]
-                    }
-                },
-                model: { primary: "皮肤直售+至臻系统", pricing: "30-130元" },
-                commercial: {
-                    model: "皮肤直售 + 至臻代币系统 + 神话皮肤",
-                    channels: ["商城直售", "至臻代币兑换", "神话精萃兑换", "海克斯科技抽奖"],
-                    cycle: "每2周新皮肤，至臻皮肤月度更新",
-                    strategy: "分级明确，至臻系统增加稀缺性和收集价值"
-                },
-                payment: {
-                    structure: "免费 + 内购",
-                    currencies: ["RP(riot points)", "至臻代币", "神话精萃"],
-                    monetization: "皮肤+通行证为主，RP充值档位多样",
-                    tierCount: 5,
-                    priceRange: "¥38-200+"
-                },
-                market: {
-                    scale: "全球月流水超$1.5亿，皮肤收入占比高",
-                    users: "月活超1.5亿(全球)",
-                    growth: "成熟期稳定，至臻系统刺激消费",
-                    competitors: ["DOTA2", "王者荣耀", "VALORANT"]
-                },
-                painPoints: [
-                    "低端皮肤性价比低，玩家选择少",
-                    "至臻代币获取周期长，肝度要求高",
-                    "神话皮肤获取门槛高，新玩家难以获得",
-                    "皮肤特效过于复杂影响游戏性能",
-                    "部分限定皮肤绝版引发不满"
-                ]
+                category: "moba", icon: "⚔️", rank: 2, platform: "pc",
+                overview: "Riot Games出品，RP点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "RP点券制", pricing: "普通: 520RP（约4美元）, 史诗: 975RP（约8美元）, 传说: 1350RP（约10美元）, 终极: 3250RP（约25美元）" },
+                commercial: { model: "RP点券制", channels: ["皮肤分级定价", "赛季奖励皮肤", "至臻系列（代币兑换）"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 5, priceRange: "普通: 520RP（约4美元）, 史诗: 975RP（约8美元）, 传说: 1350RP（约10美元）, 终极: 3250RP（约25美元）" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
             },
-            "原神": {
-                category: "simulation", icon: "🏠", rank: 1,
-                overview: "开放世界RPG，角色驱动商业化",
-                appearanceTypes: ["skin", "home_decor", "mount"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["模型调整", "配色更换", "简单特效"] },
-                            { name: "商城皮肤", game: "1680原石", rmb: "¥168", tasks: ["新模型设计", "技能特效", "专属动画", "立绘更新"] },
-                            { name: "联动皮肤", game: "1980原石", rmb: "¥198", tasks: ["主题设计", "全套特效", "专属剧情", "联动元素"] }
-                        ]
-                    },
-                    home_decor: {
-                        tiers: [
-                            { name: "普通家具", game: "洞天宝钱", rmb: "游戏内获取", tasks: ["基础模型", "简单动画"] },
-                            { name: "限定家具", game: "创世结晶", rmb: "¥30+", tasks: ["主题设计", "交互功能", "专属特效"] }
-                        ]
-                    }
-                },
-                model: { primary: "角色抽卡+皮肤直售", pricing: "68-198元" },
-                commercial: {
-                    model: "角色/武器抽卡为主 + 皮肤直售 + 尘歌壶系统",
-                    channels: ["商城直售", "活动免费", "尘歌壶家具"],
-                    cycle: "皮肤更新频率低(月度或季度)，角色更新为主",
-                    strategy: "角色驱动消费，皮肤作为附加价值，免费皮肤提升玩家留存"
-                },
-                payment: {
-                    structure: "免费 + 抽卡 + 内购",
-                    currencies: ["原石", "创世结晶", "洞天宝钱"],
-                    monetization: "角色抽卡ARPU极高，皮肤为辅助收入",
-                    tierCount: 3,
-                    priceRange: "免费-¥198"
-                },
-                market: {
-                    scale: "月流水超$2亿(全球)，皮肤收入占比约5-10%",
-                    users: "MAU超6000万",
-                    growth: "稳定期，版本更新带动收入波动",
-                    competitors: ["鸣潮", "崩坏：星穹铁道", "幻塔"]
-                },
-                painPoints: [
-                    "皮肤更新频率低，玩家期待难以满足",
-                    "皮肤定价偏高(¥168)，性价比争议",
-                    "免费皮肤质量参差不齐",
-                    "尘歌壶系统后续更新不足",
-                    "皮肤特效改动较少，差异化不足"
-                ]
+            "DOTA2": {
+                category: "moba", icon: "⚔️", rank: 3, platform: "pc",
+                overview: "Valve出品，Steam市场+创意工坊",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "Steam市场+创意工坊", pricing: "普通套装: 1-5美元, 稀有套装: 5-15美元, 不朽品质: 赛事掉落/购买, 至宝: 25-35美元" },
+                commercial: { model: "Steam市场+创意工坊", channels: ["创意工坊UGC分成", "国际赛本子（互动指南）", "饰品独立交易"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "普通套装: 1-5美元, 稀有套装: 5-15美元, 不朽品质: 赛事掉落/购买, 至宝: 25-35美元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
             },
-            "和平精英": {
-                category: "fps", icon: "🔫", rank: 1,
-                overview: "国内最大FPS手游",
-                appearanceTypes: ["weapon_skin", "skin", "decoration", "mount"],
-                pricing: {
-                    weapon_skin: {
-                        tiers: [
-                            { name: "普通枪皮", game: "军需抽取", rmb: "¥100-500", tasks: ["枪械换色", "基础贴图"] },
-                            { name: "稀有枪皮", game: "军需抽取", rmb: "¥300-800", tasks: ["新模型细节", "专属检视动画", "击杀特效"] },
-                            { name: "传说枪皮", game: "军需抽取", rmb: "¥500-2000", tasks: ["完整建模", "全套动画", "专属音效", "升级特效"] }
-                        ]
-                    },
-                    mount: {
-                        tiers: [
-                            { name: "普通载具", game: "军需抽取", rmb: "¥200-500", tasks: ["载具换色", "简单贴图"] },
-                            { name: "联动载具", game: "军需抽取", rmb: "¥1500+", tasks: ["完整建模", "专属音效", "联动元素", "特效"] }
-                        ]
-                    }
-                },
-                model: { primary: "军需箱抽奖", pricing: "600-2000元" },
-                commercial: {
-                    model: "军需抽奖为主 + 通行证 + 联动限定",
-                    channels: ["军需抽奖", "荣耀手册", "限时活动", "IP联动"],
-                    cycle: "军需周更，大型联动季度更新",
-                    strategy: "抽奖概率刺激消费，联动IP扩大用户圈层"
-                },
-                payment: {
-                    structure: "免费 + 抽奖 + 通行证",
-                    currencies: ["UC点券", "荣耀勋章", "物资币"],
-                    monetization: "军需抽奖为主，ARPPU高但付费率偏低",
-                    tierCount: 3,
-                    priceRange: "¥100-2000+"
-                },
-                market: {
-                    scale: "月流水超15亿，军需收入占比70%+",
-                    users: "DAU超5000万",
-                    growth: "稳定增长，联动活动带动峰值",
-                    competitors: ["使命召唤手游", "荒野行动", "堡垒之夜"]
-                },
-                painPoints: [
-                    "军需抽奖概率低，玩家挫败感强",
-                    "联动载具定价过高(¥1500+)",
-                    "枪皮同质化，升级系统肝度高",
-                    "免费内容少，白嫖玩家体验差",
-                    "外挂问题影响付费意愿"
-                ]
-            },
-            "鸣潮": {
-                category: "action", icon: "🌊", rank: 1,
-                overview: "库洛游戏开放世界动作RPG，声骸系统独特",
-                appearanceTypes: ["skin", "weapon_skin", "decoration", "vfx"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["模型调整", "配色更换", "简单特效"] },
-                            { name: "商城皮肤", game: "1680-1980星声", rmb: "¥100-120", tasks: ["新模型设计", "技能特效", "专属动画", "待机动作"] },
-                            { name: "限定皮肤", game: "活动限定", rmb: "活动获取", tasks: ["主题设计", "全套特效", "专属剧情", "限定标识"] }
-                        ]
-                    },
-                    weapon_skin: {
-                        tiers: [
-                            { name: "活动武器皮", game: "免费", rmb: "免费", tasks: ["武器换色", "简单特效"] },
-                            { name: "限定武器皮", game: "活动获取", rmb: "活动获取", tasks: ["武器建模", "专属特效", "专属音效"] }
-                        ]
-                    }
-                },
-                model: { primary: "角色抽卡+皮肤直售", pricing: "68-128元" },
-                commercial: {
-                    model: "角色/武器抽卡 + 皮肤直售 + 声骸系统",
-                    channels: ["商城直售", "活动免费", "通行证"],
-                    cycle: "皮肤更新频率中等，角色更新为主",
-                    strategy: "高品质皮肤吸引付费，免费活动皮肤提升好感度"
-                },
-                payment: {
-                    structure: "免费 + 抽卡 + 内购",
-                    currencies: ["星声", "共鸣", "月相"],
-                    monetization: "角色抽卡为主，皮肤为辅助收入",
-                    tierCount: 3,
-                    priceRange: "免费-¥120"
-                },
-                market: {
-                    scale: "月流水约5-8亿，快速增长期",
-                    users: "MAU超2000万",
-                    growth: "新游红利期，用户增长迅速",
-                    competitors: ["原神", "崩坏3", "幻塔"]
-                },
-                painPoints: [
-                    "皮肤种类较少，玩家选择有限",
-                    "武器皮肤更新慢",
-                    "声骸系统与外观关联度低",
-                    "新游戏内容深度待验证",
-                    "部分玩家反馈优化问题"
-                ]
-            },
-            "永劫无间": {
-                category: "action", icon: "⚔️", rank: 1,
-                overview: "武侠吃鸡，皮肤系统成熟",
-                appearanceTypes: ["skin", "weapon_skin", "vfx", "decoration"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "普通", game: "直购/活动", rmb: "¥30-50", tasks: ["基础换色", "简单调整"] },
-                            { name: "稀有", game: "金块购买", rmb: "¥60-150", tasks: ["新模型设计", "专属特效", "主题元素"] },
-                            { name: "传说", game: "限定活动", rmb: "¥150-500", tasks: ["顶级设计", "全套特效", "专属动画", "联动元素"] }
-                        ]
-                    },
-                    weapon_skin: {
-                        tiers: [
-                            { name: "普通武器", game: "直购", rmb: "¥20-50", tasks: ["武器换色", "简单纹理"] },
-                            { name: "传说武器", game: "限定活动", rmb: "¥100-300", tasks: ["完整建模", "专属特效", "专属音效"] }
-                        ]
-                    }
-                },
-                model: { primary: "皮肤直售+抽奖", pricing: "几十到几百元" },
-                commercial: {
-                    model: "皮肤直售 + 抽奖宝箱 + 通行证 + 联动限定",
-                    channels: ["商城直售", "奇珍宝箱", "赛季通行证", "IP联动"],
-                    cycle: "周常皮肤更新，赛季大型活动",
-                    strategy: "武侠题材差异化，联动IP扩大受众"
-                },
-                payment: {
-                    structure: "买断制转免费 + 内购",
-                    currencies: ["金块", "古币", "幻丝"],
-                    monetization: "皮肤+通行证为主，免费转型后用户量大增",
-                    tierCount: 3,
-                    priceRange: "¥30-500"
-                },
-                market: {
-                    scale: "月流水约2-3亿，Steam在线常驻TOP20",
-                    users: "全球累计超4000万",
-                    growth: "免费后用户激增，稳定运营",
-                    competitors: ["绝地求生", "Apex英雄", "CS2"]
-                },
-                painPoints: [
-                    "宝箱抽奖概率争议",
-                    "部分联动皮肤定价过高",
-                    "武器皮肤种类偏少",
-                    "赛季皮肤返场规则不明",
-                    "新玩家获取限定皮肤困难"
-                ]
-            },
-            "CS2": {
-                category: "fps", icon: "🔫", rank: 2,
-                overview: "武器皮肤经济系统最成熟",
-                appearanceTypes: ["weapon_skin", "decoration", "vfx"],
-                pricing: {
-                    weapon_skin: {
-                        tiers: [
-                            { name: "消费级", game: "市场购买", rmb: "¥5-10", tasks: ["基础换色", "简单纹理"] },
-                            { name: "工业级", game: "市场购买", rmb: "¥10-30", tasks: ["基础纹理设计"] },
-                            { name: "军规级", game: "市场购买", rmb: "¥30-80", tasks: ["主题纹理", "磨损度设计"] },
-                            { name: "受限", game: "开箱/市场", rmb: "¥80-200", tasks: ["完整主题设计", "多磨损度"] },
-                            { name: "保密", game: "开箱/市场", rmb: "¥200-500", tasks: ["高品质设计", "特殊纹理"] },
-                            { name: "隐秘", game: "开箱/市场", rmb: "¥500-2000", tasks: ["顶级设计", "稀有纹理", "收藏价值"] },
-                            { name: "特殊/刀", game: "开箱/市场", rmb: "¥2000-10000+", tasks: ["独特设计", "动画系统", "极高收藏价值"] }
-                        ]
-                    }
-                },
-                model: { primary: "武器箱开箱+市场交易", pricing: "市场化定价" },
-                commercial: {
-                    model: "开箱 + Steam市场交易 + 饰品经济",
-                    channels: ["开箱", "Steam市场", "第三方平台", "掉落"],
-                    cycle: "武器箱季度更新，饰品长期流通",
-                    strategy: "市场化定价，饰品投资属性，稀缺性驱动价值"
-                },
-                payment: {
-                    structure: "买断制 + 市场交易",
-                    currencies: ["Steam钱包", "钥匙(已取消)", "饰品"],
-                    monetization: "市场交易手续费为主，开箱已调整",
-                    tierCount: 7,
-                    priceRange: "¥5-10000+"
-                },
-                market: {
-                    scale: "饰品市场规模超$50亿，年交易活跃",
-                    users: "日活超100万",
-                    growth: "饰品经济成熟，价值稳定",
-                    competitors: ["DOTA2", "PUBG", "Rust"]
-                },
-                painPoints: [
-                    "开箱机制已被各国监管关注",
-                    "饰品市场价格波动大",
-                    "稀有饰品获取门槛极高",
-                    "第三方交易平台风险",
-                    "饰品与游戏平衡性无关，但社交压力明显"
-                ]
-            },
-            "明日方舟": {
-                category: "strategy", icon: "🎯", rank: 2,
-                overview: "塔防手游，皮肤系统克制",
-                appearanceTypes: ["skin", "decoration", "vfx"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "源石皮肤", game: "15-21源石", rmb: "¥90-126", tasks: ["新立绘", "动态效果", "技能特效", "基建形象"] },
-                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["新立绘", "基础特效"] }
-                        ]
-                    }
-                },
-                model: { primary: "角色抽卡", pricing: "90-126元" },
-                commercial: {
-                    model: "角色抽卡为主 + 皮肤直售(克制)",
-                    channels: ["商城直售", "活动免费", "采购中心"],
-                    cycle: "皮肤月更或双周更，更新频率克制",
-                    strategy: "克制商业化，口碑优先，皮肤质量稳定"
-                },
-                payment: {
-                    structure: "免费 + 抽卡 + 内购",
-                    currencies: ["源石", "合成玉", "至纯源石"],
-                    monetization: "角色抽卡为主，皮肤收入占比低",
-                    tierCount: 2,
-                    priceRange: "免费-¥126"
-                },
-                market: {
-                    scale: "月流水约3-5亿，皮肤占比约10%",
-                    users: "MAU超800万",
-                    growth: "稳定运营，口碑良好",
-                    competitors: ["碧蓝航线", "少女前线", "FGO"]
-                },
-                painPoints: [
-                    "皮肤更新频率较低",
-                    "源石皮肤定价偏高",
-                    "部分干员长期无皮肤",
-                    "基建系统更新慢",
-                    "免费皮肤质量参差"
-                ]
-            },
-            "蛋仔派对": {
-                category: "casual", icon: "🎮", rank: 5,
-                overview: "休闲竞技，外观商业化成熟",
-                appearanceTypes: ["skin", "decoration", "vfx"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "普通外观", game: "蛋币购买", rmb: "¥20-50", tasks: ["角色换装", "基础动画"] },
-                            { name: "盲盒外观", game: "抽奖", rmb: "¥50-200", tasks: ["主题设计", "专属动画", "稀有度"] }
-                        ]
-                    }
-                },
-                model: { primary: "外观直售+盲盒", pricing: "几十元" },
-                commercial: {
-                    model: "外观直售 + 盲盒抽奖 + 通行证 + UGC生态",
-                    channels: ["商城直售", "盲盒抽奖", "赛季通行证", "UGC创作"],
-                    cycle: "外观高频更新，联动活动密集",
-                    strategy: "休闲+社交+UGC，外观驱动社交货币"
-                },
-                payment: {
-                    structure: "免费 + 内购",
-                    currencies: ["蛋币", "潮流纤维", "瓶盖"],
-                    monetization: "外观为主，付费率较高",
-                    tierCount: 2,
-                    priceRange: "¥20-200"
-                },
-                market: {
-                    scale: "月流水约5-8亿，快速增长",
-                    users: "MAU超3000万，年轻用户为主",
-                    growth: "高速增长期，UGC生态活跃",
-                    competitors: ["糖豆人", "元梦之星", "光·遇"]
-                },
-                painPoints: [
-                    "盲盒概率争议",
-                    "联动活动过于密集",
-                    "部分外观定价偏高",
-                    "UGC内容质量参差",
-                    "未成年用户付费管理"
-                ]
-            },
-            "金铲铲之战": {
-                category: "strategy", icon: "♟️", rank: 3,
-                overview: "自走棋手游，棋盘与小小英雄商业化",
-                appearanceTypes: ["board", "decoration", "skin"],
-                pricing: {
-                    board: {
-                        tiers: [
-                            { name: "普通棋盘", game: "4500点券", rmb: "¥450", tasks: ["棋盘贴图设计", "基础环境光效", "2-3种地形变化"] },
-                            { name: "史诗棋盘", game: "7900点券", rmb: "¥790", tasks: ["全3D棋盘建模", "动态环境效果", "专属音效", "交互反馈"] },
-                            { name: "传说棋盘", game: "11500点券", rmb: "¥1150", tasks: ["高质量场景设计", "完整动画系统", "专属BGM", "粒子特效", "主题角色"] }
-                        ]
-                    },
-                    skin: {
-                        tiers: [
-                            { name: "小小英雄", game: "2300-4500点券", rmb: "¥230-450", tasks: ["角色模型设计", "专属动画", "升级形态"] }
-                        ]
-                    }
-                },
-                model: { primary: "棋盘+小小英雄直售", pricing: "45-115元" },
-                commercial: {
-                    model: "棋盘/小小英雄直售 + 通行证 + 限时活动",
-                    channels: ["商城直售", "赛季通行证", "限时活动"],
-                    cycle: "赛季更新，棋盘和小小英雄按赛季投放",
-                    strategy: "稀缺性营销+收藏价值，赛季限定刺激消费"
-                },
-                payment: {
-                    structure: "免费 + 内购",
-                    currencies: ["点券", "星之碎片", "银河币"],
-                    monetization: "棋盘+小小英雄为主，ARPU较高",
-                    tierCount: 3,
-                    priceRange: "¥230-1150"
-                },
-                market: {
-                    scale: "月流水约8-10亿",
-                    users: "DAU超1500万",
-                    growth: "稳定运营，用户粘性强",
-                    competitors: ["云顶之弈", "炉石传说酒馆战棋"]
-                },
-                painPoints: [
-                    "棋盘定价偏高(¥450起)",
-                    "小小英雄升级系统复杂",
-                    "赛季限定内容返场规则不明",
-                    "免费棋盘选择少",
-                    "部分玩家认为性价比低"
-                ]
-            },
-            "宝可梦大集结": {
-                category: "moba", icon: "⚡", rank: 4,
-                overview: "宝可梦IP MOBA，5v5团队对战，外观系统包含服装、特效、对战服等",
-                appearanceTypes: ["skin", "costume", "decoration", "vfx", "mount"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "时尚风格", game: "350-580宝石", rmb: "¥35-58", tasks: ["角色换色", "服装变化", "基础特效微调"] },
-                            { name: "潮流风格", game: "840-1200宝石", rmb: "¥84-120", tasks: ["全新模型", "专属特效", "回城动画", "击杀特效"] },
-                            { name: "节日限定", game: "活动/抽奖", rmb: "¥50-300", tasks: ["主题设计", "专属特效", "限定标识", "联动元素"] },
-                            { name: "宝可梦中心联名", game: "联动活动", rmb: "¥100-500", tasks: ["实体联动", "专属外观", "限定徽章"] }
-                        ]
-                    },
-                    costume: {
-                        tiers: [
-                            { name: "对战服", game: "350-840宝石", rmb: "¥35-84", tasks: ["服装设计", "适配多角色", "主题风格"] },
-                            { name: "节日服装", game: "活动限定", rmb: "¥50-150", tasks: ["节日主题", "限时获取", "特殊动画"] }
-                        ]
-                    },
-                    decoration: {
-                        tiers: [
-                            { name: "头像框", game: "活动/宝石", rmb: "¥10-50", tasks: ["UI设计", "动态效果", "稀有度标识"] },
-                            { name: "登场特效", game: "840宝石", rmb: "¥84", tasks: ["登场动画", "特效设计", "音效"] },
-                            { name: "胜利姿势", game: "480-580宝石", rmb: "¥48-58", tasks: ["动作设计", "特效配合"] }
-                        ]
-                    },
-                    mount: {
-                        tiers: [
-                            { name: "滑板", game: "840-1200宝石", rmb: "¥84-120", tasks: ["滑板设计", "移动特效", "音效"] }
-                        ]
-                    }
-                },
-                model: { primary: "外观直售+通行证+联动", pricing: "35-500元" },
-                commercial: {
-                    model: "外观直售 + 赛季通行证 + 活动限定 + 宝可梦中心联动",
-                    channels: ["商城直售", "赛季通行证", "限时活动", "宝可梦中心联动", "亿奥斯券兑换"],
-                    cycle: "赛季更新（约2个月），宝可梦外观持续投放，联动活动频繁",
-                    strategy: "IP价值+轻度竞技+收藏驱动，宝可梦粉丝经济，外观差异化"
-                },
-                payment: {
-                    structure: "免费 + 内购",
-                    currencies: ["宝石(付费)", "亿奥斯币(免费)", "亿奥斯券(活动)"],
-                    monetization: "外观为主，通行证为辅，付费率中等",
-                    tierCount: 4,
-                    priceRange: "¥35-500"
-                },
-                market: {
-                    scale: "全球累计下载超1亿，国服月流水约1-2亿",
-                    users: "MAU约500万（国服），宝可梦粉丝+MOBA玩家",
-                    growth: "稳定运营，IP影响力强，持续更新",
-                    competitors: ["王者荣耀", "英雄联盟手游", "决战！平安京", "无尽对决"]
-                },
-                painPoints: [
-                    "部分宝可梦外观更新较慢",
-                    "限定外观返场规则不明确",
-                    "国服与国际服内容不同步",
-                    "部分潮流风格价格偏高",
-                    "新手玩家外观获取途径有限",
-                    "竞技玩家对外观需求较低"
-                ],
-                pokemon: {
-                    attackers: ["皮卡丘", "喷火龙", "耿鬼", "烈箭鹰", "闪焰王牌", "九尾(阿罗拉)", "仙子伊布", "狙射树枭", "魔墙人偶", "太阳伊布"],
-                    defenders: ["卡比兽", "呆壳兽", "岩石巨兽", "水箭龟", "象牙猪", "龙头地鼠"],
-                    speedsters: ["路卡利欧", "烈咬陆鲨", "杰拉奥拉", "武道熊师(一击流)", "武道熊师(连击流)", "阿罗拉雷丘", "索罗亚克"],
-                    supporters: ["胖丁", "吉利蛋", "沙奈朵", "太阳伊布", "白蓬蓬", "勾帕路翁"],
-                    all_rounders: ["怪力", "谜拟Q", "水君", "蜥蜴王", "烈焰猴", "藏饱栗鼠", "达摩狒狒(伽勒尔)", "劈斩司令"]
-                }
-            },
-            "第五人格": {
-                category: "casual", icon: "🎭", rank: 4,
-                overview: "非对称竞技，角色外观商业化成熟",
-                appearanceTypes: ["skin", "costume", "decoration", "vfx"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "旧装/初始", game: "免费/线索", rmb: "免费", tasks: ["基础模型", "简单贴图"] },
-                            { name: "独特", game: "318-518回声", rmb: "¥32-52", tasks: ["模型调整", "基础特效"] },
-                            { name: "奇珍", game: "858-1288回声", rmb: "¥86-129", tasks: ["全新模型", "专属特效", "随身物品"] },
-                            { name: "稀世", game: "活动/抽奖", rmb: "¥100-1000", tasks: ["顶级设计", "全套特效", "限定标识"] },
-                            { name: "虚妄杰作", game: "抽奖", rmb: "¥500-3000+", tasks: ["双形态", "顶级特效", "专属动画"] }
-                        ]
-                    }
-                },
-                model: { primary: "外观直售+抽奖", pricing: "32-3000元" },
-                commercial: {
-                    model: "外观直售 + 抽奖 + 赛季通行证 + 联动活动",
-                    channels: ["商城直售", "精华抽奖", "赛季通行证", "联动活动"],
-                    cycle: "赛季更新，联动活动频繁",
-                    strategy: "IP联动驱动，收藏价值，哥特美学"
-                },
-                payment: {
-                    structure: "免费 + 内购",
-                    currencies: ["回声", "灵感", "碎片"],
-                    monetization: "外观为主，ARPU中等",
-                    tierCount: 5,
-                    priceRange: "¥32-3000+"
-                },
-                market: {
-                    scale: "月流水约2-3亿",
-                    users: "MAU约800万，女性用户占比高",
-                    growth: "稳定运营，联动频繁",
-                    competitors: ["黎明杀机", "猫鼠游戏", "Among Us"]
-                },
-                painPoints: [
-                    "虚妄杰作获取成本过高",
-                    "抽奖概率争议",
-                    "部分限定皮肤返场规则不明",
-                    "联动活动过于频繁",
-                    "角色平衡性与外观无关"
-                ]
+            "决战！平安京": {
+                category: "moba", icon: "⚔️", rank: 4, platform: "mobile",
+                overview: "网易出品，勾玉制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "勾玉制", pricing: "普通: 免费/活动获取, 史诗: 88-128元, 传说: 168-198元, 限定: 198-298元" },
+                commercial: { model: "勾玉制", channels: ["阴阳师IP联动", "和风主题差异化", "皮肤试玩功能"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "普通: 免费/活动获取, 史诗: 88-128元, 传说: 168-198元, 限定: 198-298元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
             },
             "英雄联盟手游": {
-                category: "moba", icon: "⚔️", rank: 3,
-                overview: "端游移植MOBA，皮肤系统成熟",
-                appearanceTypes: ["skin", "decoration", "vfx", "mount"],
-                pricing: {
-                    skin: {
-                        tiers: [
-                            { name: "普通", game: "450点券", rmb: "¥45", tasks: ["模型换色", "简单特效"] },
-                            { name: "史诗", game: "790-990点券", rmb: "¥79-99", tasks: ["全新模型", "技能特效", "回城特效"] },
-                            { name: "传说", game: "1320-1450点券", rmb: "¥132-145", tasks: ["顶级模型", "全套特效", "专属语音", "击杀特效"] },
-                            { name: "终极", game: "1990点券", rmb: "¥199", tasks: ["多形态", "全套定制", "专属语音包", "专属交互"] }
-                        ]
-                    }
-                },
-                model: { primary: "皮肤直售", pricing: "45-199元" },
-                commercial: {
-                    model: "皮肤直售 + 通行证 + 活动限定",
-                    channels: ["商城直售", "赛季通行证", "限时活动"],
-                    cycle: "每周更新，赛季通行证",
-                    strategy: "端游IP+移动端优化，皮肤驱动收入"
-                },
-                payment: {
-                    structure: "免费 + 内购",
-                    currencies: ["点券", "橙色精萃", "蓝色精萃"],
-                    monetization: "皮肤为主，ARPU中等",
-                    tierCount: 4,
-                    priceRange: "¥45-199"
-                },
-                market: {
-                    scale: "月流水约1-1.5亿",
-                    users: "MAU约600万，LOL玩家为主",
-                    growth: "稳定运营，用户粘性强",
-                    competitors: ["王者荣耀", "决战！平安京", "宝可梦大集结"]
-                },
-                painPoints: [
-                    "皮肤更新频率低于端游",
-                    "部分端游限定皮肤未移植",
-                    "活动奖励相对保守",
-                    "排位体验影响付费意愿",
-                    "皮肤特效与端游有差距"
-                ]
+                category: "moba", icon: "⚔️", rank: 5, platform: "mobile",
+                overview: "Riot Games/腾讯出品，点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点券制", pricing: "普通: 免费/活动获取, 史诗: 790点券（约79元）, 传说: 990点券（约99元）, 限定: 活动/抽奖" },
+                commercial: { model: "点券制", channels: ["端游皮肤移植", "峡谷宝典", "皮肤抽奖"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "普通: 免费/活动获取, 史诗: 790点券（约79元）, 传说: 990点券（约99元）, 限定: 活动/抽奖" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
             },
-            "无畏契约": {
-                category: "fps", icon: "🎯", rank: 5,
-                overview: "战术射击，皮肤经济成熟",
-                appearanceTypes: ["weapon_skin", "decoration", "vfx"],
-                pricing: {
-                    weapon_skin: {
-                        tiers: [
-                            { name: "精选", game: "875 VP", rmb: "¥58", tasks: ["基础模型", "简单配色"] },
-                            { name: "豪华", game: "1275 VP", rmb: "¥85", tasks: ["全新模型", "开火音效"] },
-                            { name: "至尊", game: "1775 VP", rmb: "¥118", tasks: ["主题设计", "特效音效", "击杀特效", "换弹动画"] },
-                            { name: "终极", game: "2175-2675 VP", rmb: "¥145-178", tasks: ["全套特效", "变异形态", "专属动画", "击杀计数"] },
-                            { name: "限定/联名", game: "活动/抽奖", rmb: "¥100-500", tasks: ["独特主题", "全套定制", "限定标识"] }
-                        ]
-                    }
-                },
-                model: { primary: "武器皮肤直售+通行证", pricing: "58-500元" },
-                commercial: {
-                    model: "皮肤直售 + 赛季通行证 + 夜市折扣",
-                    channels: ["商城直售", "赛季通行证", "夜市折扣", "活动限定"],
-                    cycle: "皮肤系列更新，夜市每赛季",
-                    strategy: "皮肤差异化+收藏价值，FPS皮肤标杆"
-                },
-                payment: {
-                    structure: "免费 + 内购",
-                    currencies: ["VP点券", "R点", "王国币"],
-                    monetization: "皮肤为主，ARPU较高",
-                    tierCount: 5,
-                    priceRange: "¥58-500"
-                },
-                market: {
-                    scale: "全球月流水超$50M，中国区增长快",
-                    users: "全球MAU超2000万",
-                    growth: "高速增长，电竞生态成熟",
-                    competitors: ["CS2", "守望先锋2", "Apex英雄"]
-                },
-                painPoints: [
-                    "终极皮肤价格偏高",
-                    "限定皮肤获取难度大",
-                    "部分皮肤特效过于花哨影响竞技",
-                    "夜市折扣随机性强",
-                    "国服与国际服不同步"
-                ]
+            "无尽对决": {
+                category: "moba", icon: "⚔️", rank: 6, platform: "mobile",
+                overview: "沐瞳科技出品，钻石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "钻石制", pricing: "普通: 免费/活动获取, 史诗: 599钻石, 传说: 899钻石, 限定: 活动限定" },
+                commercial: { model: "钻石制", channels: ["皮肤商城", "抽奖系统", "赛季奖励"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "普通: 免费/活动获取, 史诗: 599钻石, 传说: 899钻石, 限定: 活动限定" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
             },
-            "暗区突围": {
-                category: "fps", icon: "🔫", rank: 4,
-                overview: "硬核射击，皮肤系统逐步完善",
-                appearanceTypes: ["weapon_skin", "costume", "decoration"],
-                pricing: {
-                    weapon_skin: {
-                        tiers: [
-                            { name: "普通涂装", game: "柯恩币", rmb: "游戏币", tasks: ["基础涂装", "简单纹理"] },
-                            { name: "高级涂装", game: "点券", rmb: "¥30-80", tasks: ["主题涂装", "磨损效果"] },
-                            { name: "限定涂装", game: "活动/抽奖", rmb: "¥50-300", tasks: ["主题设计", "稀有标识", "专属音效"] }
-                        ]
-                    }
-                },
-                model: { primary: "皮肤直售+通行证", pricing: "30-300元" },
-                commercial: {
-                    model: "皮肤直售 + 赛季通行证 + 保险箱",
-                    channels: ["商城直售", "赛季通行证", "活动限定"],
-                    cycle: "赛季更新，皮肤定期投放",
-                    strategy: "硬核玩法+外观付费，保险箱为核心付费点"
-                },
-                payment: {
-                    structure: "免费 + 内购",
-                    currencies: ["点券", "柯恩币"],
-                    monetization: "保险箱+外观，ARPU中等",
-                    tierCount: 3,
-                    priceRange: "¥30-300"
-                },
-                market: {
-                    scale: "月流水约1-2亿",
-                    users: "MAU约500万，硬核玩家为主",
-                    growth: "快速增长，差异化竞争",
-                    competitors: ["和平精英", "逃离塔科夫", "萤火突击"]
-                },
-                painPoints: [
-                    "保险箱付费争议",
-                    "皮肤对外观辨识度影响",
-                    "硬核玩家对外观需求较低",
-                    "部分皮肤影响隐蔽性",
-                    "商业化与硬核玩法的平衡"
-                ]
-            }
-        };
+            "漫威超级战争": {
+                category: "moba", icon: "⚔️", rank: 7, platform: "mobile",
+                overview: "网易出品，金币/星币制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "金币/星币制", pricing: "普通: 免费/金币购买, 史诗: 星币购买, 传说: 星币购买/限定" },
+                commercial: { model: "金币/星币制", channels: ["漫威IP授权", "英雄外观系统", "赛季通行证"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "普通: 免费/金币购买, 史诗: 星币购买, 传说: 星币购买/限定" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== FPS（第一人称射击） ==========
+            "CS2/CSGO": {
+                category: "fps", icon: "🔫", rank: 1, platform: "pc",
+                overview: "Valve出品，Steam市场交易",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "Steam市场交易", pricing: "消费级: 0.03-1美元, 工业级: 1-5美元, 军规级: 5-15美元, 受限级: 15-50美元" },
+                commercial: { model: "Steam市场交易", channels: ["开箱系统（概率获取）", "磨损度系统（外观差异）", "独立交易市场"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 7, priceRange: "消费级: 0.03-1美元, 工业级: 1-5美元, 军规级: 5-15美元, 受限级: 15-50美元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "VALORANT": {
+                category: "fps", icon: "🔫", rank: 2, platform: "pc",
+                overview: "Riot Games出品，VP点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "VP点券制", pricing: "精选: 875VP（约9美元）, deluxe: 1275VP（约13美元）, Premium: 1775VP（约18美元）, Ultra: 2175VP（约22美元）" },
+                commercial: { model: "VP点券制", channels: ["皮肤套装捆绑销售", "变体/升级系统", "枪械检视动画"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 5, priceRange: "精选: 875VP（约9美元）, deluxe: 1275VP（约13美元）, Premium: 1775VP（约18美元）, Ultra: 2175VP（约22美元）" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "Apex英雄": {
+                category: "fps", icon: "🔫", rank: 3, platform: "pc",
+                overview: "EA/Respawn出品，Apex金币制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "Apex金币制", pricing: "普通: 400金币（约4美元）, 稀有: 600-1000金币, 史诗: 1200-1600金币, 传说: 1800金币（约18美元）" },
+                commercial: { model: "Apex金币制", channels: ["战斗通行证", "传家宝系统（保底机制）", "活动限定商店"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 5, priceRange: "普通: 400金币（约4美元）, 稀有: 600-1000金币, 史诗: 1200-1600金币, 传说: 1800金币（约18美元）" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "和平精英": {
+                category: "fps", icon: "🔫", rank: 4, platform: "mobile",
+                overview: "腾讯出品，UC点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "UC点券制", pricing: "普通: 活动/军需抽取, 稀有: 60-120元, 史诗: 120-200元, 传说: 200-500元" },
+                commercial: { model: "UC点券制", channels: ["军需宝箱系统", "战令通行证", "限时折扣"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 5, priceRange: "普通: 活动/军需抽取, 稀有: 60-120元, 史诗: 120-200元, 传说: 200-500元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "使命召唤手游": {
+                category: "fps", icon: "🔫", rank: 5, platform: "mobile",
+                overview: "动视/腾讯出品，CP点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "CP点券制", pricing: "普通: 活动获取, 稀有: CP购买, 史诗: CP购买/抽奖, 传说: 抽奖保底" },
+                commercial: { model: "CP点券制", channels: ["武器皮肤系统", "角色皮肤", "战令系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "普通: 活动获取, 稀有: CP购买, 史诗: CP购买/抽奖, 传说: 抽奖保底" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "荒野乱斗": {
+                category: "fps", icon: "🔫", rank: 6, platform: "mobile",
+                overview: "Supercell出品，宝石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "宝石制", pricing: "普通: 金币购买/活动, 稀有: 宝石购买, 史诗: 宝石购买, 神话: 抽奖/活动" },
+                commercial: { model: "宝石制", channels: ["角色皮肤", "战令系统", "星妙之路"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "普通: 金币购买/活动, 稀有: 宝石购买, 史诗: 宝石购买, 神话: 抽奖/活动" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "穿越火线": {
+                category: "fps", icon: "🔫", rank: 7, platform: "pc",
+                overview: "腾讯/Smilegate出品，CF点制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "CF点制", pricing: "普通: 活动获取, 英雄级: 488-688元（永久）, 王者级: 888-1288元, 限定: 活动抽奖" },
+                commercial: { model: "CF点制", channels: ["武器属性加成（英雄级）", "套装系统", "VVG抽奖系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "普通: 活动获取, 英雄级: 488-688元（永久）, 王者级: 888-1288元, 限定: 活动抽奖" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== 二次元/卡牌RPG ==========
+            "原神": {
+                category: "simulation", icon: "🏠", rank: 1, platform: "pc",
+                overview: "米哈游出品，原石/创世结晶",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "原石/创世结晶", pricing: "四星角色: 祈愿获取, 五星角色: 祈愿获取（保底90抽）, 角色皮肤: 免费/1680原石（约168元）, 武器: 祈愿获取" },
+                commercial: { model: "原石/创世结晶", channels: ["角色/武器双池祈愿", "大小保底机制", "限定角色轮换"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 5, priceRange: "四星角色: 祈愿获取, 五星角色: 祈愿获取（保底90抽）, 角色皮肤: 免费/1680原石（约168元）, 武器: 祈愿获取" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "崩坏：星穹铁道": {
+                category: "simulation", icon: "🏠", rank: 2, platform: "pc",
+                overview: "米哈游出品，星琼/古老梦华",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "星琼/古老梦华", pricing: "四星角色: 跃迁获取, 五星角色: 跃迁获取（保底90抽）, 光锥: 跃迁获取, 礼包: 68-648元" },
+                commercial: { model: "星琼/古老梦华", channels: ["角色/光锥双池", "保底继承机制", "限定角色UP"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "四星角色: 跃迁获取, 五星角色: 跃迁获取（保底90抽）, 光锥: 跃迁获取, 礼包: 68-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "明日方舟": {
+                category: "simulation", icon: "🏠", rank: 3, platform: "mobile",
+                overview: "鹰角网络出品，合成玉/源石",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "合成玉/源石", pricing: "六星干员: 寻访获取（保底）, 五星干员: 寻访获取, 皮肤: 源石购买（15-21源石）, 礼包: 6-328元" },
+                commercial: { model: "合成玉/源石", channels: ["寻访系统", "保底机制", "限定干员池"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "六星干员: 寻访获取（保底）, 五星干员: 寻访获取, 皮肤: 源石购买（15-21源石）, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "阴阳师": {
+                category: "simulation", icon: "🏠", rank: 4, platform: "mobile",
+                overview: "网易出品，勾玉/魂玉",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "勾玉/魂玉", pricing: "SSR式神: 召唤获取, SP式神: 召唤获取, 皮肤: 皮肤券/魂玉购买, 礼包: 6-648元" },
+                commercial: { model: "勾玉/魂玉", channels: ["召唤系统", "碎片合成", "限定式神"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "SSR式神: 召唤获取, SP式神: 召唤获取, 皮肤: 皮肤券/魂玉购买, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "Fate/Grand Order": {
+                category: "simulation", icon: "🏠", rank: 5, platform: "mobile",
+                overview: "TYPE-MOON/Aniplex出品，圣晶石",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "圣晶石", pricing: "五星从者: 召唤获取（概率0.7%）, 四星从者: 召唤获取, 礼装: 召唤获取, 礼包: 6-968元" },
+                commercial: { model: "圣晶石", channels: ["卡池系统", "保底机制（部分卡池）", "限定从者"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "五星从者: 召唤获取（概率0.7%）, 四星从者: 召唤获取, 礼装: 召唤获取, 礼包: 6-968元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "碧蓝航线": {
+                category: "simulation", icon: "🏠", rank: 6, platform: "mobile",
+                overview: "蛮啾网络/勇仕网络出品，钻石/心智魔方",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "钻石/心智魔方", pricing: "角色: 建造/活动获取, 皮肤: 钻石购买（500-2000钻石）, 婚戒: 600钻石, 礼包: 6-648元" },
+                commercial: { model: "钻石/心智魔方", channels: ["建造系统", "活动角色", "L2D皮肤"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "角色: 建造/活动获取, 皮肤: 钻石购买（500-2000钻石）, 婚戒: 600钻石, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "少女前线": {
+                category: "simulation", icon: "🏠", rank: 7, platform: "mobile",
+                overview: "云母组/散爆出品，钻石/采购币",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "钻石/采购币", pricing: "角色: 建造/活动获取, 皮肤: 采购币/钻石购买, 礼包: 6-648元" },
+                commercial: { model: "钻石/采购币", channels: ["建造系统", "活动角色", "皮肤采购"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "角色: 建造/活动获取, 皮肤: 采购币/钻石购买, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "崩坏3": {
+                category: "simulation", icon: "🏠", rank: 8, platform: "mobile",
+                overview: "米哈游出品，水晶/硬币",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "水晶/硬币", pricing: "S级女武神: 补给获取, 皮肤: 水晶购买/活动, 武器: 补给获取, 礼包: 6-648元" },
+                commercial: { model: "水晶/硬币", channels: ["补给系统", "保底机制", "限定角色"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "S级女武神: 补给获取, 皮肤: 水晶购买/活动, 武器: 补给获取, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "公主连结Re:Dive": {
+                category: "simulation", icon: "🏠", rank: 9, platform: "mobile",
+                overview: "Cygames出品，宝石",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "宝石", pricing: "三星角色: 扭蛋获取, 皮肤: 宝石购买, 礼包: 6-328元" },
+                commercial: { model: "宝石", channels: ["扭蛋系统", "保底机制", "限定角色"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "三星角色: 扭蛋获取, 皮肤: 宝石购买, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "雀魂": {
+                category: "simulation", icon: "🏠", rank: 10, platform: "mobile",
+                overview: "猫粮工作室出品，辉石/礼物",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "辉石/礼物", pricing: "角色: 抽奖/活动获取, 皮肤: 辉石购买, 装扮: 礼物兑换, 礼包: 6-328元" },
+                commercial: { model: "辉石/礼物", channels: ["角色抽奖", "皮肤商店", "限定活动"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "角色: 抽奖/活动获取, 皮肤: 辉石购买, 装扮: 礼物兑换, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "重返未来：1999": {
+                category: "simulation", icon: "🏠", rank: 11, platform: "mobile",
+                overview: "深蓝互动出品，雨滴/共鸣星",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "雨滴/共鸣星", pricing: "六星角色: 共鸣获取（保底）, 五星角色: 共鸣获取, 皮肤: 雨滴购买/活动, 礼包: 6-648元" },
+                commercial: { model: "雨滴/共鸣星", channels: ["共鸣系统", "保底机制", "限定角色"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "六星角色: 共鸣获取（保底）, 五星角色: 共鸣获取, 皮肤: 雨滴购买/活动, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== MMORPG（大型多人在线角色扮演） ==========
+            "魔兽世界": {
+                category: "rpg", icon: "🎭", rank: 1, platform: "pc",
+                overview: "暴雪出品，订阅制+商城",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "订阅制+商城", pricing: "月卡: 75元/月, 坐骑: 120-240元, 宠物: 40-80元, 外观套装: 120-200元" },
+                commercial: { model: "订阅制+商城", channels: ["订阅月卡制", "商城坐骑/宠物", "幻化系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 5, priceRange: "月卡: 75元/月, 坐骑: 120-240元, 宠物: 40-80元, 外观套装: 120-200元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "剑网3": {
+                category: "rpg", icon: "🎭", rank: 2, platform: "pc",
+                overview: "西山居出品，点卡/月卡+商城",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点卡/月卡+商城", pricing: "外观: 200-888元, 限量外观: 288-1288元, 盒子: 200-500元, 成衣: 100-300元" },
+                commercial: { model: "点卡/月卡+商城", channels: ["外观盒子", "限量发售", "拓印系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "外观: 200-888元, 限量外观: 288-1288元, 盒子: 200-500元, 成衣: 100-300元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "逆水寒": {
+                category: "rpg", icon: "🎭", rank: 3, platform: "pc",
+                overview: "网易出品，免费+商城",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "免费+商城", pricing: "时装: 100-500元, 限量时装: 200-1000元, 坐骑: 200-500元, 捏脸: 50-200元" },
+                commercial: { model: "免费+商城", channels: ["时装系统", "限量发售", "捏脸收费"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "时装: 100-500元, 限量时装: 200-1000元, 坐骑: 200-500元, 捏脸: 50-200元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "天涯明月刀": {
+                category: "rpg", icon: "🎭", rank: 4, platform: "pc",
+                overview: "腾讯出品，点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点券制", pricing: "时装: 100-400元, 限量时装: 200-800元, 坐骑: 200-500元, 翅膀: 200-1000元" },
+                commercial: { model: "点券制", channels: ["时装系统", "染色系统", "限量抢购"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "时装: 100-400元, 限量时装: 200-800元, 坐骑: 200-500元, 翅膀: 200-1000元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "天谕": {
+                category: "rpg", icon: "🎭", rank: 5, platform: "pc",
+                overview: "网易出品，点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点券制", pricing: "时装: 100-400元, 限量时装: 200-800元, 坐骑: 150-500元, 翅膀: 200-600元" },
+                commercial: { model: "点券制", channels: ["时装系统", "翅膀系统", "捏脸系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "时装: 100-400元, 限量时装: 200-800元, 坐骑: 150-500元, 翅膀: 200-600元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "龙族幻想": {
+                category: "rpg", icon: "🎭", rank: 6, platform: "mobile",
+                overview: "腾讯出品，点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点券制", pricing: "时装: 100-400元, 坐骑: 200-500元, 伙伴: 抽奖获取, 礼包: 6-648元" },
+                commercial: { model: "点券制", channels: ["时装系统", "伙伴系统", "坐骑系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "时装: 100-400元, 坐骑: 200-500元, 伙伴: 抽奖获取, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "完美世界": {
+                category: "rpg", icon: "🎭", rank: 7, platform: "mobile",
+                overview: "完美世界出品，元宝制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "元宝制", pricing: "时装: 100-400元, 坐骑: 200-600元, 翅膀: 200-800元, 礼包: 6-648元" },
+                commercial: { model: "元宝制", channels: ["时装系统", "翅膀系统", "坐骑系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "时装: 100-400元, 坐骑: 200-600元, 翅膀: 200-800元, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "一梦江湖": {
+                category: "rpg", icon: "🎭", rank: 8, platform: "mobile",
+                overview: "网易出品，元宝制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "元宝制", pricing: "时装: 100-500元, 限定时装: 200-1000元, 坐骑: 200-500元, 外观: 元宝购买" },
+                commercial: { model: "元宝制", channels: ["时装系统", "限量外观", "染色系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "时装: 100-500元, 限定时装: 200-1000元, 坐骑: 200-500元, 外观: 元宝购买" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "杖剑传说": {
+                category: "rpg", icon: "🎭", rank: 9, platform: "mobile",
+                overview: "腾讯出品，点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点券制", pricing: "时装: 100-400元, 武器外观: 100-300元, 坐骑: 150-500元, 礼包: 6-328元" },
+                commercial: { model: "点券制", channels: ["时装系统", "武器外观", "坐骑系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "时装: 100-400元, 武器外观: 100-300元, 坐骑: 150-500元, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== 休闲/社交竞技 ==========
+            "蛋仔派对": {
+                category: "casual", icon: "🎮", rank: 1, platform: "mobile",
+                overview: "网易出品，蛋币制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "蛋币制", pricing: "外观: 免费/60-200蛋币, 稀有外观: 活动/抽取, 赛季通行证: 60元/季, 礼包: 6-328元" },
+                commercial: { model: "蛋币制", channels: ["赛季通行证", "活动外观", "UGC地图"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "外观: 免费/60-200蛋币, 稀有外观: 活动/抽取, 赛季通行证: 60元/季, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "元梦之星": {
+                category: "casual", icon: "🎮", rank: 2, platform: "mobile",
+                overview: "腾讯出品，星币制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "星币制", pricing: "外观: 免费/60-200星币, 稀有外观: 活动/抽取, 赛季通行证: 68元/季, 礼包: 6-328元" },
+                commercial: { model: "星币制", channels: ["赛季通行证", "UGC地图", "社交互动"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "外观: 免费/60-200星币, 稀有外观: 活动/抽取, 赛季通行证: 68元/季, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "第五人格": {
+                category: "casual", icon: "🎮", rank: 3, platform: "mobile",
+                overview: "网易出品，回声/灵感",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "回声/灵感", pricing: "时装: 免费/回声购买, 稀世时装: 2500-3500回声, 奇珍时装: 1288-1988回声, 礼包: 6-328元" },
+                commercial: { model: "回声/灵感", channels: ["时装系统", "推理之径", "记忆珍宝"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "时装: 免费/回声购买, 稀世时装: 2500-3500回声, 奇珍时装: 1288-1988回声, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "光·遇": {
+                category: "casual", icon: "🎮", rank: 4, platform: "pc",
+                overview: "thatgamecompany出品，蜡烛/爱心+IAP",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "蜡烛/爱心+IAP", pricing: "季节通行证: 68元/季, 礼包: 6-128元, 限定装扮: 季节蜡烛兑换, 斗篷: 蜡烛/礼包" },
+                commercial: { model: "蜡烛/爱心+IAP", channels: ["季节限定装扮", "先祖兑换系统", "社交礼物系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "季节通行证: 68元/季, 礼包: 6-128元, 限定装扮: 季节蜡烛兑换, 斗篷: 蜡烛/礼包" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "开心消消乐": {
+                category: "casual", icon: "🎮", rank: 5, platform: "mobile",
+                overview: "乐元素出品，风车币",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "风车币", pricing: "精力: 风车币购买, 道具: 风车币购买, 礼包: 6-30元, 月卡: 18元/月" },
+                commercial: { model: "风车币", channels: ["精力系统", "道具购买", "月卡系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "精力: 风车币购买, 道具: 风车币购买, 礼包: 6-30元, 月卡: 18元/月" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "欢乐斗地主": {
+                category: "casual", icon: "🎮", rank: 6, platform: "mobile",
+                overview: "腾讯出品，欢乐豆/钻石",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "欢乐豆/钻石", pricing: "欢乐豆: 钻石兑换, 记牌器: 月卡/道具购买, 表情: 钻石购买, 礼包: 6-68元" },
+                commercial: { model: "欢乐豆/钻石", channels: ["欢乐豆系统", "记牌器", "表情系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "欢乐豆: 钻石兑换, 记牌器: 月卡/道具购买, 表情: 钻石购买, 礼包: 6-68元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "摩尔庄园": {
+                category: "casual", icon: "🎮", rank: 7, platform: "mobile",
+                overview: "淘米/雷霆游戏出品，摩尔豆/金豆",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "摩尔豆/金豆", pricing: "服装: 摩尔豆/金豆购买, 家具: 金豆购买, 礼包: 6-198元, 超拉: 30元/月" },
+                commercial: { model: "摩尔豆/金豆", channels: ["服装系统", "家园装饰", "超拉特权"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "服装: 摩尔豆/金豆购买, 家具: 金豆购买, 礼包: 6-198元, 超拉: 30元/月" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "QQ飞车手游": {
+                category: "casual", icon: "🎮", rank: 8, platform: "mobile",
+                overview: "腾讯出品，点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点券制", pricing: "A车: 活动/抽取, B车: 点券购买, 时装: 点券购买, 特效: 点券购买" },
+                commercial: { model: "点券制", channels: ["赛车系统", "改装系统", "时装系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "A车: 活动/抽取, B车: 点券购买, 时装: 点券购买, 特效: 点券购买" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== 策略/SLG ==========
+            "万国觉醒": {
+                category: "strategy", icon: "🎯", rank: 1, platform: "mobile",
+                overview: "莉莉丝出品，宝石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "宝石制", pricing: "统帅: 雕像获取, 皮肤: 宝石购买/活动, 城堡皮肤: 500-2000元, 礼包: 6-648元" },
+                commercial: { model: "宝石制", channels: ["统帅系统", "雕像收集", "城堡皮肤"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "统帅: 雕像获取, 皮肤: 宝石购买/活动, 城堡皮肤: 500-2000元, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "三国志·战略版": {
+                category: "strategy", icon: "🎯", rank: 2, platform: "mobile",
+                overview: "阿里灵犀互娱出品，金铢制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "金铢制", pricing: "武将: 招募获取, 战法: 研究/抽取, 皮肤: 金铢购买/活动, 礼包: 6-648元" },
+                commercial: { model: "金铢制", channels: ["武将招募", "战法系统", "赛季制度"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "武将: 招募获取, 战法: 研究/抽取, 皮肤: 金铢购买/活动, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "部落冲突": {
+                category: "strategy", icon: "🎯", rank: 3, platform: "mobile",
+                overview: "Supercell出品，宝石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "宝石制", pricing: "黄金令牌: 68元/月, 皮肤: 令牌专属/宝石购买, 装饰: 宝石购买, 礼包: 6-648元" },
+                commercial: { model: "宝石制", channels: ["黄金令牌", "赛季皮肤", "建筑皮肤"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "黄金令牌: 68元/月, 皮肤: 令牌专属/宝石购买, 装饰: 宝石购买, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "皇室战争": {
+                category: "strategy", icon: "🎯", rank: 4, platform: "mobile",
+                overview: "Supercell出品，宝石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "宝石制", pricing: "皇室令牌: 68元/月, 塔皮: 令牌专属/宝石购买, 表情: 宝石购买/活动, 礼包: 6-648元" },
+                commercial: { model: "宝石制", channels: ["皇室令牌", "塔皮系统", "表情系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "皇室令牌: 68元/月, 塔皮: 令牌专属/宝石购买, 表情: 宝石购买/活动, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "率土之滨": {
+                category: "strategy", icon: "🎯", rank: 5, platform: "mobile",
+                overview: "网易出品，玉符/虎符",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "玉符/虎符", pricing: "武将: 招募获取, 战法: 研究/抽取, 皮肤: 活动/购买, 礼包: 6-648元" },
+                commercial: { model: "玉符/虎符", channels: ["武将招募", "战法系统", "赛季制度"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "武将: 招募获取, 战法: 研究/抽取, 皮肤: 活动/购买, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "梦幻西游": {
+                category: "strategy", icon: "🎯", rank: 6, platform: "mobile",
+                overview: "网易出品，仙玉/点卡",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "仙玉/点卡", pricing: "角色锦衣: 200-600元, 祥瑞坐骑: 300-1000元, 限定礼盒: 500-2000元, 点卡: 6-75元" },
+                commercial: { model: "仙玉/点卡", channels: ["锦衣系统", "祥瑞系统", "周年庆限定"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "角色锦衣: 200-600元, 祥瑞坐骑: 300-1000元, 限定礼盒: 500-2000元, 点卡: 6-75元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "大话西游": {
+                category: "strategy", icon: "🎯", rank: 7, platform: "mobile",
+                overview: "网易出品，仙玉/点卡",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "仙玉/点卡", pricing: "角色外观: 200-600元, 坐骑: 300-800元, 限定外观: 活动/购买, 点卡: 6-75元" },
+                commercial: { model: "仙玉/点卡", channels: ["外观系统", "坐骑系统", "染色系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "角色外观: 200-600元, 坐骑: 300-800元, 限定外观: 活动/购买, 点卡: 6-75元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "鸿图之下": {
+                category: "strategy", icon: "🎯", rank: 8, platform: "mobile",
+                overview: "腾讯出品，珠玉制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "珠玉制", pricing: "武将: 招募获取, 皮肤: 珠玉购买/活动, 礼包: 6-648元" },
+                commercial: { model: "珠玉制", channels: ["武将系统", "皮肤系统", "赛季制度"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "武将: 招募获取, 皮肤: 珠玉购买/活动, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== 体育竞技 ==========
+            "FIFA足球世界": {
+                category: "sports", icon: "⚽", rank: 1, platform: "pc",
+                overview: "EA出品，FC Points",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "FC Points", pricing: "球员卡: 卡包购买, 传奇球员: 特殊卡包/活动, 球场: FC Points购买, 礼包: 6-648元" },
+                commercial: { model: "FC Points", channels: ["终极球队模式", "卡包系统", "转会市场"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "球员卡: 卡包购买, 传奇球员: 特殊卡包/活动, 球场: FC Points购买, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "NBA 2K系列": {
+                category: "sports", icon: "⚽", rank: 2, platform: "pc",
+                overview: "2K Sports出品，VC币",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "VC币", pricing: "球员卡: 卡包购买, 外观: VC购买, 属性提升: VC购买, 礼包: 6-648元" },
+                commercial: { model: "VC币", channels: ["MyTEAM模式", "VC系统", "球员卡收集"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "球员卡: 卡包购买, 外观: VC购买, 属性提升: VC购买, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "实况足球": {
+                category: "sports", icon: "⚽", rank: 3, platform: "pc",
+                overview: "科乐美出品，金币制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "金币制", pricing: "球员: 抽签获取, 传奇球员: 特殊抽签, 球场: 金币购买, 礼包: 6-648元" },
+                commercial: { model: "金币制", channels: ["抽签系统", "eFootball模式", "赛季更新"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "球员: 抽签获取, 传奇球员: 特殊抽签, 球场: 金币购买, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "QQ飞车": {
+                category: "sports", icon: "⚽", rank: 4, platform: "mobile",
+                overview: "腾讯出品，点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点券制", pricing: "A车: 活动/抽取, B车: 点券购买, 时装: 点券购买, 特效: 点券购买" },
+                commercial: { model: "点券制", channels: ["赛车系统", "改装系统", "时装系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "A车: 活动/抽取, B车: 点券购买, 时装: 点券购买, 特效: 点券购买" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "街头篮球": {
+                category: "sports", icon: "⚽", rank: 5, platform: "pc",
+                overview: "天游/JCE出品，点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "点券制", pricing: "服装: 点券购买, 技能: 点券购买/活动, 角色: 点券购买, 礼包: 6-328元" },
+                commercial: { model: "点券制", channels: ["服装系统", "技能购买", "角色解锁"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "服装: 点券购买, 技能: 点券购买/活动, 角色: 点券购买, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "网球大师": {
+                category: "sports", icon: "⚽", rank: 6, platform: "mobile",
+                overview: "腾讯出品，钻石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "钻石制", pricing: "角色: 钻石购买/活动, 服装: 钻石购买, 球拍: 钻石购买, 礼包: 6-328元" },
+                commercial: { model: "钻石制", channels: ["角色系统", "服装系统", "球拍皮肤"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "角色: 钻石购买/活动, 服装: 钻石购买, 球拍: 钻石购买, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== 大逃杀/吃鸡类 ==========
+            "PUBG Mobile": {
+                category: "fps", icon: "🔫", rank: 8, platform: "mobile",
+                overview: "Krafton/腾讯出品，UC点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "UC点券制", pricing: "服装: 活动/抽取, 武器皮肤: UC购买/抽取, 载具皮肤: 抽取保底, 礼包: 6-648元" },
+                commercial: { model: "UC点券制", channels: ["通行证系统", "军需宝箱", "活动皮肤"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "服装: 活动/抽取, 武器皮肤: UC购买/抽取, 载具皮肤: 抽取保底, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "荒野行动": {
+                category: "fps", icon: "🔫", rank: 9, platform: "mobile",
+                overview: "网易出品，钻石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "钻石制", pricing: "服装: 钻石购买/活动, 武器皮肤: 钻石购买, 载具皮肤: 活动/抽奖, 礼包: 6-648元" },
+                commercial: { model: "钻石制", channels: ["通行证系统", "抽奖系统", "服装商城"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "服装: 钻石购买/活动, 武器皮肤: 钻石购买, 载具皮肤: 活动/抽奖, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "使命召唤：战区": {
+                category: "fps", icon: "🔫", rank: 10, platform: "pc",
+                overview: "动视出品，CP点券制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "CP点券制", pricing: "武器蓝图: CP购买/通行证, 角色皮肤: CP购买, 载具皮肤: CP购买, 礼包: 6-648元" },
+                commercial: { model: "CP点券制", channels: ["战斗通行证", "商店轮换", "限定礼包"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "武器蓝图: CP购买/通行证, 角色皮肤: CP购买, 载具皮肤: CP购买, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== 音游类 ==========
+            "节奏大师": {
+                category: "casual", icon: "🎮", rank: 9, platform: "mobile",
+                overview: "腾讯出品，钻石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "钻石制", pricing: "角色: 钻石购买/活动, 皮肤: 钻石购买, 音效: 钻石购买, 礼包: 6-68元" },
+                commercial: { model: "钻石制", channels: ["角色系统", "皮肤系统", "音效包"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "角色: 钻石购买/活动, 皮肤: 钻石购买, 音效: 钻石购买, 礼包: 6-68元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "Phigros": {
+                category: "casual", icon: "🎮", rank: 10, platform: "mobile",
+                overview: "Pigeon Games出品，免费+IAP",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "免费+IAP", pricing: "曲包: 免费/付费购买, 皮肤: 解锁获取, 收藏品: 游戏内获取" },
+                commercial: { model: "免费+IAP", channels: ["免费曲包", "付费曲包", "收藏品系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "曲包: 免费/付费购买, 皮肤: 解锁获取, 收藏品: 游戏内获取" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "Cytus II": {
+                category: "casual", icon: "🎮", rank: 11, platform: "mobile",
+                overview: "雷亚游戏出品，买断+IAP",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "买断+IAP", pricing: "游戏本体: 12-30元, 角色包: 12-30元, 曲包: 6-18元" },
+                commercial: { model: "买断+IAP", channels: ["买断制", "角色系统", "付费曲包"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "游戏本体: 12-30元, 角色包: 12-30元, 曲包: 6-18元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "Deemo": {
+                category: "casual", icon: "🎮", rank: 12, platform: "mobile",
+                overview: "雷亚游戏出品，买断+IAP",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "买断+IAP", pricing: "游戏本体: 12-30元, 曲包: 6-18元, 收藏集: 游戏内获取" },
+                commercial: { model: "买断+IAP", channels: ["买断制", "剧情模式", "付费曲包"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "游戏本体: 12-30元, 曲包: 6-18元, 收藏集: 游戏内获取" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== 放置挂机类 ==========
+            "剑与远征": {
+                category: "card", icon: "🃏", rank: 1, platform: "mobile",
+                overview: "莉莉丝出品，钻石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "钻石制", pricing: "英雄: 抽卡获取, 皮肤: 钻石购买/活动, 礼包: 6-648元, 月卡: 30-68元" },
+                commercial: { model: "钻石制", channels: ["抽卡系统", "皮肤系统", "通行证"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "英雄: 抽卡获取, 皮肤: 钻石购买/活动, 礼包: 6-648元, 月卡: 30-68元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "放置少女": {
+                category: "card", icon: "🃏", rank: 2, platform: "mobile",
+                overview: "有爱互娱出品，元宝制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "元宝制", pricing: "角色: 抽卡获取, 皮肤: 元宝购买/活动, 礼包: 6-648元" },
+                commercial: { model: "元宝制", channels: ["抽卡系统", "皮肤系统", "活动限定"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "角色: 抽卡获取, 皮肤: 元宝购买/活动, 礼包: 6-648元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "想不想修真": {
+                category: "card", icon: "🃏", rank: 3, platform: "mobile",
+                overview: "Yes or No出品，仙石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "仙石制", pricing: "道具: 仙石购买, 外观: 仙石购买/活动, 礼包: 6-328元" },
+                commercial: { model: "仙石制", channels: ["放置修炼", "外观系统", "活动奖励"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "道具: 仙石购买, 外观: 仙石购买/活动, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            // ========== 卡牌对战类 ==========
+            "炉石传说": {
+                category: "card", icon: "🃏", rank: 4, platform: "pc",
+                overview: "暴雪出品，金币/符文石",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "金币/符文石", pricing: "卡包: 100金币/12元, 英雄皮肤: 88-128元, 冒险: 700金币/区, 预购: 388-488元" },
+                commercial: { model: "金币/符文石", channels: ["卡包系统", "英雄皮肤", "冒险模式"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "卡包: 100金币/12元, 英雄皮肤: 88-128元, 冒险: 700金币/区, 预购: 388-488元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "影之诗": {
+                category: "card", icon: "🃏", rank: 5, platform: "mobile",
+                overview: "Cygames出品，水晶/乙太",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "水晶/乙太", pricing: "卡包: 100水晶/12元, 皮肤: 水晶购买/活动, 预购: 248-388元" },
+                commercial: { model: "水晶/乙太", channels: ["卡包系统", "皮肤系统", "活动奖励"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 3, priceRange: "卡包: 100水晶/12元, 皮肤: 水晶购买/活动, 预购: 248-388元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+            "游戏王：决斗链接": {
+                category: "card", icon: "🃏", rank: 6, platform: "mobile",
+                overview: "科乐美出品，宝石制",
+                appearanceTypes: ["skin"],
+                pricing: { skin: { tiers: [] } },
+                model: { primary: "宝石制", pricing: "卡包: 宝石购买, 角色: 活动/宝石购买, 皮肤: 宝石购买, 礼包: 6-328元" },
+                commercial: { model: "宝石制", channels: ["卡包系统", "角色系统", "皮肤系统"], cycle: "定期更新", strategy: "多元化定价" },
+                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "卡包: 宝石购买, 角色: 活动/宝石购买, 皮肤: 宝石购买, 礼包: 6-328元" },
+                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
+                painPoints: []
+            },
+        };;
 
         // 品类TOP游戏 - 覆盖全平台
         const TOP_GAMES = {
