@@ -1,4 +1,17 @@
-{
+# 1. 克隆仓库
+git clone https://github.com/cccccc610/appearance-commerce-tool.git
+cd appearance-commerce-tool
+
+# 2. 下载更新后的文件
+curl -o data/competitors.json "https://您的文件托管链接"
+
+# 或者直接创建文件并粘贴内容
+nano data/competitors.json
+
+# 3. 提交更新
+git add data/competitors.json
+git commit -m "feat: 扩充竞品数据库至69款游戏（11大品类）"
+git push origin main{
   "moba": {
     "name": "MOBA（多人在线战术竞技）",
     "competitors": [
