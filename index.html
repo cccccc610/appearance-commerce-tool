@@ -456,12 +456,13 @@
             <h1>🎮 游戏外观商业化分析平台</h1>
             <p class="subtitle">竞品分析 · 榜单追踪 · 创意拆解 · 运营规划</p>
             <div class="badge-row">
-                <span class="badge">50+ 竞品数据</span>
+                <span class="badge">69款 竞品数据</span>
+                <span class="badge">11大品类</span>
                 <span class="badge">全平台覆盖</span>
                 <span class="badge">分层定价体系</span>
-                <span class="badge">实时榜单</span>
-                <span class="badge">创意工具库</span>
+                <span class="badge"><a href="terms.html" style="color:inherit;text-decoration:none;">使用条款</a></span>
             </div>
+            <p style="font-size:0.7rem;color:var(--text-muted);margin-top:8px;">© 2024 cccccc610 · <a href="terms.html" style="color:var(--accent);">禁止未经授权商用</a></p>
         </header>
 
         <div class="main-layout">
@@ -4278,6 +4279,30 @@
             toast.classList.add('show');
             setTimeout(() => toast.classList.remove('show'), 2500);
         }
+
+        // ==================== 版权保护脚本 ====================
+        (function() {
+            // 禁用右键菜单
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showToast('本网站内容受版权保护', 'warning');
+            });
+            
+            // 禁用F12开发者工具快捷键
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                    (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                    showToast('本网站内容受版权保护', 'warning');
+                }
+            });
+            
+            // 添加版权水印到控制台
+            console.log('%c游戏外观商业化分析工具', 'font-size: 24px; font-weight: bold; color: #6366f1;');
+            console.log('%c© 2024 cccccc610 - 禁止未经授权商用', 'font-size: 14px; color: #888;');
+            console.log('%c如需商业使用，请联系作者获取授权', 'font-size: 12px; color: #f59e0b;');
+        })();
     </script>
 </body>
 </html>
