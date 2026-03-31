@@ -1393,15 +1393,42 @@
                 painPoints: []
             },
             "QQ飞车": {
-                category: "sports", icon: "⚽", rank: 4, platform: "mobile",
-                overview: "腾讯出品，点券制",
-                appearanceTypes: ["skin"],
-                pricing: { skin: { tiers: [] } },
-                model: { primary: "点券制", pricing: "A车: 活动/抽取, B车: 点券购买, 时装: 点券购买, 特效: 点券购买" },
-                commercial: { model: "点券制", channels: ["赛车系统", "改装系统", "时装系统"], cycle: "定期更新", strategy: "多元化定价" },
-                payment: { structure: "免费+内购", currencies: [], monetization: "外观收入为主", tierCount: 4, priceRange: "A车: 活动/抽取, B车: 点券购买, 时装: 点券购买, 特效: 点券购买" },
-                market: { scale: "头部游戏", users: "活跃用户", growth: "稳定", competitors: [] },
-                painPoints: []
+                category: "sports", icon: "🏎️", rank: 4, platform: "pc",
+                overview: "腾讯出品，经典竞速端游，丰富装扮系统",
+                appearanceTypes: ["skin", "mount", "decoration", "vfx"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "时装套装", game: "300-2000点券", rmb: "¥3-20", tasks: ["完整时装设计", "专属特效", "配套配饰"] },
+                            { name: "单件时装", game: "100-500点券", rmb: "¥1-5", tasks: ["单件服饰设计", "基础特效"] },
+                            { name: "翅膀/背饰", game: "500-3000点券", rmb: "¥5-30", tasks: ["翅膀设计", "动态特效", "飞行轨迹"] }
+                        ]
+                    },
+                    mount: {
+                        tiers: [
+                            { name: "B车（永久）", game: "1800-3500点券", rmb: "¥18-35", tasks: ["B级赛车模型", "基础性能", "外观定制"] },
+                            { name: "A车（永久）", game: "活动/抽奖", rmb: "¥200-600", tasks: ["A级赛车设计", "高级性能", "专属特效", "稀有标识"] },
+                            { name: "S车/绝版车", game: "限时活动", rmb: "¥800-2000", tasks: ["S级顶级赛车", "极致性能", "全套定制特效", "绝版标识"] },
+                            { name: "T车/机甲", game: "特殊活动", rmb: "¥1500+", tasks: ["T级机甲赛车", "变形功能", "顶级特效", "限定标识"] }
+                        ]
+                    },
+                    decoration: {
+                        tiers: [
+                            { name: "特效/漂移印", game: "200-1000点券", rmb: "¥2-10", tasks: ["漂移特效设计", "轨迹粒子效果"] },
+                            { name: "戒指/求婚道具", game: "500-3000点券", rmb: "¥5-30", tasks: ["戒指设计", "特效光环", "情侣标识"] }
+                        ]
+                    }
+                },
+                model: { primary: "点券制（1元=100点券）", pricing: "¥1-2000+" },
+                commercial: {
+                    model: "赛车+时装+特效多元化变现",
+                    channels: ["赛车分级（B/A/S/T级）", "时装系统", "抽奖系统", "VIP特权"],
+                    cycle: "每周更新时装，活动更新赛车",
+                    strategy: "赛车分级+时装双线驱动，抽奖增加稀缺性"
+                },
+                payment: { structure: "免费+内购", currencies: ["点券", "金币"], monetization: "赛车收入最高，时装次之", tierCount: 11, priceRange: "¥1-2000+" },
+                market: { scale: "经典端游稳定运营", users: "活跃用户稳定", growth: "成熟期", competitors: ["跑跑卡丁车", "QQ飞车手游"] },
+                painPoints: ["A/S车获取门槛高", "端游用户流失", "部分绝版车返场争议", "与手游差异化不足"]
             },
             "街头篮球": {
                 category: "sports", icon: "⚽", rank: 5, platform: "pc",
