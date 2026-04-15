@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v4.4</title>
+    <title>游戏外观商业化分析平台 v4.5</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -488,8 +488,10 @@
                 <div class="sidebar-section">
                     <div class="section-label">选择外观类型 <span style="font-size:0.7rem;color:var(--text-muted);">（根据品类动态展示）</span></div>
                     <div class="appearance-tags" id="appearanceTagsContainer">
-                        <div class="appearance-tag selected" data-appearance="skin"><span>👤</span>皮肤</div>
+                        <div class="appearance-tag selected" data-appearance="all"><span>🎨</span>全部</div>
+                        <div class="appearance-tag" data-appearance="skin"><span>👤</span>皮肤</div>
                         <div class="appearance-tag" data-appearance="weapon_skin"><span>🔫</span>武器皮肤</div>
+                        <div class="appearance-tag" data-appearance="action"><span>⚔️</span>动作</div>
                         <div class="appearance-tag" data-appearance="vfx"><span>💫</span>特效</div>
                         <div class="appearance-tag" data-appearance="decoration"><span>✨</span>装饰</div>
                         <div class="appearance-tag" data-appearance="mount"><span>🐴</span>坐骑/载具</div>
@@ -1872,8 +1874,10 @@
         };
 
         const APPEARANCE_LABELS = {
+            all: { icon: '🎨', name: '全部' },
             skin: { icon: '👤', name: '皮肤' },
             weapon_skin: { icon: '🔫', name: '武器皮肤' },
+            action: { icon: '⚔️', name: '动作' },
             vfx: { icon: '💫', name: '特效' },
             decoration: { icon: '✨', name: '装饰' },
             mount: { icon: '🐴', name: '坐骑/载具' },
@@ -2410,7 +2414,7 @@
 
         // ==================== 状态管理 ====================
         let selectedCategory = 'all';
-        let selectedAppearance = 'skin';
+        let selectedAppearance = 'all';
         let selectedCompetitors = new Set();
         let currentPlatform = 'ios';
         let currentMonth = new Date();
@@ -2619,11 +2623,11 @@
             document.getElementById('resetBtn').addEventListener('click', () => {
                 selectedCompetitors.clear();
                 selectedCategory = 'all';
-                selectedAppearance = 'skin';
+                selectedAppearance = 'all';
                 document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
                 document.querySelector('.category-tab[data-category="all"]').classList.add('active');
                 document.querySelectorAll('.appearance-tag').forEach(t => t.classList.remove('selected'));
-                document.querySelector('.appearance-tag[data-appearance="skin"]').classList.add('selected');
+                document.querySelector('.appearance-tag[data-appearance="all"]').classList.add('selected');
                 document.getElementById('selectedCount').textContent = '0';
                 document.getElementById('competitorSearch').value = '';
                 renderCompetitorList(Object.keys(COMPETITOR_DATA));
