@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>游戏外观商业化分析平台 v4.3</title>
+    <title>游戏外观商业化分析平台 v4.4</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -472,6 +472,7 @@
                         <div class="category-tab active" data-category="all">全部</div>
                         <div class="category-tab" data-category="moba">MOBA</div>
                         <div class="category-tab" data-category="fps">FPS</div>
+                        <div class="category-tab" data-category="action">动作</div>
                         <div class="category-tab" data-category="simulation">模拟</div>
                         <div class="category-tab" data-category="rpg">RPG</div>
                         <div class="category-tab" data-category="card">卡牌</div>
@@ -1054,6 +1055,53 @@
                     "武器皮肤种类偏少",
                     "赛季皮肤返场规则不明",
                     "新玩家获取限定皮肤困难"
+                ]
+            },
+            "绝区零": {
+                category: "action", icon: "🎭", rank: 1,
+                overview: "米哈游都市题材动作RPG，潮流美术风格独特",
+                appearanceTypes: ["skin", "weapon_skin", "vfx", "decoration"],
+                pricing: {
+                    skin: {
+                        tiers: [
+                            { name: "活动皮肤", game: "免费/活动", rmb: "免费", tasks: ["模型调整", "配色更换", "简单特效"] },
+                            { name: "商城皮肤", game: "680-1680菲林", rmb: "¥68-168", tasks: ["新模型设计", "技能特效", "专属动画", "待机动作"] },
+                            { name: "限定皮肤", game: "活动限定", rmb: "活动获取", tasks: ["主题设计", "全套特效", "专属剧情", "限定标识"] }
+                        ]
+                    },
+                    weapon_skin: {
+                        tiers: [
+                            { name: "活动武器皮", game: "免费", rmb: "免费", tasks: ["武器换色", "简单特效"] },
+                            { name: "限定武器皮", game: "活动获取", rmb: "活动获取", tasks: ["武器建模", "专属特效", "专属音效"] }
+                        ]
+                    }
+                },
+                model: { primary: "角色抽卡+皮肤直售", pricing: "68-168元" },
+                commercial: {
+                    model: "角色/武器抽卡 + 皮肤直售 + 网绳系统",
+                    channels: ["商城直售", "活动免费", "通行证"],
+                    cycle: "皮肤更新频率中等，角色更新为主",
+                    strategy: "潮流美术风格吸引年轻玩家，高品质皮肤吸引付费"
+                },
+                payment: {
+                    structure: "免费 + 抽卡 + 内购",
+                    currencies: ["菲林", "邦布券", "月相"],
+                    monetization: "角色抽卡为主，皮肤为辅助收入",
+                    tierCount: 3,
+                    priceRange: "免费-¥168"
+                },
+                market: {
+                    scale: "月流水约3-5亿，新游快速增长期",
+                    users: "MAU超1500万",
+                    growth: "新游红利期，用户增长迅速",
+                    competitors: ["鸣潮", "崩坏3", "幻塔"]
+                },
+                painPoints: [
+                    "皮肤种类较少，玩家选择有限",
+                    "武器皮肤更新慢",
+                    "网绳系统与外观关联度低",
+                    "新游戏内容深度待验证",
+                    "部分玩家反馈优化问题"
                 ]
             },
             "CS2": {
